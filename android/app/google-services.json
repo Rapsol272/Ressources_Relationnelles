@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "945171425010",
+    "project_id": "formfirebase-e7d6e",
+    "storage_bucket": "formfirebase-e7d6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945171425010:android:1f4dfc909a238e77a7126b",
+        "android_client_info": {
+          "package_name": "com.form_firebase.adrien"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "945171425010-ok84tagf37c463t530nbjvq16o51kksu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1nGvrxP7NK8lHSr2wnvzpraVAfowb_N8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945171425010-ok84tagf37c463t530nbjvq16o51kksu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
