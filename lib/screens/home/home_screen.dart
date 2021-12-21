@@ -3,7 +3,6 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/authenticate/confirmation.dart';
-import 'package:flutter_firebase/screens/home/user_list.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil.dart';
@@ -26,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var _currentIndex = 0;
   final List<Widget> _pages = [
     Accueil(),
-    ConfirmationInscription(),
+    Groupes(),
     Search(),
     Profil(),
   ];

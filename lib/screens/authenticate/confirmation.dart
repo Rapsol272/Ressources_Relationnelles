@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
-import 'package:search_app_bar_page/search_app_bar_page.dart';
 
 class ConfirmationInscription extends StatefulWidget {
   ConfirmationInscription({Key? key}) : super(key: key);
@@ -145,7 +144,7 @@ List? _myActivities;
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(16),
-                child:
+               
 
 
               ),

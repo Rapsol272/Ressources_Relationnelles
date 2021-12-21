@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 
 import 'models/chat_params.dart';
 import 'models/user.dart';
-import 'screens/chat/chat_screen.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 // If you're going to use other Firebase services in the background, such as Firestore,
@@ -54,23 +53,8 @@ class RouteGenerator {
     switch (settings.name) {
       case '/' :
         return MaterialPageRoute(builder: (context) => SplashScreenWrapper());
-      case '/chat':
-        var arguments = settings.arguments;
-        if (arguments != null) {
-          return PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  ChatScreen(chatParams : arguments as ChatParams),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                animation = CurvedAnimation(curve: Curves.ease, parent: animation);
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              }
-          );
-        } else {
-          return pageNotFound();
-        }
+        //chat
+      
       default:
         return pageNotFound();
     }

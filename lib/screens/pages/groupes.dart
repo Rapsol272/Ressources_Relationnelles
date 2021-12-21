@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/common/constants.dart';
 
-class Groupes extends StatefulWidget {
-  Groupes({Key? key}) : super(key: key);
+class Groupes extends StatelessWidget {
+  const Groupes({Key? key}) : super(key: key);
 
-  @override
-  _GroupesState createState() => _GroupesState();
-}
-
-class _GroupesState extends State<Groupes> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text('groupes'),
+      color: or,
     );
   }
 }
