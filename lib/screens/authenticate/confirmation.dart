@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:search_page/search_page.dart';
+import 'package:flappy_search_bar_ns/flappy_search_bar_ns.dart';
+import 'package:flappy_search_bar_ns/scaled_tile.dart';
+import 'dart:math';
 
-class Person {
-  final String name, surname;
-  final num age;
+class Post {
+  final String title;
+  final String body;
 
-  Person(this.name, this.surname, this.age);
+  Post(this.title, this.body);
 }
+
 class ConfirmationInscription extends StatefulWidget {
   ConfirmationInscription({Key? key}) : super(key: key);
 
@@ -17,16 +20,29 @@ class ConfirmationInscription extends StatefulWidget {
 }
 
 class _ConfirmationInscriptionState extends State<ConfirmationInscription> {
+
+  final SearchBarController<Post> _searchBarController = SearchBarController();
+  bool isReplay = false;
+
+  Future<List<Post>> _getALlPosts(String? text) async {
+    await Future.delayed(Duration(seconds: text!.length == 4 ? 10 : 1));
+    if (isReplay) return [Post("Replaying !", "Replaying body")];
+    if (text.length == 5) throw Error();
+    if (text.length == 6) return [];
+    List<Post> posts = [];
+
+    var random = new Random();
+    for (int i = 0; i < 10; i++) {
+      posts.add(
+        Post("$text $i", "body random number : ${random.nextInt(100)}"),
+      );
+    }
+    return posts;
+  }
+
 List? _myActivities;
   late String _myActivitiesResult;
   final formKey = new GlobalKey<FormState>();
-  static List<Person> people = [
-    Person('Mike', 'Barron', 64),
-    Person('Todd', 'Black', 30),
-    Person('Ahmad', 'Edwards', 55),
-    Person('Anthony', 'Johnson', 67),
-    Person('Annette', 'Brooks', 39),
-  ];
 
   @override
   void initState() {
@@ -49,7 +65,6 @@ List? _myActivities;
 
   @override
   Widget build(BuildContext context) {
-    bool _value = false;
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -73,44 +88,6 @@ List? _myActivities;
               Text('Vos premiers groupes !'),
 
               SizedBox(height: 20,),
-                  ListView.builder(
-        itemCount: people.length,
-        itemBuilder: (context, index) {
-          final Person person = people[index];
-          return ListTile(
-            title: Text(person.name),
-            subtitle: Text(person.surname),
-            trailing: Text('${person.age} yo'),
-          );
-        },
-      ),
-       FloatingActionButton(
-        tooltip: 'Search people',
-        onPressed: () => showSearch(
-          context: context,
-          delegate: SearchPage<Person>(
-            onQueryUpdate: (s) => print(s),
-            items: people,
-            searchLabel: 'Search people',
-            suggestion: Center(
-              child: Text('Filter people by name, surname or age'),
-            ),
-            failure: Center(
-              child: Text('No person found :('),
-            ),
-            filter: (person) => [
-              person.name,
-              person.surname,
-              person.age.toString(),
-            ],
-            builder: (person) => ListTile(
-              title: Text(person.name),
-              subtitle: Text(person.surname),
-              trailing: Text('${person.age} yo'),
-            ),
-          ),
-        ),
-        child: Icon(Icons.search),),
   
                Container(
                 width: double.infinity,
@@ -125,8 +102,6 @@ List? _myActivities;
                   Text('Amis'),
                 ],),
               ),
-              ),
-
 
               SizedBox(height: 20,),
 
@@ -245,6 +220,25 @@ List? _myActivities;
         ),
         )
         ),
+    );
+  }
+}
+
+class Detail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            Text("Detail"),
+          ],
+        ),
+      ),
     );
   }
 }

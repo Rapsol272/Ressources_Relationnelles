@@ -45,9 +45,7 @@ dependencies:
   select_form_field: ^2.2.0
   expandable: ^5.0.1
   multiselect_formfield: ^0.1.7
-  easy_search: ^1.0.6+1
-  search_app_bar_page: ^2.1.2
-  search_page: ^2.0.0+1
+  flappy_search_bar_ns: ^2.0.2
 
 dev_dependencies:
   flutter_test:
