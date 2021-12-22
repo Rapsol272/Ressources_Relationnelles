@@ -45,7 +45,10 @@ dependencies:
   select_form_field: ^2.2.0
   expandable: ^5.0.1
   multiselect_formfield: ^0.1.7
-  flappy_search_bar_ns: ^2.0.2
+  flutter_switch: ^0.3.2
+  anim_search_bar: ^2.0.2
+  search_widget: ^1.0.2
+  paginated_search_bar: ^1.1.2
 
 dev_dependencies:
   flutter_test:

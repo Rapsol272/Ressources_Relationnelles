@@ -3,12 +3,15 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/authenticate/confirmation.dart';
+import 'package:flutter_firebase/screens/pages/components/radioButton.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:select_form_field/select_form_field.dart';
 
+
+enum BestTutorSite { javatpoint, w3schools, tutorialandexample } 
 class AuthenticateScreen extends StatefulWidget {
   @override
   _AuthenticateScreenState createState() => _AuthenticateScreenState();
@@ -26,10 +29,13 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final dateController = TextEditingController();
+  //final roleController = TextEditingController();
   bool showSignIn = true;
+
 
   final format = DateFormat("yyyy-MM-dd");
   DateTime? value;
+
 
   @override
   void dispose() {
@@ -38,6 +44,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     emailController.dispose();
     passwordController.dispose();
     dateController.dispose();
+    //roleController.dispose();
     super.dispose();
   }
 
@@ -50,6 +57,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       prenomController.text = '';
       passwordController.text = '';
       dateController.text = '';
+      //roleController.text = '';
       showSignIn = !showSignIn;
     });
   }
@@ -207,6 +215,20 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                 ? "Entrez votre adresse email"
                                 : null,
                           ),
+                          /*!showSignIn ? 
+                          Row(
+                            children: [
+                                Container(
+                              child: CustomRadioButton('test1', 1)
+                            ),
+                            Container(
+                            child: CustomRadioButton('test2', 2)
+                          )
+                            ],
+                          )
+                           : Container(),*/
+
+  
                           SizedBox(height: 20.0),
                           TextFormField(
                             controller: passwordController,
@@ -265,12 +287,14 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                 var name = nameController.value.text;
                                 var prenom = prenomController.value.text;
                                 var date = dateController.value.text;
+                                //var role = roleController.value.text;
+                                //var bio = bioController.value.text;
 
                                 dynamic result = showSignIn
                                     ? await _auth.signInWithEmailAndPassword(
                                         email, password)
-                                    : Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmationInscription()),);
-                                    //await _auth.registerWithEmailAndPassword(name, prenom, date, email, password);
+                                    : //Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmationInscription()),);
+                                    await _auth.registerWithEmailAndPassword(name, prenom, date, email, password);
                                 if (result == null) {
                                   setState(() {
                                     loading = false;
@@ -308,3 +332,5 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                 ]))));
   }
 }
+
+

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flappy_search_bar_ns/flappy_search_bar_ns.dart';
-import 'package:flappy_search_bar_ns/scaled_tile.dart';
-import 'dart:math';
 
 class Post {
   final String title;
@@ -21,24 +18,9 @@ class ConfirmationInscription extends StatefulWidget {
 
 class _ConfirmationInscriptionState extends State<ConfirmationInscription> {
 
-  final SearchBarController<Post> _searchBarController = SearchBarController();
   bool isReplay = false;
 
-  Future<List<Post>> _getALlPosts(String? text) async {
-    await Future.delayed(Duration(seconds: text!.length == 4 ? 10 : 1));
-    if (isReplay) return [Post("Replaying !", "Replaying body")];
-    if (text.length == 5) throw Error();
-    if (text.length == 6) return [];
-    List<Post> posts = [];
-
-    var random = new Random();
-    for (int i = 0; i < 10; i++) {
-      posts.add(
-        Post("$text $i", "body random number : ${random.nextInt(100)}"),
-      );
-    }
-    return posts;
-  }
+  
 
 List? _myActivities;
   late String _myActivitiesResult;

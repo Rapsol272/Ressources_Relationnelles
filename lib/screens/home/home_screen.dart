@@ -4,6 +4,8 @@ import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/authenticate/confirmation.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
+import 'package:flutter_firebase/screens/pages/components/help.dart';
+import 'package:flutter_firebase/screens/pages/components/params.dart';
 import 'package:flutter_firebase/screens/pages/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil.dart';
 import 'package:flutter_firebase/screens/pages/recherche.dart';
@@ -41,15 +43,64 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0.0,
           title: Text('Ressources Relationnelles', style: TextStyle(color: greenMajor),),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.logout,
-                color: greenMajor,
-              ),
-              onPressed: () async {
-                await _auth.signOut();
-              },
-            )
+            PopupMenuButton(
+  icon: Icon(Icons.more_vert, color: greenMajor,),
+  onSelected: (choice) {
+        switch (choice) {
+            case 0:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Params()));
+                break;
+            case 1:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Help()));
+                break;
+            // other cases...
+        }
+    },
+  itemBuilder: (context) => [
+    PopupMenuItem(
+      value: 0,
+      child: Row(
+        children: <Widget>[
+          Padding( 
+            padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
+              child: Icon(Icons.settings, color:greenMajor,)),
+                  Text('Paramètres')
+      ])
+      ),
+    PopupMenuItem(
+      value: 1,
+      child: Row(
+        children: <Widget>[
+          Padding( 
+            padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
+              child: Icon(Icons.help, color:greenMajor,)),
+                  Text('Aide')
+      ])
+    ),
+
+    PopupMenuItem(
+      onTap: () async {
+      },
+      child: Row(children: <Widget>[
+      Padding( padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
+          child: Icon(Icons.edit, color: greenMajor,)),
+      Text('Modifier mon profil')
+    ])
+      ),
+    
+    PopupMenuItem(
+      onTap: () async {
+        await _auth.signOut();
+      },
+      child: Row(children: <Widget>[
+      Padding( padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
+          child: Icon(Icons.logout, color: greenMajor,)),
+      Text('Se déconnecter')
+    ])
+      )
+      
+  ],
+)
           ],
         ),
         body: //UserList(),
@@ -81,7 +132,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             /// Mon profil
             SalomonBottomBarItem(
-              icon: Icon(Icons.person),
+              icon: CircleAvatar(
+                backgroundImage: AssetImage('images/ressources_relationnelles.png'),
+              ),
+              //Icon(Icons.person),
               title: Text("Mon profil"),
               selectedColor: or,
             ),

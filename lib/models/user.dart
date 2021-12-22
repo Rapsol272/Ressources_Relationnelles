@@ -10,6 +10,7 @@ class AppUserData {
   final String prenom;
   final String date;
   final String email;
+  //final String role;
   
-  AppUserData({required this.uid, required this.name, required this.prenom, required this.date, required this.email});
+  AppUserData({required this.uid, required this.name, required this.prenom, required this.date, required this.email}); //required this.role //required this.bio});
 }
