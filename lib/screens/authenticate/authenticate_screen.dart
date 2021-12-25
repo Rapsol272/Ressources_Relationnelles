@@ -121,8 +121,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                     ),
                   ),
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
+                    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
                     child: Form(
                       key: _formKey,
                       child: Column(
