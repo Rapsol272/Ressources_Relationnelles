@@ -9,9 +9,14 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:select_form_field/select_form_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
-enum BestTutorSite { javatpoint, w3schools, tutorialandexample } 
+
+
+enum SingingCharacter { lecteur, redacteur }
+ 
 class AuthenticateScreen extends StatefulWidget {
   @override
   _AuthenticateScreenState createState() => _AuthenticateScreenState();
@@ -32,6 +37,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   //final roleController = TextEditingController();
   bool showSignIn = true;
 
+   SingingCharacter? _character = SingingCharacter.lecteur;
+
+
 
   final format = DateFormat("yyyy-MM-dd");
   DateTime? value;
@@ -47,6 +55,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     //roleController.dispose();
     super.dispose();
   }
+
+  
 
   void toggleView() {
     setState(() {
@@ -179,6 +189,31 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                           SizedBox(
                             height: 20,
                           ),
+                          !showSignIn ?
+                          Column(
+                            children: [
+                              RadioListTile<SingingCharacter>(
+                                title: const Text('Lecteur'),
+                                value: SingingCharacter.lecteur,
+                                groupValue: _character,
+                                onChanged: (SingingCharacter? value) {
+                                  setState(() {
+                                    _character = value;
+                                  });
+                                },
+                              ),
+                              RadioListTile<SingingCharacter>(
+                                title: const Text('Rédacteur'),
+                                value: SingingCharacter.redacteur,
+                                groupValue: _character,
+                                onChanged: (SingingCharacter? value) {
+                                  setState(() {
+                                    _character = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ) : Container(),
                           !showSignIn
                               ? Column(
                                   children: <Widget>[

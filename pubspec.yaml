@@ -49,6 +49,7 @@ dependencies:
   anim_search_bar: ^2.0.2
   search_widget: ^1.0.2
   paginated_search_bar: ^1.1.2
+  google_fonts: ^2.1.1
 
 dev_dependencies:
   flutter_test:
