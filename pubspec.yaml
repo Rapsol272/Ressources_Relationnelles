@@ -50,6 +50,7 @@ dependencies:
   search_widget: ^1.0.2
   paginated_search_bar: ^1.1.2
   google_fonts: ^2.1.1
+  sliver_header_delegate: ^0.0.5
 
 dev_dependencies:
   flutter_test:

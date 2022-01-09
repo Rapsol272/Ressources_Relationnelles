@@ -11,11 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 
-
-
-
-enum SingingCharacter { lecteur, redacteur }
  
 class AuthenticateScreen extends StatefulWidget {
   @override
@@ -37,7 +34,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   //final roleController = TextEditingController();
   bool showSignIn = true;
 
-   SingingCharacter? _character = SingingCharacter.lecteur;
 
 
 
@@ -72,104 +68,42 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     });
   }
 
-  TextEditingController? _controller;
-  //String _initialValue;
-  String _valueChanged = '';
-  String _valueToValidate = '';
-  String _valueSaved = '';
 
-  final List<Map<String, dynamic>> _items = [
-    {
-      'value': 'redacValue',
-      'label': 'Rédacteur',
-      'icon': Icon(Icons.pending_actions),
-    },
-    {
-      'value': 'lecteurValue',
-      'label': 'Lecteur',
-      'icon': Icon(Icons.book),
-    },
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-
-    //_initialValue = 'starValue';
-    _controller = TextEditingController(text: '2');
-
-    _getValue();
-  }
-
-  Future<void> _getValue() async {
-    await Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        //_initialValue = 'circleValue';
-        _controller?.text = 'lecteurValue';
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return loading
-        ? Loading()
-        : Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [greenMajor, or])),
-            child: Scaffold(
-                backgroundColor: Colors.transparent,
-                body: SingleChildScrollView(
-                    child: Column(children: [
-                  Container(
-                    child: Image.asset(
-                      'images/ressources_relationnelles_transparent.png',
-                      height: 300,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !showSignIn
-                              ? TextFormField(
-                                  controller: nameController,
-                                  decoration: textInputDecoration.copyWith(
-                                      hintText: 'Votre nom'),
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                          ? "Entrez votre nom"
-                                          : null,
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !showSignIn
-                              ? TextFormField(
-                                  controller: prenomController,
-                                  decoration: textInputDecoration.copyWith(
-                                      hintText: 'Votre prénom'),
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                          ? "Entrez votre prénom"
-                                          : null,
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !showSignIn
-                              ? Column(children: <Widget>[
+  int _activeStepIndex = 0;
+  TextEditingController bio = TextEditingController();
+  List<Step> stepList() => [
+        Step(
+          state: _activeStepIndex <= 0 ? StepState.editing : StepState.complete,
+          isActive: _activeStepIndex >= 0,
+          title: const Text('Informations Personnelles'),
+          content: Container(
+            child: Column(
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: textInputDecoration.copyWith(
+                    hintText: 'Votre nom')
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextField(
+                  controller: prenomController,
+                  decoration: textInputDecoration.copyWith(
+                    hintText: 'Votre Prénom')
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextField(
+                  controller: emailController,
+                  decoration: textInputDecoration.copyWith(
+                    hintText: 'Votre adresse mail')
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Column(children: <Widget>[
                                   DateTimeField(
                                     controller: dateController,
                                     decoration: textInputDecoration.copyWith(
@@ -184,63 +118,107 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                           lastDate: DateTime.now());
                                     },
                                   ),
-                                ])
-                              : Container(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !showSignIn ?
-                          Column(
-                            children: [
-                              RadioListTile<SingingCharacter>(
-                                title: const Text('Lecteur'),
-                                value: SingingCharacter.lecteur,
-                                groupValue: _character,
-                                onChanged: (SingingCharacter? value) {
-                                  setState(() {
-                                    _character = value;
-                                  });
-                                },
-                              ),
-                              RadioListTile<SingingCharacter>(
-                                title: const Text('Rédacteur'),
-                                value: SingingCharacter.redacteur,
-                                groupValue: _character,
-                                onChanged: (SingingCharacter? value) {
-                                  setState(() {
-                                    _character = value;
-                                  });
-                                },
-                              ),
-                            ],
-                          ) : Container(),
-                          !showSignIn
-                              ? Column(
-                                  children: <Widget>[
-                                    SelectFormField(
-                                      decoration: textInputDecoration,
-                                      type: SelectFormFieldType.dialog,
-                                      controller: _controller,
-                                      icon: Icon(Icons.collections_bookmark),
-                                      labelText: 'Choisir votre rôle',
-                                      changeIcon: true,
-                                      dialogTitle: 'Choisissez votre rôle',
-                                      dialogCancelBtn: 'Fermer',
-                                      items: _items,
-                                      onChanged: (val) =>
-                                          setState(() => _valueChanged = val),
-                                      validator: (val) {
-                                        setState(
-                                            () => _valueToValidate = val ?? '');
-                                        return null;
-                                      },
-                                      onSaved: (val) => setState(
-                                          () => _valueSaved = val ?? ''),
-                                    ),
-                                  ],
-                                )
-                              : Container(),
-                          !showSignIn ? SizedBox(height: 20.0) : Container(),
+                                ]),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextField(
+                  obscureText: true,
+                  controller: passwordController,
+                  decoration: textInputDecoration.copyWith(
+                      hintText: 'Votre mot de passe')
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextField(
+                  obscureText: true,
+                  decoration: textInputDecoration.copyWith(
+                      hintText: 'Confirmez votre mot de passe')
+                ),
+              ],
+            ),
+          ),
+        ),
+        Step(
+            state:
+                _activeStepIndex <= 1 ? StepState.editing : StepState.complete,
+            isActive: _activeStepIndex >= 1,
+            title: const Text('Mon Compte'),
+            content: Container(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextField(
+                    controller: bio,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Biographie',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Pin Code',
+                    ),
+                  ),
+                ],
+              ),
+            )),
+        Step(
+            state: StepState.complete,
+            isActive: _activeStepIndex >= 2,
+            title: const Text('Confirmation d\'inscription'),
+            content: Container(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('Nom : ${nameController.text}'),
+                Text('Prénom : ${prenomController.text}'),
+                Text('Date de naissance : ${dateController.text}'),
+                Text('Adresse mail : ${emailController.text}'),
+                Text('Biograhie : ${bio.text}'),
+              ],
+            )))
+      ];
+
+
+  @override
+  Widget build(BuildContext context) {
+    return loading
+        ? Loading()
+        : Scaffold(
+                backgroundColor: greenMajor,
+                body: SingleChildScrollView(
+                  child:
+                  Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xff03989E ), Color(0xffF9E79F)])),
+      child: Column(
+                      children: [
+                  Container(
+                    child: Image.asset(
+                      'images/ressources_relationnelles_transparent.png',
+                      height: 300,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          showSignIn ? 
                           TextFormField(
                             controller: emailController,
                             decoration: textInputDecoration.copyWith(
@@ -248,22 +226,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                             validator: (value) => value == null || value.isEmpty
                                 ? "Entrez votre adresse email"
                                 : null,
-                          ),
-                          /*!showSignIn ? 
-                          Row(
-                            children: [
-                                Container(
-                              child: CustomRadioButton('test1', 1)
-                            ),
-                            Container(
-                            child: CustomRadioButton('test2', 2)
-                          )
-                            ],
-                          )
-                           : Container(),*/
-
-  
-                          SizedBox(height: 20.0),
+                          ) : Container(),
+                          const SizedBox(height: 20,),
+                          showSignIn ?
                           TextFormField(
                             controller: passwordController,
                             decoration: textInputDecoration.copyWith(
@@ -273,21 +238,69 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                     value.length < 6
                                 ? "Entrez un mot de passe d'au moins 6 caractères"
                                 : null,
-                          ),
-                          SizedBox(height: 20.0),
-                          !showSignIn
-                              ? TextFormField(
-                                  controller: confirmPasswordController,
-                                  decoration: textInputDecoration.copyWith(
-                                      hintText: 'Confirmez mot de passe'),
-                                  obscureText: true,
-                                  validator: (value) => value ==
-                                          passwordController.text
-                                      ? null
-                                      : "Les mots de passes ne se correspondent pas !",
-                                )
-                              : Container(),
+                          ) : Container(),
                           SizedBox(height: 10.0),
+                          !showSignIn ? 
+                          Stepper(
+                            type: StepperType.vertical,
+                            currentStep: _activeStepIndex,
+                            steps: stepList(),
+                            onStepContinue: () {
+                              if (_activeStepIndex < (stepList().length - 1)) {
+                                setState(() {
+                                  _activeStepIndex += 1;
+                                });
+                              } else {
+                                var password = passwordController.value.text;
+                                var email = emailController.value.text;
+                                var date = dateController.value.text;
+                                var name = nameController.value.text;
+                                var prenom = prenomController.value.text;
+                                _auth.registerWithEmailAndPassword(password, email, prenom, name, date );
+                              }
+                            },
+                            onStepCancel: () {
+                              if (_activeStepIndex == 0) {
+                                return;
+                              }
+                              setState(() {
+                                _activeStepIndex -= 1;
+                              });
+                            },
+                            onStepTapped: (int index) {
+                              setState(() {
+                                _activeStepIndex = index;
+                              });
+                            },
+                            controlsBuilder: (context, {onStepContinue, onStepCancel}) {
+                              final isLastStep = _activeStepIndex == stepList().length - 1;
+                              return Container(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: onStepContinue,
+                                        child: (isLastStep)
+                                            ? const Text('S\'inscrire')
+                                            : const Text('Suivant'),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    if (_activeStepIndex > 0)
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: onStepCancel,
+                                          child: 
+                                            const Text('Retour'),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              );
+                            },
+                          ) : Container(),
                           Center(
                               child: GestureDetector(
                                   onTap: () => toggleView(),
@@ -311,30 +324,16 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                               minimumSize: Size(200, 40),
                             ),
                             child: Text(
-                              showSignIn ? "Se connecter" : "Suivant",
+                              "Se connecter",
                             ),
                             onPressed: () async {
                               if (_formKey.currentState?.validate() == true) {
                                 setState(() => loading = true);
                                 var password = passwordController.value.text;
                                 var email = emailController.value.text;
-                                var name = nameController.value.text;
-                                var prenom = prenomController.value.text;
-                                var date = dateController.value.text;
-                                //var role = roleController.value.text;
-                                //var bio = bioController.value.text;
 
-                                dynamic result = showSignIn
-                                    ? await _auth.signInWithEmailAndPassword(
-                                        email, password)
-                                    : //Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmationInscription()),);
-                                    await _auth.registerWithEmailAndPassword(name, prenom, date, email, password);
-                                if (result == null) {
-                                  setState(() {
-                                    loading = false;
-                                    error = 'Please supply a valid email';
-                                  });
-                                }
+                                     await _auth.signInWithEmailAndPassword(
+                                        email, password); 
                               }
                             },
                           ),
