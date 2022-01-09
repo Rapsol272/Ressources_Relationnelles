@@ -194,7 +194,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     return loading
         ? Loading()
         : Scaffold(
-                backgroundColor: greenMajor,
+                backgroundColor: Colors.transparent,
                 body: SingleChildScrollView(
                   child:
                   Container(
