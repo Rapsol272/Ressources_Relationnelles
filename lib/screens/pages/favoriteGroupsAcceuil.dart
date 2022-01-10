@@ -38,7 +38,7 @@ class FavoriteSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(6),
+      padding: EdgeInsets.all(7),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
@@ -49,6 +49,14 @@ class FavoriteSection extends StatelessWidget {
             bottomRight: Radius.circular(15),
             bottomLeft: Radius.circular(15),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(1),
+              spreadRadius: 1.5,
+              blurRadius: 7,
+              offset: Offset(0, 1), // changes position of shadow
+            ),
+          ],
         ),
         child: Column(
           children: [
@@ -59,6 +67,7 @@ class FavoriteSection extends StatelessWidget {
                   return Container(
                     margin: EdgeInsets.only(
                       left: 10,
+                      top: 5,
                     ),
                     child: Column(
                       children: [
@@ -68,6 +77,15 @@ class FavoriteSection extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black38,
+                                spreadRadius: 1,
+                                blurRadius: 6,
+                                offset:
+                                    Offset(0, 1), // changes position of shadow
+                              ),
+                            ],
                           ),
                           padding: const EdgeInsets.all(4),
                           child: IconButton(

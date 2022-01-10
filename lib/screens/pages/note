@@ -159,3 +159,117 @@ SingleChildScrollView(
           );
         },
       ),
+
+
+
+
+
+
+      CommentPage
+
+
+      SingleChildScrollView(
+      child: Column(
+        children: messages.map((message) {
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              );
+            },
+            splashColor: greenMajor,
+            child: Container(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 10,
+                top: 15,
+                bottom: 5,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 70,
+                    height: 70,
+                    margin: EdgeInsets.only(right: 25),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage('images/pokemon.png'),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  message['senderName'],
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                Wrap(
+                                  children: [
+                                    Text(
+                                      message['message'],
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  message['date'],
+                                ),
+                                message['unRead'] != 0
+                                    ? Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: greenMajor,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Text(
+                                          message['unRead'].toString(),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      )
+                                    : Container()
+                              ],
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          height: 0.5,
+                          color: Colors.grey,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );

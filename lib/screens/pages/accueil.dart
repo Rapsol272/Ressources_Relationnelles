@@ -18,7 +18,6 @@ class Accueil extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            color: Colors.white,
             child: FavoriteSection(),
           ),
           Expanded(

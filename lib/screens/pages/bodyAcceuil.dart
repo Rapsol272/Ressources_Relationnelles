@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -34,7 +35,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
           }
           final data = snapshot.requireData;
           return ListView.builder(
-            itemCount: data.size,
+            itemCount: 1,
             itemBuilder: (context, index) {
               return SingleChildScrollView(
                 physics: ScrollPhysics(),
@@ -43,9 +44,8 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                     ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: 3,
+                      itemCount: data.size,
                       itemBuilder: (context, index) {
-                        PostItemModel posts = PostHelper.getPost(index);
                         return Container(
                           padding: const EdgeInsets.only(
                             left: 10,
@@ -100,7 +100,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12.0),
                                   child: Image.asset(
-                                    posts.image,
+                                    "images/test1.jpeg",
                                   ),
                                 ),
                                 Padding(
@@ -143,7 +143,12 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
                                       onPressed: () {
-                                        commentPage();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => commentPage(),
+                                          ),
+                                        );
                                       },
                                       icon: Icon(FontAwesomeIcons.comment),
                                       color: Colors.grey,
