@@ -16,7 +16,7 @@ class DatabaseService {
   }
 
   Future<void> saveToken(String? token) async {
-    return await userCollection.doc(uid).update({'token': token});
+    return await userCollection.doc(uid).set({'token': token});
   }
 
   AppUserData _userFromSnapshot(
@@ -29,6 +29,7 @@ class DatabaseService {
         firstname: data['prenom'],
         image: data['image'],
         date: data['date'],
+        role: data['role'],
         email: data['email']);
   }
 

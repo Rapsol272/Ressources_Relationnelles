@@ -1,0 +1,95 @@
+SingleChildScrollView(
+      physics: ScrollPhysics(),
+      child: Column(
+        children: <Widget>[
+          ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              PostItemModel posts = PostHelper.getPost(index);
+              return Container(
+                padding: const EdgeInsets.all(10),
+                height: 420,
+                child: Card(
+                  elevation: 15,
+                  margin: EdgeInsets.all(5),
+                  shadowColor: Color(0xff03989E),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: IconButton(
+                          onPressed: () {/* Your code */},
+                          icon: Icon(Icons.portrait),
+                          iconSize: 30,
+                        ),
+                        title: Text(
+                          posts.title,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          posts.toString(),
+                          style:
+                              TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                        trailing: IconButton(
+                          onPressed: () {/* Your code */},
+                          icon: Icon(Icons.expand_more),
+                          iconSize: 35,
+                        ),
+                      ),
+                      Image.asset(posts.image),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          posts.content,
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(FontAwesomeIcons.comment),
+                            color: Colors.grey,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              FontAwesomeIcons.retweet,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              FontAwesomeIcons.plusSquare,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          FavoriteButton(
+                            iconSize: 50,
+                            iconColor: Colors.red,
+                            valueChanged: (_isFavorite) {
+                              print('Is Favorite $_isFavorite)');
+                            },
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        ],
+      ),
+    );

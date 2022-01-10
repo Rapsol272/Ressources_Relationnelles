@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/splashscreen_wrapper.dart';
 import 'package:flutter_firebase/services/authentication.dart';
+import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:provider/provider.dart';
 
 import 'models/chat_params.dart';
@@ -34,6 +35,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final user = UserPreferences.myUser;
+
     return StreamProvider<AppUser?>.value(
       value: AuthenticationService().user,
       initialData: null,
