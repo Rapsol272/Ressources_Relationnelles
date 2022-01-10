@@ -103,9 +103,11 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         : Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
+
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [Color(0xff03989E), Color(0xffF9E79F)])),
+
             child: Scaffold(
                 backgroundColor: Colors.transparent,
                 body: SingleChildScrollView(
@@ -273,8 +275,10 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                 dynamic result = showSignIn
                                     ? await _auth.signInWithEmailAndPassword(
                                         email, password)
+
                                     : await _auth.registerWithEmailAndPassword(
                                         name, prenom, date, email, password);
+
                                 if (result == null) {
                                   setState(() {
                                     loading = false;
