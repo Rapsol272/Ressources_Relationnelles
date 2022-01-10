@@ -10,10 +10,9 @@ class DatabaseService {
       FirebaseFirestore.instance.collection("users");
 
   Future<void> saveUser(
-      String name, String prenom, String date, String email) async {
-    return await userCollection
-        .doc(uid)
-        .set({'name': name, 'prenom': prenom, 'date': date, 'email': email});
+      String firstname, String lastname, String date, String email) async {
+    return await userCollection.doc(uid).set(
+        {'name': firstname, 'prenom': lastname, 'date': date, 'email': email});
   }
 
   Future<void> saveToken(String? token) async {
@@ -26,9 +25,11 @@ class DatabaseService {
     if (data == null) throw Exception("user not found");
     return AppUserData(
         uid: snapshot.id,
-        name: data['name'],
-        prenom: data['prenom'],
+        lastname: data['name'],
+        firstname: data['prenom'],
+        image: data['image'],
         date: data['date'],
+        role: data['role'],
         email: data['email']);
   }
 
