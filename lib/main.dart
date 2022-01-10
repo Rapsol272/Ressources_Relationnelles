@@ -24,12 +24,13 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   if (!kIsWeb) {
-      await FirebaseCrashlytics.instance
-          .setCrashlyticsCollectionEnabled(kDebugMode ? false : true);
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(kDebugMode ? false : true);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   }
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -40,9 +41,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
-        theme: ThemeData(
-          primarySwatch: customColor,
-        ),
+        theme:
+            ThemeData(primarySwatch: customColor, dividerColor: Colors.black),
       ),
     );
   }
@@ -51,10 +51,10 @@ class MyApp extends StatelessWidget {
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/' :
+      case '/':
         return MaterialPageRoute(builder: (context) => SplashScreenWrapper());
-        //chat
-      
+      //chat
+
       default:
         return pageNotFound();
     }
@@ -62,13 +62,10 @@ class RouteGenerator {
 
   static MaterialPageRoute pageNotFound() {
     return MaterialPageRoute(
-        builder: (context) =>
-            Scaffold(
-                appBar: AppBar(title: Text("Error"), centerTitle: true),
-                body: Center(
-                  child: Text("Page not found"),
-                )
-            )
-    );
+        builder: (context) => Scaffold(
+            appBar: AppBar(title: Text("Error"), centerTitle: true),
+            body: Center(
+              child: Text("Page not found"),
+            )));
   }
 }
