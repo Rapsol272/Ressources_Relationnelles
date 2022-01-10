@@ -3,8 +3,11 @@ class PostItemModel {
   List tags = [];
   String content = '';
   String image = '';
+  String author = '';
+  String date = '';
 
-  PostItemModel(this.title, this.tags, this.content, this.image);
+  PostItemModel(
+      this.title, this.tags, this.content, this.image, this.author, this.date);
 
   @override
   String toString() {
