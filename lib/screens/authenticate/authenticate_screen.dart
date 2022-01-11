@@ -250,13 +250,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                 setState(() {
                                   _activeStepIndex += 1;
                                 });
-                              } else {
-                                var password = passwordController.value.text;
-                                var email = emailController.value.text;
-                                var date = dateController.value.text;
-                                var name = nameController.value.text;
-                                var prenom = prenomController.value.text;
-                                _auth.registerWithEmailAndPassword(password, email, prenom, name, date );
+                              } else if(_activeStepIndex == 2) {
+                                return;
                               }
                             },
                             onStepCancel: () {
@@ -281,7 +276,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                       child: ElevatedButton(
                                         onPressed: onStepContinue,
                                         child: (isLastStep)
-                                            ? const Text('S\'inscrire')
+                                            ? SizedBox()
                                             : const Text('Suivant'),
                                       ),
                                     ),
@@ -323,8 +318,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                   borderRadius: BorderRadius.circular(20.0)),
                               minimumSize: Size(200, 40),
                             ),
-                            child: Text(
-                              "Se connecter",
+                            child: Text( showSignIn ?
+                              "Se connecter" : "S'inscrire"
                             ),
                             onPressed: () async {
                               if (_formKey.currentState?.validate() == true) {
