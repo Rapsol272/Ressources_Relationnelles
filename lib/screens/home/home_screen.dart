@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/screens/authenticate/confirmation.dart';
+import 'package:flutter_firebase/screens/authenticate/scrollAuth.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';

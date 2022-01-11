@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/splashscreen_wrapper.dart';
 import 'package:flutter_firebase/services/authentication.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'models/chat_params.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
         theme: ThemeData(
           primarySwatch: customColor,
+          fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
     );
