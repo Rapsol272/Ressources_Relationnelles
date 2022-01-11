@@ -21,13 +21,13 @@ class _ProfilPageState extends State<Profil> {
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
-          ProfileWidget(
+          /* ProfileWidget(
             imagePath: user.image,
             onClicked: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => EditProfile()));
             },
-          ),
+          ), */
           const SizedBox(height: 24),
           buildName(user),
           const SizedBox(height: 24),
@@ -43,16 +43,16 @@ class _ProfilPageState extends State<Profil> {
 Widget buildName(AppUserData user) => Column(
       children: [
         Text(
-          user.lastname,
+          user.name,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         Text(
-          user.firstname,
+          user.prenom,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         const SizedBox(height: 24),
         Text(
-          user.role,
+          user.uid,
           style: TextStyle(color: Colors.grey),
         )
       ],
@@ -68,10 +68,10 @@ Widget buildAbout(AppUserData user) => Container(
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          Text(
+          /* Text(
             user.about,
             style: TextStyle(fontSize: 16, height: 1.4),
-          ),
+          ), */
         ],
       ),
     );
