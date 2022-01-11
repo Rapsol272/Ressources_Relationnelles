@@ -12,6 +12,7 @@ class AppUserData {
   final String email;
   final String image;
   final String role;
+  final String about;
 
   const AppUserData(
       {required this.uid,
@@ -20,5 +21,6 @@ class AppUserData {
       required this.date,
       required this.email,
       required this.image,
+      required this.about,
       required this.role});
 }

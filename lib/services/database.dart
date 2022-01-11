@@ -30,6 +30,7 @@ class DatabaseService {
         image: data['image'],
         date: data['date'],
         role: data['role'],
+        about: data['bio'],
         email: data['email']);
   }
 

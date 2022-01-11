@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/models/user.dart';
+import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
 import 'package:flutter_firebase/screens/pages/edit_profile.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/widget/profile_widget.dart';
 import 'package:flutter_firebase/widget/numbers_widgets.dart';
-import 'package:flutter_firebase/screens/pages/poubelle.dart';
+import 'package:flutter_firebase/screens/pages/accueil.dart';
 
 class Profil extends StatefulWidget {
   @override
@@ -31,8 +32,8 @@ class _ProfilPageState extends State<Profil> {
           buildName(user),
           const SizedBox(height: 24),
           NumbersWidget(),
-          const SizedBox(height: 24),
-          PoubellePage(),
+          const SizedBox(height: 48),
+          buildAbout(user),
         ],
       ),
     );
@@ -49,10 +50,28 @@ Widget buildName(AppUserData user) => Column(
           user.firstname,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 24),
         Text(
           user.role,
           style: TextStyle(color: Colors.grey),
         )
       ],
+    );
+
+Widget buildAbout(AppUserData user) => Container(
+      padding: EdgeInsets.symmetric(horizontal: 48),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'A propos de moi',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            user.about,
+            style: TextStyle(fontSize: 16, height: 1.4),
+          ),
+        ],
+      ),
     );

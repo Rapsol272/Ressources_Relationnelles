@@ -35,14 +35,14 @@ class _EditProfileState extends State<EditProfile> {
               label: 'Email',
               text: user.email,
               onChanged: (email) {},
-            ) /* ,
-        const SizedBox(height: 24),
-        TextFieldWidget(
-          label: 'Bio',
-          text: user.about,
-          maxLines:5,
-          onChanged: (about) {},
-        ) */
+            ),
+            const SizedBox(height: 24),
+            TextFieldWidget(
+              label: 'Bio',
+              text: user.about,
+              maxLines: 5,
+              onChanged: (about) {},
+            )
           ],
         ),
       );
