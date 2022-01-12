@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/screens/authenticate/confirmation.dart';
+import 'package:flutter_firebase/screens/authenticate/scrollAuth.dart';
+import 'package:flutter_firebase/screens/pages/components/radioButton.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:select_form_field/select_form_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 
+ 
 class AuthenticateScreen extends StatefulWidget {
   @override
   _AuthenticateScreenState createState() => _AuthenticateScreenState();
@@ -26,10 +31,15 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final dateController = TextEditingController();
+  //final roleController = TextEditingController();
   bool showSignIn = true;
+
+
+
 
   final format = DateFormat("yyyy-MM-dd");
   DateTime? value;
+
 
   @override
   void dispose() {
@@ -38,8 +48,11 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     emailController.dispose();
     passwordController.dispose();
     dateController.dispose();
+    //roleController.dispose();
     super.dispose();
   }
+
+  
 
   void toggleView() {
     setState(() {
@@ -50,10 +63,12 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       prenomController.text = '';
       passwordController.text = '';
       dateController.text = '';
+      //roleController.text = '';
       showSignIn = !showSignIn;
     });
   }
 
+<<<<<<< HEAD
   TextEditingController? _controller;
   //String _initialValue;
   String _valueChanged = '';
@@ -96,10 +111,13 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     });
   }
 
+=======
+>>>>>>> origin/main
   @override
   Widget build(BuildContext context) {
     return loading
         ? Loading()
+<<<<<<< HEAD
         : Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -121,149 +139,90 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                   Container(
                     padding:
                         EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
+=======
+        : SingleChildScrollView(
+                  child:
+                  Column(
+                      children: [
+                  Text(showSignIn ? 'Se connecter' : 'S\'inscrire',  style: TextStyle(color: greenMajor, fontSize: 25, fontWeight: FontWeight.bold)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
+>>>>>>> origin/main
                     child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !showSignIn
-                              ? TextFormField(
-                                  controller: nameController,
-                                  decoration: textInputDecoration.copyWith(
-                                      hintText: 'Votre nom'),
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                          ? "Entrez votre nom"
-                                          : null,
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !showSignIn
-                              ? TextFormField(
-                                  controller: prenomController,
-                                  decoration: textInputDecoration.copyWith(
-                                      hintText: 'Votre prénom'),
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                          ? "Entrez votre prénom"
-                                          : null,
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !showSignIn
-                              ? Column(children: <Widget>[
-                                  DateTimeField(
-                                    controller: dateController,
-                                    decoration: textInputDecoration.copyWith(
-                                        hintText: 'Votre date de naissance'),
-                                    format: format,
-                                    onShowPicker: (context, currentValue) {
-                                      return showDatePicker(
-                                          context: context,
-                                          firstDate: DateTime(1900),
-                                          initialDate:
-                                              currentValue ?? DateTime(2000),
-                                          lastDate: DateTime.now());
-                                    },
-                                  ),
-                                ])
-                              : Container(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          !showSignIn
-                              ? Column(
-                                  children: <Widget>[
-                                    SelectFormField(
-                                      decoration: textInputDecoration,
-                                      type: SelectFormFieldType.dialog,
-                                      controller: _controller,
-                                      icon: Icon(Icons.collections_bookmark),
-                                      labelText: 'Choisir votre rôle',
-                                      changeIcon: true,
-                                      dialogTitle: 'Choisissez votre rôle',
-                                      dialogCancelBtn: 'Fermer',
-                                      items: _items,
-                                      onChanged: (val) =>
-                                          setState(() => _valueChanged = val),
-                                      validator: (val) {
-                                        setState(
-                                            () => _valueToValidate = val ?? '');
-                                        return null;
-                                      },
-                                      onSaved: (val) => setState(
-                                          () => _valueSaved = val ?? ''),
-                                    ),
-                                  ],
-                                )
-                              : Container(),
-                          !showSignIn ? SizedBox(height: 20.0) : Container(),
-                          TextFormField(
-                            controller: emailController,
-                            decoration: textInputDecoration.copyWith(
-                                hintText: 'Votre adresse email'),
-                            validator: (value) => value == null || value.isEmpty
-                                ? "Entrez votre adresse email"
-                                : null,
-                          ),
-                          SizedBox(height: 20.0),
-                          TextFormField(
-                            controller: passwordController,
-                            decoration: textInputDecoration.copyWith(
-                                hintText: 'Votre mot de passe'),
-                            obscureText: true,
-                            validator: (value) => value != null &&
-                                    value.length < 6
-                                ? "Entrez un mot de passe d'au moins 6 caractères"
-                                : null,
-                          ),
-                          SizedBox(height: 20.0),
-                          !showSignIn
-                              ? TextFormField(
-                                  controller: confirmPasswordController,
-                                  decoration: textInputDecoration.copyWith(
-                                      hintText: 'Confirmez mot de passe'),
-                                  obscureText: true,
-                                  validator: (value) => value ==
-                                          passwordController.text
-                                      ? null
-                                      : "Les mots de passes ne se correspondent pas !",
-                                )
-                              : Container(),
-                          SizedBox(height: 10.0),
-                          Center(
-                              child: GestureDetector(
-                                  onTap: () => toggleView(),
-                                  child: Text(
-                                    showSignIn
-                                        ? 'Créer un compte ?'
-                                        : 'Déjà un compte ? Connectez vous !',
-                                    style: TextStyle(color: greenMajor),
-                                  ))),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Color(0xff148F77),
-                              onPrimary: Colors.white,
-                              shadowColor: Colors.greenAccent,
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0)),
-                              minimumSize: Size(200, 40),
-                            ),
-                            child: Text(
-                              showSignIn ? "Se connecter" : "Suivant",
-                            ),
-                            onPressed: () async {
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: 20,),
+                    !showSignIn
+                        ? TextFormField(
+                            controller: nameController,
+                            decoration: textInputDecoration.copyWith(hintText: 'Votre nom'),
+                            validator: (value) =>
+                                value == null || value.isEmpty ? "Entrez votre nom" : null,
+                          )
+                        : Container(),
+                        SizedBox(height: 20,),
+                        !showSignIn
+                        ? TextFormField(
+                            controller: prenomController,
+                            decoration: textInputDecoration.copyWith(hintText: 'Votre prénom'),
+                            validator: (value) =>
+                                value == null || value.isEmpty ? "Entrez votre prénom" : null,
+                          )
+                        : Container(),
+                        SizedBox(height: 20,),
+
+                    !showSignIn ? SizedBox(height: 20.0) : Container(),
+                    TextFormField(
+                      controller: emailController,
+                      decoration: textInputDecoration.copyWith(hintText: 'Votre adresse email'),
+                      validator: (value) =>
+                          value == null || value.isEmpty ? "Entrez votre adresse email" : null,
+                    ),
+                    SizedBox(height: 20.0),
+                    TextFormField(
+                      controller: passwordController,
+                      decoration: textInputDecoration.copyWith(hintText: 'Votre mot de passe'),
+                      obscureText: true,
+                      validator: (value) => value != null && value.length < 6
+                          ? "Entrez un mot de passe d'au moins 6 caractères"
+                          : null,
+                    ),
+                    SizedBox(height: 20.0),
+                    !showSignIn ?
+                    TextFormField(
+                      controller: confirmPasswordController,
+                      decoration: textInputDecoration.copyWith(hintText: 'Confirmez mot de passe'),
+                      obscureText: true,
+                      validator: (value) => value == passwordController.text
+                          ? null
+                          : "Les mots de passes ne se correspondent pas !",
+                    ):  Container(),
+                    SizedBox(height: 10.0),
+                    Center(child: 
+                    GestureDetector(
+                      onTap: () => toggleView(), 
+                      child: Text(showSignIn ? 'Créer un compte ?' : 'Déjà un compte ? Connectez vous !', 
+                      style: TextStyle(
+                        color: Colors.green
+                      )
+                      ,))),
+                      SizedBox(height: 20,),
+                    ElevatedButton(
+                       style: ElevatedButton.styleFrom(
+                            primary: Color(0xff148F77),
+                            onPrimary: Colors.white,
+                            shadowColor: Colors.greenAccent,
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            minimumSize: Size(200, 40),
+                        ),
+                      child: Text(
+                        showSignIn? "Se connecter" : "S\'inscrire",
+                      ),
+                      onPressed: () async {
                               if (_formKey.currentState?.validate() == true) {
                                 setState(() => loading = true);
                                 var password = passwordController.value.text;
@@ -287,7 +246,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                 }
                               }
                             },
-                          ),
+                            ),
                           showSignIn
                               ? OutlinedButton(
                                   style: OutlinedButton.styleFrom(
@@ -313,6 +272,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                       ),
                     ),
                   ),
-                ]))));
+                ]));
   }
 }
+
+

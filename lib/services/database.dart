@@ -9,10 +9,15 @@ class DatabaseService {
   final CollectionReference<Map<String, dynamic>> userCollection =
       FirebaseFirestore.instance.collection("users");
 
+<<<<<<< HEAD
   Future<void> saveUser(
       String firstname, String lastname, String date, String email) async {
     return await userCollection.doc(uid).set(
         {'name': firstname, 'prenom': lastname, 'date': date, 'email': email});
+=======
+  Future<void> saveUser(String name, String prenom, String date, String email, /*String role,*/ ) async {
+    return await userCollection.doc(uid).set({'name': name, 'prenom': prenom, 'date': date, 'email': email, /*'role' : role,*/});
+>>>>>>> origin/main
   }
 
   Future<void> saveToken(String? token) async {
@@ -24,6 +29,7 @@ class DatabaseService {
     var data = snapshot.data();
     if (data == null) throw Exception("user not found");
     return AppUserData(
+<<<<<<< HEAD
         uid: snapshot.id,
         lastname: data['name'],
         firstname: data['prenom'],
@@ -31,6 +37,15 @@ class DatabaseService {
         date: data['date'],
         role: data['role'],
         email: data['email']);
+=======
+      uid: snapshot.id,
+      name: data['name'],
+      prenom: data['prenom'],
+      date: data['date'],
+      email: data['email'],
+      //role: data['role'],
+    );
+>>>>>>> origin/main
   }
 
   Stream<AppUserData> get user {

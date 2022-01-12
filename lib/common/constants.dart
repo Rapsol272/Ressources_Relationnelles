@@ -37,3 +37,12 @@ var textInputDecoration = InputDecoration(
     borderRadius: BorderRadius.circular(40)
   ),
 );
+
+final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
+  primary: Colors.red,
+  minimumSize: Size(88, 36),
+  padding: EdgeInsets.symmetric(horizontal: 16),
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(2)),
+  ),
+  );
