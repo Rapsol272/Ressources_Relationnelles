@@ -27,19 +27,21 @@ class DatabaseService {
   Future<void> saveToken(String? token) async {
     return await userCollection.doc(uid).set({'token': token});
   }
+  
 
   AppUserData _userFromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     var data = snapshot.data();
     if (data == null) throw Exception("user not found");
     return AppUserData(
-      uid: snapshot.id,
-      name: data['name'],
-      prenom: data['prenom'],
-      date: data['date'],
-      email: data['email'],
-      //role: data['role'],
-    );
+        uid: snapshot.id,
+        name: data['name'],
+        prenom: data['prenom'],
+        date: data['date'],
+        email: data['email'],
+        about: data['bio'],
+        role: data['role'],
+        image: data['image']);
   }
 
   Stream<AppUserData> get user {
