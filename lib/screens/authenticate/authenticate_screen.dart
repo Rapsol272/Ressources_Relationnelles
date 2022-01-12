@@ -68,7 +68,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     });
   }
 
-<<<<<<< HEAD
   TextEditingController? _controller;
   //String _initialValue;
   String _valueChanged = '';
@@ -111,13 +110,10 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     });
   }
 
-=======
->>>>>>> origin/main
   @override
   Widget build(BuildContext context) {
     return loading
         ? Loading()
-<<<<<<< HEAD
         : Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -139,15 +135,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                   Container(
                     padding:
                         EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
-=======
-        : SingleChildScrollView(
-                  child:
-                  Column(
-                      children: [
-                  Text(showSignIn ? 'Se connecter' : 'S\'inscrire',  style: TextStyle(color: greenMajor, fontSize: 25, fontWeight: FontWeight.bold)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
->>>>>>> origin/main
                     child: Form(
                 key: _formKey,
                 child: Column(

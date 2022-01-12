@@ -10,7 +10,6 @@ class AppUserData {
   final String lastname;
   final String date;
   final String email;
-<<<<<<< HEAD
   final String image;
   final String role;
 
@@ -23,9 +22,3 @@ class AppUserData {
       required this.image,
       required this.role});
 }
-=======
-  //final String role;
-  
-  AppUserData({required this.uid, required this.name, required this.prenom, required this.date, required this.email}); //required this.role //required this.bio});
-}
->>>>>>> origin/main
