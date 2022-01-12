@@ -7,6 +7,7 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/splashscreen_wrapper.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'models/chat_params.dart';
@@ -44,8 +45,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
-        theme:
-            ThemeData(primarySwatch: customColor, dividerColor: Colors.black),
+        theme: ThemeData(
+          primarySwatch: customColor,
+          fontFamily: GoogleFonts.poppins().fontFamily,
+        ),
       ),
     );
   }

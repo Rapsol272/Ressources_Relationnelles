@@ -6,21 +6,21 @@ class AppUser {
 
 class AppUserData {
   final String uid;
-  final String firstname;
-  final String lastname;
+  final String name;
+  final String prenom;
   final String date;
   final String email;
-  final String image;
   final String role;
   final String about;
+  final String image;
 
   const AppUserData(
       {required this.uid,
-      required this.firstname,
-      required this.lastname,
+      required this.name,
+      required this.prenom,
       required this.date,
-      required this.email,
-      required this.image,
+      required this.role,
       required this.about,
-      required this.role});
+      required this.image,
+      required this.email});
 }

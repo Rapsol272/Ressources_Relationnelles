@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
@@ -13,29 +16,53 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<Profil> {
+  final Stream<QuerySnapshot> users =
+      FirebaseFirestore.instance.collection('users').snapshots();
+
   @override
   Widget build(BuildContext context) {
     final user = UserPreferences.myUser;
 
     return Scaffold(
-      body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: [
-          ProfileWidget(
-            imagePath: user.image,
-            onClicked: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => EditProfile()));
-            },
-          ),
-          const SizedBox(height: 24),
-          buildName(user),
-          const SizedBox(height: 24),
-          NumbersWidget(),
-          const SizedBox(height: 48),
-          buildAbout(user),
-        ],
-      ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: users,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasError) {
+              return Text("Il y a eu une erreur");
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text('En chargement');
+            }
+            final data = snapshot.requireData;
+
+            return ListView.builder(
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  return ListView(
+                    physics: BouncingScrollPhysics(),
+                    children: [
+                      ProfileWidget(
+                        imagePath: user.image,
+                        onClicked: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => EditProfile()));
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      //buildName(user),
+                      Text(
+                        '${data.docs[index]['name']}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24),
+                      ),
+                      const SizedBox(height: 24),
+                      NumbersWidget(),
+                      const SizedBox(height: 48),
+                      buildAbout(user)
+                    ],
+                  );
+                });
+          }),
     );
   }
 }
@@ -43,16 +70,12 @@ class _ProfilPageState extends State<Profil> {
 Widget buildName(AppUserData user) => Column(
       children: [
         Text(
-          user.lastname,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-        ),
-        Text(
-          user.firstname,
+          user.prenom,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         const SizedBox(height: 24),
         Text(
-          user.role,
+          user.uid,
           style: TextStyle(color: Colors.grey),
         )
       ],
