@@ -52,6 +52,7 @@ dependencies:
   google_fonts: ^2.2.0
   sliver_header_delegate: ^0.0.5
   draggable_home: ^1.0.2
+  
 
 dev_dependencies:
   flutter_test:
