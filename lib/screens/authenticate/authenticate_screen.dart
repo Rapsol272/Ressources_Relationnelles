@@ -259,7 +259,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                       ),
                     ),
                   ),
-                ]));
+                ]))));
   }
 }
 

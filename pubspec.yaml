@@ -48,24 +48,21 @@ dependencies:
   select_form_field: ^2.2.0
   expandable: ^5.0.1
   multiselect_formfield: ^0.1.7
-<<<<<<< HEAD
   easy_search: ^1.0.6+1
   search_app_bar_page: ^2.1.2
 
   colours: ^0.0.2
   expansion_tile_card: ^2.0.0
+  sliver_header_delegate: ^0.0.5
+  google_fonts: ^2.2.0
+  draggable_home: ^1.0.2
+  flutter_switch: ^0.3.2
+  anim_search_bar: ^2.0.2
+  paginated_search_bar: ^1.1.2
+  endless: ^1.6.0
 
   
 
-=======
-  flutter_switch: ^0.3.2
-  anim_search_bar: ^2.0.2
-  search_widget: ^1.0.2
-  paginated_search_bar: ^1.1.2
-  google_fonts: ^2.2.0
-  sliver_header_delegate: ^0.0.5
-  draggable_home: ^1.0.2
->>>>>>> origin/main
 
 dev_dependencies:
   flutter_test:
