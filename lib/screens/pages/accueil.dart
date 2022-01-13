@@ -6,8 +6,29 @@ class Accueil extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: greenMajor,
-    );
+
+
+    Widget portrait() {
+      return Center(
+        child: Text('Portrait'),
+      );
+    }
+
+    Widget landscape() {
+      return Center(
+        child: Text('Landscape'),
+      );
+    }
+
+    return Scaffold(
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          if (orientation == Orientation.portrait){
+            return portrait();
+          } else {
+            return landscape();
+          }
+        })
+      );
   }
 }

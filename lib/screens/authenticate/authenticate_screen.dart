@@ -70,11 +70,19 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? Loading()
-        : SingleChildScrollView(
-                  child:
-                  Column(
+
+    MediaQueryData deviceInfo = MediaQuery.of(context);
+ 
+    print('size: ${deviceInfo.orientation}');
+    print('padding: ${deviceInfo.size}');
+
+  Widget landscape() {
+    return Center(child:Text('Hello'));
+  }
+
+  Widget portrait(){
+    return 
+        Column(
                       children: [
                   Text(showSignIn ? 'Se connecter' : 'S\'inscrire',  style: TextStyle(color: greenMajor, fontSize: 25, fontWeight: FontWeight.bold)),
                   Padding(
@@ -136,15 +144,15 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                       onTap: () => toggleView(), 
                       child: Text(showSignIn ? 'Créer un compte ?' : 'Déjà un compte ? Connectez vous !', 
                       style: TextStyle(
-                        color: Colors.green
+                        color: greenMajor
                       )
                       ,))),
                       SizedBox(height: 20,),
                     ElevatedButton(
                        style: ElevatedButton.styleFrom(
-                            primary: Color(0xff148F77),
+                            primary: greenMajor,
                             onPrimary: Colors.white,
-                            shadowColor: Colors.greenAccent,
+                            shadowColor: or,
                             elevation: 3,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
@@ -203,7 +211,23 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                       ),
                     ),
                   ),
-                ]));
+      ],
+    );
+  }
+
+    return loading
+        ? Loading()
+        : SingleChildScrollView(
+                  child: 
+                  OrientationBuilder(
+                    builder: (context, orientation) {
+                      if (orientation == Orientation.portrait){
+                          return portrait();
+                        } else {
+                          return landscape();
+                        }
+                    })
+                  );
   }
 }
 

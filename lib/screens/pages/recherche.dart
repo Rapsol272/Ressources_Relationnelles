@@ -5,8 +5,8 @@ import 'package:flutter_firebase/common/loading.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'dart:async';
 import 'dart:math';
-
-import 'package:search_page/search_page.dart';
+import 'package:paginated_search_bar/paginated_search_bar.dart';
+import 'package:endless/endless.dart';
 
 class Search extends StatefulWidget {
   Search({Key? key}) : super(key: key);
@@ -29,6 +29,12 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool _show = true;
+  ExampleItemPager pager = ExampleItemPager();
+  TextEditingController textController = TextEditingController();
+
+
     TextEditingController _textController = TextEditingController();
     return Container(
         decoration: BoxDecoration(
@@ -40,7 +46,58 @@ class _SearchState extends State<Search> {
     Scaffold(
       backgroundColor: Colors.transparent,
       key: _scaffoldKey,
-      body: Center(
+      body: 
+
+      Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(top: 20),
+            child: Container(
+              width: 600,
+              child: PaginatedSearchBar<ExampleItem>(
+                maxHeight: 200,
+                hintText: 'Tapez votre recherche ici ...',
+                emptyBuilder: (context) {
+                  return const Text("I'm an empty state!");
+                },
+                placeholderBuilder: (context) {
+                  return const Text("");
+                },
+                paginationDelegate: EndlessPaginationDelegate(
+                  pageSize: 20,
+                  maxPages: 3,
+                ),
+                onSearch: ({
+                  required pageIndex,
+                  required pageSize,
+                  required searchQuery,
+                }) async {
+                  return Future.delayed(const Duration(milliseconds: 1300), () {
+                    if (searchQuery == "empty") {
+                      return [];
+                    }
+
+                    if (pageIndex == 0) {
+                      pager = ExampleItemPager();
+                    }
+
+                    return pager.nextBatch();
+                  });
+                },
+                itemBuilder: (
+                  context, {
+                  required item,
+                  required index,
+                }) {
+                  return Text(item.title);
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+      
+      /*Center(
         child: TextField(
           style: TextStyle(
             color: Colors.white
@@ -56,7 +113,7 @@ class _SearchState extends State<Search> {
             showSearch(context: context, delegate:CustomSearchDelegate());
           },
         )
-      )
+      )*/
       /*StreamBuilder<int>(
             stream: counterStream,
             builder: (context, snapshot) {
@@ -76,6 +133,37 @@ class _SearchState extends State<Search> {
             })*/));
   }
 }
+
+class ExampleItem {
+  final String title;
+
+  ExampleItem({
+    required this.title,
+  });
+}
+
+class ExampleItemPager {
+  int pageIndex = 0;
+  final int pageSize;
+
+  ExampleItemPager({
+    this.pageSize = 20,
+  });
+
+  List<ExampleItem> nextBatch() {
+    List<ExampleItem> batch = [];
+
+    for (int i = 0; i < pageSize; i++) {
+      batch.add(ExampleItem(title: 'Item ${pageIndex * pageSize + i}'));
+    }
+
+    pageIndex += 1;
+
+    return batch;
+  }
+}
+
+
 
 class CustomSearchDelegate extends SearchDelegate {
   
