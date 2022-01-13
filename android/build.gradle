@@ -8,8 +8,11 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.1.0'
         classpath 'com.google.gms:google-services:4.3.5'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+      
     }
 }
+
+
 
 allprojects {
     repositories {
@@ -28,7 +31,4 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-implementation('com.google.firebase:firebase-inappmessaging-display:19.1.5', {
-    exclude group: 'io.grpc', module: 'grpc-okhttp'
-})
-implementation 'io.grpc:grpc-okhttp:1.32.2'
+
