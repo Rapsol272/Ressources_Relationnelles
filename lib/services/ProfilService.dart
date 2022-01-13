@@ -6,9 +6,9 @@ class ProfilService {
   Future<String> get terms async {
     String content ='';
     DocumentReference documentReference =
-    _firebaseFirestore.collection('infos').doc('content');
+    _firebaseFirestore.collection('users').doc('name');
 
-    content = (await documentReference.get()).get('content');
+    content = (await documentReference.get()).get('name');
 
     return content;
   }
