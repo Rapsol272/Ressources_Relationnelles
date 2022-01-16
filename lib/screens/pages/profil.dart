@@ -33,7 +33,6 @@ class _ProfilPageState extends State<Profil> {
           const SizedBox(height: 24),
           NumbersWidget(),
           const SizedBox(height: 24),
-          bodyAcceuil(),
         ],
       ),
     );

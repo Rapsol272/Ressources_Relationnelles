@@ -117,7 +117,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                       ),
                                     ),
                                     leading: Text(
-                                      '${data.docs[index]['dateCreation']}',
+                                      '${data.docs[index]['dateCreation'].toDate()}',
                                       style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: 12,
