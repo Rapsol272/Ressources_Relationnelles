@@ -16,24 +16,22 @@ Map<int, Color> colorCodes = {
 MaterialColor customColor = MaterialColor(0xff03989E, colorCodes);
 
 const greenMajor = Color(0xff03989E);
-const or =  Color(0xffFABD5A);
+const or = Color(0xffFABD5A);
+
+var isCommentPost = false;
 
 var textInputDecoration = InputDecoration(
   fillColor: Colors.white30,
   filled: true,
   contentPadding: EdgeInsets.all(5.0),
   errorBorder: OutlineInputBorder(
-    borderSide: BorderSide(color:Colors.red, width:1.0),
-    borderRadius: BorderRadius.circular(40)
-  ),
+      borderSide: BorderSide(color: Colors.red, width: 1.0),
+      borderRadius: BorderRadius.circular(40)),
   focusedErrorBorder: UnderlineInputBorder(
-    borderSide: BorderSide(color:Colors.red, width:1.0),
-    borderRadius: BorderRadius.circular(40)
-  ),
-  enabledBorder: UnderlineInputBorder(
-  ),
+      borderSide: BorderSide(color: Colors.red, width: 1.0),
+      borderRadius: BorderRadius.circular(40)),
+  enabledBorder: UnderlineInputBorder(),
   focusedBorder: UnderlineInputBorder(
-    borderSide: BorderSide(color:or, width:1.0),
-    borderRadius: BorderRadius.circular(40)
-  ),
+      borderSide: BorderSide(color: or, width: 1.0),
+      borderRadius: BorderRadius.circular(40)),
 );

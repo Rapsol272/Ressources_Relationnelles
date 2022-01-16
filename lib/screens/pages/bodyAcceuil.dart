@@ -143,10 +143,11 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
                                       onPressed: () {
+                                        isCommentPost = true;
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => commentPage(),
+                                            builder: (context) => HomeScreen(),
                                           ),
                                         );
                                       },
