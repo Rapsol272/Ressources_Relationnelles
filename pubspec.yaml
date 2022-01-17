@@ -52,6 +52,9 @@ dependencies:
   google_fonts: ^2.2.0
   sliver_header_delegate: ^0.0.5
   draggable_home: ^1.0.2
+  font_awesome_flutter: ^9.2.0
+  favorite_button: ^0.0.4
+  expansion_tile_card: ^2.0.0
 
 dev_dependencies:
   flutter_test:
