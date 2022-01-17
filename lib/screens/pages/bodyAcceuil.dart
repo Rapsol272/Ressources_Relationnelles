@@ -8,6 +8,7 @@ import 'package:flutter_firebase/screens/pages/postHelper.dart';
 import 'package:flutter_firebase/screens/pages/postItem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:intl/intl.dart';
 
 class bodyAcceuil extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   var _iconColor = Colors.grey;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
+  var parsedDate = DateTime.parse('2019-10-22 00:00:00.000');
 
   @override
   Widget build(BuildContext context) {
@@ -105,10 +107,12 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 4.0, bottom: 4.0),
+                                    top: 4.0,
+                                    bottom: 4.0,
+                                  ),
                                   child: ExpansionTile(
                                     title: Text(
-                                      posts.toString(),
+                                      '${data.docs[index]['auteur']}',
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontSize: 15,
@@ -117,7 +121,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                       ),
                                     ),
                                     leading: Text(
-                                      '${data.docs[index]['dateCreation']}',
+                                      '${convertDateTimeDisplay(data.docs[index]['dateCreation'].toDate().toString())}',
                                       style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: 12,
@@ -215,4 +219,12 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
       ),
     );
   }
+}
+
+String convertDateTimeDisplay(String date) {
+  final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
+  final DateFormat serverFormater = DateFormat('dd-MM-yyyy');
+  final DateTime displayDate = displayFormater.parse(date);
+  final String formatted = serverFormater.format(displayDate);
+  return formatted;
 }

@@ -10,7 +10,7 @@ class PostItemModel {
       this.title, this.tags, this.content, this.image, this.author, this.date);
 
   @override
-  String toString() {
+  String toTags() {
     String msg = '';
     for (var i = 0; i < tags.length; i++) {
       msg += this.tags[i] + ", ";
