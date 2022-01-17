@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/services/database.dart';
 
@@ -27,9 +28,10 @@ class AuthenticationService {
 
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      UserCredential result =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
+      tokenConnected = user?.uid;
       return _userFromFirebaseUser(user);
     } catch (exception) {
       print(exception.toString());
@@ -37,15 +39,21 @@ class AuthenticationService {
     }
   }
 
-  Future registerWithEmailAndPassword(String name, String prenom, String date, /*String role*/ String email, String password) async {
+  Future registerWithEmailAndPassword(String name, String prenom, String date,
+      /*String role*/ String email, String password) async {
     try {
-      UserCredential result =
-          await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
       if (user == null) {
         throw Exception("No user found");
       } else {
-        await DatabaseService(user.uid).saveUser(name, prenom, date, email, /*role,*/ );
+        await DatabaseService(user.uid).saveUser(
+          name,
+          prenom,
+          date,
+          email, /*role,*/
+        );
 
         return _userFromFirebaseUser(user);
       }
@@ -60,13 +68,11 @@ class AuthenticationService {
       UserCredential result = await _auth.signInAnonymously();
       User? user = result.user;
       return user;
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
       return null;
     }
-
   }
-  
 
   Future signOut() async {
     try {

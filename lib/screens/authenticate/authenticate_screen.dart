@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_firebase/common/constants.dart';
@@ -13,7 +14,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 
- 
 class AuthenticateScreen extends StatefulWidget {
   @override
   _AuthenticateScreenState createState() => _AuthenticateScreenState();
@@ -34,12 +34,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   //final roleController = TextEditingController();
   bool showSignIn = true;
 
-
-
-
   final format = DateFormat("yyyy-MM-dd");
   DateTime? value;
-
 
   @override
   void dispose() {
@@ -51,8 +47,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     //roleController.dispose();
     super.dispose();
   }
-
-  
 
   void toggleView() {
     setState(() {
@@ -73,138 +67,153 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     return loading
         ? Loading()
         : SingleChildScrollView(
-                  child:
-                  Column(
-                      children: [
-                  Text(showSignIn ? 'Se connecter' : 'S\'inscrire',  style: TextStyle(color: greenMajor, fontSize: 25, fontWeight: FontWeight.bold)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
-                    child: Form(
+            child: Column(children: [
+            Text(showSignIn ? 'Se connecter' : 'S\'inscrire',
+                style: TextStyle(
+                    color: greenMajor,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold)),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
+              child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     !showSignIn
                         ? TextFormField(
                             controller: nameController,
-                            decoration: textInputDecoration.copyWith(hintText: 'Votre nom'),
-                            validator: (value) =>
-                                value == null || value.isEmpty ? "Entrez votre nom" : null,
+                            decoration: textInputDecoration.copyWith(
+                                hintText: 'Votre nom'),
+                            validator: (value) => value == null || value.isEmpty
+                                ? "Entrez votre nom"
+                                : null,
                           )
                         : Container(),
-                        SizedBox(height: 20,),
-                        !showSignIn
+                    SizedBox(
+                      height: 20,
+                    ),
+                    !showSignIn
                         ? TextFormField(
                             controller: prenomController,
-                            decoration: textInputDecoration.copyWith(hintText: 'Votre prénom'),
-                            validator: (value) =>
-                                value == null || value.isEmpty ? "Entrez votre prénom" : null,
+                            decoration: textInputDecoration.copyWith(
+                                hintText: 'Votre prénom'),
+                            validator: (value) => value == null || value.isEmpty
+                                ? "Entrez votre prénom"
+                                : null,
                           )
                         : Container(),
-                        SizedBox(height: 20,),
-
+                    SizedBox(
+                      height: 20,
+                    ),
                     !showSignIn ? SizedBox(height: 20.0) : Container(),
                     TextFormField(
                       controller: emailController,
-                      decoration: textInputDecoration.copyWith(hintText: 'Votre adresse email'),
-                      validator: (value) =>
-                          value == null || value.isEmpty ? "Entrez votre adresse email" : null,
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'Votre adresse email'),
+                      validator: (value) => value == null || value.isEmpty
+                          ? "Entrez votre adresse email"
+                          : null,
                     ),
                     SizedBox(height: 20.0),
                     TextFormField(
                       controller: passwordController,
-                      decoration: textInputDecoration.copyWith(hintText: 'Votre mot de passe'),
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'Votre mot de passe'),
                       obscureText: true,
                       validator: (value) => value != null && value.length < 6
                           ? "Entrez un mot de passe d'au moins 6 caractères"
                           : null,
                     ),
                     SizedBox(height: 20.0),
-                    !showSignIn ?
-                    TextFormField(
-                      controller: confirmPasswordController,
-                      decoration: textInputDecoration.copyWith(hintText: 'Confirmez mot de passe'),
-                      obscureText: true,
-                      validator: (value) => value == passwordController.text
-                          ? null
-                          : "Les mots de passes ne se correspondent pas !",
-                    ):  Container(),
+                    !showSignIn
+                        ? TextFormField(
+                            controller: confirmPasswordController,
+                            decoration: textInputDecoration.copyWith(
+                                hintText: 'Confirmez mot de passe'),
+                            obscureText: true,
+                            validator: (value) => value ==
+                                    passwordController.text
+                                ? null
+                                : "Les mots de passes ne se correspondent pas !",
+                          )
+                        : Container(),
                     SizedBox(height: 10.0),
-                    Center(child: 
-                    GestureDetector(
-                      onTap: () => toggleView(), 
-                      child: Text(showSignIn ? 'Créer un compte ?' : 'Déjà un compte ? Connectez vous !', 
-                      style: TextStyle(
-                        color: Colors.green
-                      )
-                      ,))),
-                      SizedBox(height: 20,),
+                    Center(
+                        child: GestureDetector(
+                            onTap: () => toggleView(),
+                            child: Text(
+                              showSignIn
+                                  ? 'Créer un compte ?'
+                                  : 'Déjà un compte ? Connectez vous !',
+                              style: TextStyle(color: Colors.green),
+                            ))),
+                    SizedBox(
+                      height: 20,
+                    ),
                     ElevatedButton(
-                       style: ElevatedButton.styleFrom(
-                            primary: Color(0xff148F77),
-                            onPrimary: Colors.white,
-                            shadowColor: Colors.greenAccent,
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            minimumSize: Size(200, 40),
-                        ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xff148F77),
+                        onPrimary: Colors.white,
+                        shadowColor: Colors.greenAccent,
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        minimumSize: Size(200, 40),
+                      ),
                       child: Text(
-                        showSignIn? "Se connecter" : "S\'inscrire",
+                        showSignIn ? "Se connecter" : "S\'inscrire",
                       ),
                       onPressed: () async {
-                              if (_formKey.currentState?.validate() == true) {
-                                setState(() => loading = true);
-                                var password = passwordController.value.text;
-                                var email = emailController.value.text;
-                                var name = nameController.value.text;
-                                var prenom = prenomController.value.text;
-                                var date = dateController.value.text;
+                        if (_formKey.currentState?.validate() == true) {
+                          setState(() => loading = true);
+                          var password = passwordController.value.text;
+                          var email = emailController.value.text;
+                          var name = nameController.value.text;
+                          var prenom = prenomController.value.text;
+                          var date = dateController.value.text;
 
-                                dynamic result = showSignIn
-                                    ? await _auth.signInWithEmailAndPassword(
-                                        email, password)
+                          dynamic result = showSignIn
+                              ? await _auth.signInWithEmailAndPassword(
+                                  email, password)
+                              : await _auth.registerWithEmailAndPassword(
+                                  name, prenom, date, email, password);
 
-                                    : await _auth.registerWithEmailAndPassword(
-                                        name, prenom, date, email, password);
-
-                                if (result == null) {
-                                  setState(() {
-                                    loading = false;
-                                    error = 'Please supply a valid email';
-                                  });
-                                }
-                              }
-                            },
-                            ),
-                          showSignIn
-                              ? OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    side:
-                                        BorderSide(color: greenMajor, width: 2),
-                                    primary: greenMajor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    dynamic result =
-                                        await _auth.signInAnonymously();
-                                  },
-                                  child: Text('Se connecter en Anonyme'))
-                              : Container(),
-                          SizedBox(height: 10.0),
-                          Text(
-                            error,
-                            style: TextStyle(color: Colors.red, fontSize: 15.0),
-                          )
-                        ],
-                      ),
+                          if (result == null) {
+                            setState(() {
+                              loading = false;
+                              error = 'Please supply a valid email';
+                            });
+                          }
+                        }
+                      },
                     ),
-                  ),
-                ]));
+                    showSignIn
+                        ? OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: greenMajor, width: 2),
+                              primary: greenMajor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                            onPressed: () async {
+                              dynamic result = await _auth.signInAnonymously();
+                            },
+                            child: Text('Se connecter en Anonyme'))
+                        : Container(),
+                    SizedBox(height: 10.0),
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 15.0),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ]));
   }
 }
-
-
