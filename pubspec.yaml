@@ -53,7 +53,6 @@ dependencies:
 
   colours: ^0.0.2
   expansion_tile_card: ^2.0.0
-  paginated_search_bar: ^1.1.2
 
   
 
