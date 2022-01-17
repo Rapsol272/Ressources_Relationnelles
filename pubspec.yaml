@@ -53,6 +53,7 @@ dependencies:
   sliver_header_delegate: ^0.0.5
   draggable_home: ^1.0.2
   search_page: ^2.0.0+1
+  cupertino_radio_choice: ^1.0.2
   
 
 dev_dependencies:
