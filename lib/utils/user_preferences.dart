@@ -2,7 +2,7 @@ import 'package:flutter_firebase/models/user.dart';
 
 class UserPreferences {
   static const myUser = AppUserData(
-      uid: '1',
+      uid: '5',
       name: 'HO',
       prenom: 'Anthony',
       date: '23/05/2022',

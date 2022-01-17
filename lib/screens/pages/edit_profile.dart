@@ -23,8 +23,8 @@ class _EditProfileState extends State<EditProfile> {
           padding: EdgeInsets.symmetric(horizontal: 32),
           physics: BouncingScrollPhysics(),
           children: [
-            /* ProfileWidget(
-                imagePath: user.image, isEdit: true, onClicked: () async {}), */
+            ProfileWidget(
+                imagePath: user.image, isEdit: true, onClicked: () async {}),
             const SizedBox(height: 24),
             TextFieldWidget(
               label: 'Nom',
@@ -38,12 +38,12 @@ class _EditProfileState extends State<EditProfile> {
               onChanged: (email) {},
             ),
             const SizedBox(height: 24),
-            /* TextFieldWidget(
+            TextFieldWidget(
               label: 'Bio',
               text: user.about,
               maxLines: 5,
               onChanged: (about) {},
-            ) */
+            )
           ],
         ),
       );
