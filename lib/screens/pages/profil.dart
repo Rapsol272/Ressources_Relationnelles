@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
+import 'package:flutter_firebase/screens/pages/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/edit_profile.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 
-import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
+import 'package:flutter_firebase/screens/pages/bodyAccueil.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:favorite_button/favorite_button.dart';

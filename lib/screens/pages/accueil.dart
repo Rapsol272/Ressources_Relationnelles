@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
+import 'package:flutter_firebase/screens/pages/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/favoriteGroupsAcceuil.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

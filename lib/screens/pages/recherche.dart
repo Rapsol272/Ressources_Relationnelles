@@ -34,7 +34,7 @@ class _SearchState extends State<Search> {
     ExampleItemPager pager = ExampleItemPager();
 
     bool _show = true;
-    ExampleItemPager pager = ExampleItemPager();
+    //ExampleItemPager pager = ExampleItemPager();
     TextEditingController textController = TextEditingController();
 
     TextEditingController _textController = TextEditingController();
