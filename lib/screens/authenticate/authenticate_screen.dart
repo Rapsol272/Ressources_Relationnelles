@@ -53,15 +53,6 @@
     void change() {
       setState(() {
         roleController.text = 'Rédacteur';
-        TextFormField(
-          controller: roleController..text = 'Redacteur', 
-          style: TextStyle(
-            color: changeT ? greenMajor : Colors.grey
-            ),
-          enabled: false,
-          decoration: textInputDecoration.copyWith(hintText: 'Role'),
-          validator: (value) => value == null || value.isEmpty ? "Entrez votre role" : null,
-        );
         changeT = !changeT;
       });
     }
@@ -162,19 +153,30 @@
                       SizedBox(height: 30.0),
 
                       !showSignIn ? 
-                      GestureDetector(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Votre rôle est :', style: TextStyle(
+                            fontSize: 15
+                          ),),
+                           GestureDetector(
                         onTap: () => change(),
-                        child: Container(
-                          child: TextFormField(
-                        controller: roleController..text = changeT ?'lecteur' : 'Redacteur', 
+                        child: TextFormField(
+                          textAlignVertical: TextAlignVertical.center,
+                          textAlign: TextAlign.left,
+                        controller: roleController..text = changeT ? 'Lecteur' : 'Rédacteur', 
                         style: TextStyle(
-                          color: changeT ? greenMajor : Colors.grey
+                          color: greenMajor
                           ),
                         enabled: false,
-                        decoration: textInputDecoration.copyWith(hintText: 'Role'),
-                        validator: (value) => value == null || value.isEmpty ? "Entrez votre role" : null,
+                        decoration: textInputDecoration.copyWith(
+                          prefixIcon: Icon(
+                                Icons.swap_vert,
+                                color: greenMajor// icon is 48px widget.
+                      ),),
+                        ),
                       ),
-                        )
+                        ],
                       )
                        : Container(),
                       

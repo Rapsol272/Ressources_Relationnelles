@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil.dart';
@@ -31,7 +32,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
             return Text("Il y a eu une erreur");
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('En chargement');
+            return Loading();
           }
           final data = snapshot.requireData;
           return ListView.builder(
