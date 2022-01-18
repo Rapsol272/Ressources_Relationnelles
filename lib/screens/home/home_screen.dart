@@ -3,6 +3,7 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
+import 'package:flutter_firebase/screens/pages/edit_profile.dart';
 import 'package:flutter_firebase/screens/pages/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil.dart';
 import 'package:flutter_firebase/screens/pages/recherche.dart';
@@ -55,6 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (context) => Help()));
                   break;
+                case 2:
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EditProfile()));
                 // other cases...
               }
             },
@@ -82,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text('Aide')
                   ])),
               PopupMenuItem(
-                  onTap: () async {},
+                  value: 2,
                   child: Row(children: <Widget>[
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
