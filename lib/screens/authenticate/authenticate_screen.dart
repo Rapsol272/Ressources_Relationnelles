@@ -1,18 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/screens/authenticate/scrollAuth.dart';
-import 'package:flutter_firebase/screens/pages/components/radioButton.dart';
 import 'package:flutter_firebase/services/authentication.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:select_form_field/select_form_field.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 
 class AuthenticateScreen extends StatefulWidget {
   @override
@@ -201,7 +191,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                               ),
                             ),
                             onPressed: () async {
-                              dynamic result = await _auth.signInAnonymously();
+                              await _auth.signInAnonymously();
                             },
                             child: Text('Se connecter en Anonyme'))
                         : Container(),

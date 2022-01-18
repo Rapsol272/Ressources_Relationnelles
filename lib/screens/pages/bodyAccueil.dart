@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_firebase/common/constants.dart';
 import 'package:intl/intl.dart';
 
+// ignore: camel_case_types
 class bodyAcceuil extends StatefulWidget {
   @override
   _bodyAcceuilState createState() => _bodyAcceuilState();
 }
 
+// ignore: camel_case_types
 class _bodyAcceuilState extends State<bodyAcceuil> {
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
-  var _iconColor = Colors.grey;
+
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   var parsedDate = DateTime.parse('2019-10-22 00:00:00.000');

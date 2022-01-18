@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/common/constants.dart';
-import 'package:anim_search_bar/anim_search_bar.dart';
-
 import 'package:paginated_search_bar/paginated_search_bar.dart';
 import 'package:endless/endless.dart';
-
-
 
 class Search extends StatefulWidget {
   Search({Key? key}) : super(key: key);
@@ -17,15 +12,11 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
+    ExampleItemPager pager = ExampleItemPager();
 
-  bool _show = true;
-  ExampleItemPager pager = ExampleItemPager();
-
-    TextEditingController textController = TextEditingController();
     return Scaffold(
-      body: 
-      SingleChildScrollView(
-        child:
+        body: SingleChildScrollView(
+      child:
           /*AnimSearchBar(
         width: 400,
         textController: textController,
@@ -35,7 +26,7 @@ class _SearchState extends State<Search> {
           });
         },
       ),*/
-      Column(
+          Column(
         children: [
           Container(
             padding: const EdgeInsets.only(top: 20),
@@ -83,8 +74,7 @@ class _SearchState extends State<Search> {
           ),
         ],
       ),
-      )
-      );
+    ));
   }
 }
 
@@ -116,4 +106,3 @@ class ExampleItemPager {
     return batch;
   }
 }
-

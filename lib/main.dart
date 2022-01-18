@@ -8,8 +8,6 @@ import 'package:flutter_firebase/screens/splashscreen_wrapper.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import 'models/chat_params.dart';
 import 'models/user.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -25,12 +23,13 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   if (!kIsWeb) {
-      await FirebaseCrashlytics.instance
-          .setCrashlyticsCollectionEnabled(kDebugMode ? false : true);
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(kDebugMode ? false : true);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   }
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -53,10 +52,10 @@ class MyApp extends StatelessWidget {
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/' :
+      case '/':
         return MaterialPageRoute(builder: (context) => SplashScreenWrapper());
-        //chat
-      
+      //chat
+
       default:
         return pageNotFound();
     }
@@ -64,13 +63,10 @@ class RouteGenerator {
 
   static MaterialPageRoute pageNotFound() {
     return MaterialPageRoute(
-        builder: (context) =>
-            Scaffold(
-                appBar: AppBar(title: Text("Error"), centerTitle: true),
-                body: Center(
-                  child: Text("Page not found"),
-                )
-            )
-    );
+        builder: (context) => Scaffold(
+            appBar: AppBar(title: Text("Error"), centerTitle: true),
+            body: Center(
+              child: Text("Page not found"),
+            )));
   }
 }

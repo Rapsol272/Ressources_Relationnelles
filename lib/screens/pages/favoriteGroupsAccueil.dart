@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/screens/pages/bodyAccueil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:favorite_button/favorite_button.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_firebase/common/constants.dart';
 
 class FavoriteSection extends StatelessWidget {
   FavoriteSection({Key? key}) : super(key: key);
