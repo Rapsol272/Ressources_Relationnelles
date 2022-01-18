@@ -56,13 +56,12 @@ class _ProfilPageState extends State<Profil> {
                         Container(
                           height: 100,
                           width: 100,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300], shape: BoxShape.circle),
                         ),
                         Column(
                           children: [
                             Text(
-                              '${data.docs[4]['prenom']} ${data.docs[4]['name']}',
+                              //'${data.docs[4]['prenom']} ${data.docs[4]['name']}',
+                              'lol',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),
