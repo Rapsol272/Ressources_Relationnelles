@@ -1,34 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 
-class Accueil extends StatelessWidget {
-  const Accueil({Key? key}) : super(key: key);
+import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
+import 'package:flutter_firebase/screens/pages/favoriteGroupsAcceuil.dart';
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:favorite_button/favorite_button.dart';
+import 'package:flutter_firebase/screens/pages/postHelper.dart';
+import 'package:flutter_firebase/screens/pages/postItem.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Accueil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-
-    Widget portrait() {
-      return Center(
-        child: Text('Portrait'),
-      );
-    }
-
-    Widget landscape() {
-      return Center(
-        child: Text('Landscape'),
-      );
-    }
-
     return Scaffold(
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          if (orientation == Orientation.portrait){
-            return portrait();
-          } else {
-            return landscape();
-          }
-        })
-      );
+      body: Column(
+        children: [
+          Container(
+            child: FavoriteSection(),
+          ),
+          Expanded(
+            child: bodyAcceuil(),
+          ),
+        ],
+      ),
+    );
   }
 }

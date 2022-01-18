@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AppUser {
   final String uid;
 
@@ -10,6 +12,27 @@ class AppUserData {
   final String prenom;
   final String email;
   final String role;
-  
-  AppUserData({required this.uid, required this.name, required this.prenom, required this.email, required this.role}); //required this.role //required this.bio});
+  final String about;
+  final String image;
+
+  const AppUserData(
+      {required this.uid,
+      required this.name,
+      required this.prenom,
+      required this.role,
+      required this.about,
+      required this.image,
+      required this.email});
+
+
+  factory AppUserData.fromDocument(DocumentSnapshot doc) {
+    return AppUserData(
+        uid: doc['id'],
+        prenom: doc['name'],
+        email: doc['email'],
+        role: doc['role'],
+        name: doc['displayName'],
+        image: doc['photoUrl'],
+        about: doc['bio']);
+  }
 }
