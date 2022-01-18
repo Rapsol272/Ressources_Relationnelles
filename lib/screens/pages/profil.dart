@@ -13,6 +13,7 @@ import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/widget/profile_widget.dart';
 import 'package:flutter_firebase/widget/numbers_widgets.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
+import 'package:scroll_navigation/scroll_navigation.dart';
 
 class Profil extends StatefulWidget {
   /* final String userId;
@@ -53,15 +54,13 @@ class _ProfilPageState extends State<Profil> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          height: 100,
-                          width: 100,
-                        ),
+                        ProfileWidget(
+                            imagePath: user.image, onClicked: () async {}),
                         Column(
                           children: [
                             Text(
                               //'${data.docs[4]['prenom']} ${data.docs[4]['name']}',
-                              'lol',
+                              'Peter Parker',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),
@@ -94,13 +93,21 @@ class _ProfilPageState extends State<Profil> {
                                     Column(
                                       children: [
                                         Text(
-                                          ('Posts'),
-                                          style: TextStyle(),
+                                          ('50'
+                                              'Posts'),
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 12),
                                         ),
                                       ],
                                     ),
                                     Column(
-                                      children: [Text('Amis')],
+                                      children: [
+                                        Text(
+                                          'Mes amis',
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 12),
+                                        )
+                                      ],
                                     ),
                                   ],
                                 )
@@ -109,7 +116,7 @@ class _ProfilPageState extends State<Profil> {
                           ],
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
 
@@ -160,3 +167,25 @@ Widget buildAbout(AppUserData user) => Container(
         ],
       ),
     );
+
+Widget buildScroll(BuildContext context) {
+  return ScrollNavigation(
+    bodyStyle: NavigationBodyStyle(
+      background: Colors.white,
+      borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+    ),
+    barStyle: NavigationBarStyle(
+      position: NavigationPosition.right,
+      background: Colors.white,
+      elevation: 0.0,
+    ),
+    pages: [
+      Container(color: Colors.blue[100]),
+      Container(color: Colors.green[100]),
+    ],
+    items: const [
+      ScrollNavigationItem(icon: Icon(Icons.camera)),
+      ScrollNavigationItem(icon: Icon(Icons.chat)),
+    ],
+  );
+}
