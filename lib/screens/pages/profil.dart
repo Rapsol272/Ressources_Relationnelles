@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -44,24 +46,83 @@ class _ProfilPageState extends State<Profil> {
             return ListView(
               physics: BouncingScrollPhysics(),
               children: [
-                ProfileWidget(
-                  imagePath: user.image,
-                  onClicked: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => EditProfile()));
-                  },
-                ),
                 const SizedBox(height: 24),
                 //buildName(user),
-                Text(
-                  '${data.docs[2]['name']}',
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300], shape: BoxShape.circle),
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              '${data.docs[4]['prenom']} ${data.docs[4]['name']}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Wrap(
+                                  spacing: 20,
+                                  runSpacing: 20,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'Développeur',
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Wrap(
+                                  spacing: 20,
+                                  runSpacing: 20,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          ('Posts'),
+                                          style: TextStyle(),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [Text('Amis')],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+
+                /* Text(
+                  '${data.docs[3]['name']}',
                   //'dqfzafa',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-                const SizedBox(height: 24),
+                ), */
+                /* const SizedBox(height: 24),
                 NumbersWidget(),
                 const SizedBox(height: 48),
-                buildAbout(user)
+                buildAbout(user) */
               ],
             );
           }),
@@ -69,7 +130,7 @@ class _ProfilPageState extends State<Profil> {
   }
 }
 
-Widget buildName(AppUserData user) => Column(
+Widget buildName(AppUserData user) => Row(
       children: [
         Text(
           user.name,
@@ -77,7 +138,7 @@ Widget buildName(AppUserData user) => Column(
         ),
         const SizedBox(height: 24),
         Text(
-          user.role,
+          user.prenom,
           style: TextStyle(color: Colors.grey),
         )
       ],
