@@ -2,10 +2,8 @@
   import 'package:flutter/painting.dart';
   import 'package:flutter_firebase/common/constants.dart';
   import 'package:flutter_firebase/common/loading.dart';
-  import 'package:flutter_firebase/screens/authenticate/scrollAuth.dart';
   import 'package:flutter_firebase/screens/pages/components/radioButton.dart';
   import 'package:flutter_firebase/services/authentication.dart';
-  import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
   import 'package:intl/intl.dart';
   import 'package:flutter/cupertino.dart';
   import 'package:select_form_field/select_form_field.dart';
@@ -13,8 +11,9 @@
   import 'package:google_fonts/google_fonts.dart';
   import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 
-  import 'package:cupertino_radio_choice/cupertino_radio_choice.dart';
   import 'package:flutter/cupertino.dart';
+
+  import 'package:checkbox_grouped/checkbox_grouped.dart';
 
   enum SingingCharacter { lafayette, jefferson }
   class AuthenticateScreen extends StatefulWidget {
@@ -33,13 +32,12 @@
     final prenomController = TextEditingController();
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
+    final roleController = TextEditingController();
     bool showSignIn = true;
+    bool changeT = true;
 
 
 
-
-    final format = DateFormat("yyyy-MM-dd");
-    DateTime? value;
 
 
     @override
@@ -48,11 +46,25 @@
       prenomController.dispose();
       emailController.dispose();
       passwordController.dispose();
-      //roleController.dispose();
+      roleController.dispose();
       super.dispose();
     }
 
-    
+    void change() {
+      setState(() {
+        roleController.text = 'Rédacteur';
+        TextFormField(
+          controller: roleController..text = 'Redacteur', 
+          style: TextStyle(
+            color: changeT ? greenMajor : Colors.grey
+            ),
+          enabled: false,
+          decoration: textInputDecoration.copyWith(hintText: 'Role'),
+          validator: (value) => value == null || value.isEmpty ? "Entrez votre role" : null,
+        );
+        changeT = !changeT;
+      });
+    }
 
     void toggleView() {
       setState(() {
@@ -62,25 +74,11 @@
         nameController.text = '';
         prenomController.text = '';
         passwordController.text = '';
-        //roleController.text = '';
+        roleController.text = '';
         showSignIn = !showSignIn;
       });
     }
 
-    bool majorCheck = false;
-
-    static final Map<String, String> genderMap = {
-    'lecteur': 'Lecteur',
-    'redacteur': 'Rédacteur',
-  };
-
-  String _selectedGender = genderMap.keys.first;
-
-  void onGenderSelected(String genderKey) {
-    setState(() {
-      _selectedGender = genderKey;
-    });
-  }
   SingingCharacter? _character = SingingCharacter.lafayette;
 
     @override
@@ -161,87 +159,29 @@
                             ? null
                             : "Les mots de passes ne se correspondent pas !",
                       ):  Container(),
-                      SizedBox(height: 20.0),
-                      
-                      !showSignIn ?
-                        Row(
-                          children: [
-                            Container(
-                              child:
-                              Row(
-                                children: [
-                                  Text('Lecteur'),
-                                  Radio<SingingCharacter>(
-                                    activeColor: greenMajor,
-                                    value: SingingCharacter.lafayette,
-                                    groupValue: _character,
-                                    onChanged: (SingingCharacter? value) {
-                                      setState(() {
-                                        _character = value;
-                                        print(value);
-                                      }
-                                     );
-                                    },
-                                  ) ,
-                                ],
-                              )
-                              ),
-                              Container(
-                              child:
-                              Row(
-                                children: [
-                                  Text('Rédacteur'),
-                                  Radio<SingingCharacter>(
-                                    value: SingingCharacter.jefferson,
-                                    groupValue: _character,
-                                    onChanged: (SingingCharacter? value) {
-                                      setState(() {
-                                        _character = value;
-                                        print(value);
-                                      }
-                                     );
-                                    },
-                                  ) ,
-                                ],
-                              )
-                              )
-                  
-                          ],
+                      SizedBox(height: 30.0),
+
+                      !showSignIn ? 
+                      GestureDetector(
+                        onTap: () => change(),
+                        child: Container(
+                          child: TextFormField(
+                        controller: roleController..text = changeT ?'lecteur' : 'Redacteur', 
+                        style: TextStyle(
+                          color: changeT ? greenMajor : Colors.grey
+                          ),
+                        enabled: false,
+                        decoration: textInputDecoration.copyWith(hintText: 'Role'),
+                        validator: (value) => value == null || value.isEmpty ? "Entrez votre role" : null,
+                      ),
                         )
-                     /*Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        const Text('Sélectionnez votre rôle :',
-                            style: TextStyle(
-                              color: greenMajor,
-                              fontSize: 15.0,
-                            )),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 5.0),
-                        ),
-                        CupertinoRadioChoice(
-                          selectedColor: greenMajor,
-                            choices: genderMap,
-                            onChange: onGenderSelected,
-                            initialKeyValue: _selectedGender)
-                      ],
-                    )*/
-                     : Container(),
-                      /*Row(
-                        children: [
-                          Text('Cochez la case si vous êtes majeur :'),
-                          Checkbox(
-                            value: majorCheck, 
-                            fillColor: MaterialStateProperty.resolveWith(getColor),
-                            onChanged: (bool? value) {
-                              print(value);
-                              setState(() {
-                                   majorCheck = value!;
-                                   });
-                            }
-                            ),
-                        ],
-                      ) : Container(),*/
+                      )
+                       : Container(),
+                      
+                        
+                      
+                      
+                      SizedBox(height: 30.0),
 
                       Center(child: 
                       GestureDetector(
@@ -272,13 +212,14 @@
                                   var email = emailController.value.text;
                                   var name = nameController.value.text;
                                   var prenom = prenomController.value.text;
+                                  var role = roleController.value.text;
 
                                   dynamic result = showSignIn
                                       ? await _auth.signInWithEmailAndPassword(
                                           email, password)
 
                                       : await _auth.registerWithEmailAndPassword(
-                                          name, prenom, email, password);
+                                          name, prenom, email, password, role);
 
                                   if (result == null) {
                                     setState(() {
