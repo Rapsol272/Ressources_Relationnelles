@@ -10,7 +10,9 @@ class DatabaseService {
       FirebaseFirestore.instance.collection("users");
 
   Future<void> saveUser(String name, String prenom, String email, String role) async {
+    print(name);
     return await userCollection.doc(uid).set({'name': name, 'prenom': prenom, 'email': email, 'role' : role,});
+    
   }
 
   Future<void> saveToken(String? token) async {
