@@ -28,10 +28,10 @@ class AppUserData {
   factory AppUserData.fromDocument(DocumentSnapshot doc) {
     return AppUserData(
         uid: doc['id'],
-        prenom: doc['name'],
+        name: doc['name'],
         email: doc['email'],
         role: doc['role'],
-        name: doc['displayName'],
+        prenom: doc['prenom'],
         image: doc['photoUrl'],
         about: doc['bio']);
   }
