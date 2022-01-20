@@ -59,8 +59,6 @@ dependencies:
   draggable_home: ^1.0.2
   search_page: ^2.0.0+1
   checkbox_grouped: ^1.7.1
-  url_launcher: ^6.0.18
-  mailer: ^5.0.2
   
 
 dev_dependencies:

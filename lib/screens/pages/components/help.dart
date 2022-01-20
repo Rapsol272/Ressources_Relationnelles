@@ -36,9 +36,6 @@ class _HelpState extends State<Help> {
           Card(
             child:ListTile(
               onTap: () {
-                //sendMail();
-                Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TestUIForMail()));
               },
               leading: Icon(Icons.report_problem),
               title: Text('Signaler un problème'),

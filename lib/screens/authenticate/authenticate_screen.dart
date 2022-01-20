@@ -172,7 +172,7 @@
                         decoration: textInputDecoration.copyWith(
                           prefixIcon: Icon(
                                 Icons.swap_vert,
-                                color: greenMajor// icon is 48px widget.
+                                color: greenMajor
                       ),),
                         ),
                       ),
