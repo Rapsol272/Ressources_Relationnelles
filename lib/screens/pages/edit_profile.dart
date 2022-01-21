@@ -23,7 +23,11 @@ class _EditProfileState extends State<EditProfile> {
           padding: EdgeInsets.symmetric(horizontal: 32),
           physics: BouncingScrollPhysics(),
           children: [
+<<<<<<< Updated upstream
            /* ProfileWidget(
+=======
+            /*ProfileWidget(
+>>>>>>> Stashed changes
                 imagePath: user.image, isEdit: true, onClicked: () async {}),
             const SizedBox(height: 24),
             TextFieldWidget(

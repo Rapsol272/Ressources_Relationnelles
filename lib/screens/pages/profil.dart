@@ -154,10 +154,15 @@ Widget buildAbout(AppUserData user) => Container(
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
+<<<<<<< Updated upstream
           Text(
             user.bio,
+=======
+          /*Text(
+            user.about,
+>>>>>>> Stashed changes
             style: TextStyle(fontSize: 16, height: 1.4),
-          ),
+          ),*/
         ],
       ),
     );
