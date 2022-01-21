@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
   import 'package:flutter/cupertino.dart';
   import 'dart:io';
   import 'package:image_picker/image_picker.dart';
+  import 'package:firebase_storage/firebase_storage.dart';
 
   enum SingingCharacter { lafayette, jefferson }
   class AuthenticateScreen extends StatefulWidget {
@@ -77,19 +78,32 @@ import 'package:flutter/material.dart';
 
   XFile? profilImage;
 
-
-  void filePicker() async {
+void filePicker() async {
     final XFile? selectImage = await _picker.pickImage(source:ImageSource.camera);
+
+    FirebaseStorage fs = FirebaseStorage.instance;
+    Reference rootReference = fs.ref();
+    Reference pictureFolderRef = rootReference.child("pictures").child("image");
+
+    /*pictureFolderRef.putFile(profilImage).onComplete.then((storageTask) async{
+      String link = await storageTask.ref.getDownloadURL();
+      setState(() {
+
+      });
+    });
     setState(() {
       profilImage = selectImage;
-    });
+    });*/
   }
+  
   
 
   var storage = FirebaseStorage.instance;
 
     @override
     Widget build(BuildContext context) {
+      String imageLink;
+      File _image;
       return loading
           ? Loading()
           : SingleChildScrollView(
@@ -182,7 +196,7 @@ import 'package:flutter/material.dart';
                       
                       SizedBox(height: 30.0),
 
-                      !showSignIn ?
+                     !showSignIn ?
                       Center(
                         child: profilImage == null ? 
                         Text('Pas d\'image de profil sélectionnée !')
@@ -299,6 +313,7 @@ import 'package:flutter/material.dart';
                     );
           
     }
+    
   }
 
 

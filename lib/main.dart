@@ -68,7 +68,7 @@ class RouteGenerator {
 
   static MaterialPageRoute pageNotFound() {
     return MaterialPageRoute(
-        builder: (context) => Scaffold(
+        builder: (context) => Scaffold(        
             appBar: AppBar(title: Text("Error"), centerTitle: true),
             body: Center(
               child: Text("Page not found"),
