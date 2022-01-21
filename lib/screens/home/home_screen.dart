@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Accueil(),
     Groupes(),
     Search(),
-    Profil(),
+    Profil(uId: FirebaseAuth.instance.currentUser!.uid),
   ];
   final AuthenticationService _auth = AuthenticationService();
 
@@ -63,8 +64,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       context, MaterialPageRoute(builder: (context) => Help()));
                   break;
                 case 2:
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditProfile()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditProfile(
+                                currentUserUid:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                              )));
                 // other cases...
               }
             },

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/commentPage.dart';
@@ -69,7 +70,9 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Profil()),
+                                            builder: (context) => Profil(
+                                                uId: FirebaseAuth.instance
+                                                    .currentUser!.uid)),
                                       );
                                     },
                                     child: Icon(
