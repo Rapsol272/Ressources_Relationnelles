@@ -1,8 +1,8 @@
-  import 'package:flutter/material.dart';
+  import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
   import 'package:flutter/painting.dart';
   import 'package:flutter_firebase/common/constants.dart';
   import 'package:flutter_firebase/common/loading.dart';
-  import 'package:flutter_firebase/screens/pages/components/radioButton.dart';
   import 'package:flutter_firebase/services/authentication.dart';
   import 'package:intl/intl.dart';
   import 'package:flutter/cupertino.dart';
@@ -12,8 +12,8 @@
   import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 
   import 'package:flutter/cupertino.dart';
-
-  import 'package:checkbox_grouped/checkbox_grouped.dart';
+  import 'dart:io';
+  import 'package:image_picker/image_picker.dart';
 
   enum SingingCharacter { lafayette, jefferson }
   class AuthenticateScreen extends StatefulWidget {
@@ -33,11 +33,10 @@
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
     final roleController = TextEditingController();
+    final bioController = TextEditingController();
+    
     bool showSignIn = true;
     bool changeT = true;
-
-
-
 
 
     @override
@@ -47,6 +46,7 @@
       emailController.dispose();
       passwordController.dispose();
       roleController.dispose();
+      bioController.dispose();
       super.dispose();
     }
 
@@ -66,30 +66,30 @@
         prenomController.text = '';
         passwordController.text = '';
         roleController.text = '';
+        bioController.text = '';
         showSignIn = !showSignIn;
       });
     }
 
   SingingCharacter? _character = SingingCharacter.lafayette;
 
+  final ImagePicker _picker = ImagePicker();
+
+  XFile? profilImage;
+
+
+  void filePicker() async {
+    final XFile? selectImage = await _picker.pickImage(source:ImageSource.camera);
+    setState(() {
+      profilImage = selectImage;
+    });
+  }
+  
+
+  var storage = FirebaseStorage.instance;
+
     @override
     Widget build(BuildContext context) {
-
-      //Color for checkbox
-      Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return greenMajor;
-      }
-      return greenMajor;
-    }
-
-    
-
       return loading
           ? Loading()
           : SingleChildScrollView(
@@ -180,10 +180,46 @@
                       )
                        : Container(),
                       
-                        
-                      
-                      
                       SizedBox(height: 30.0),
+
+                      !showSignIn ?
+                      Center(
+                        child: profilImage == null ? 
+                        Text('Pas d\'image de profil sélectionnée !')
+                        : ClipOval(
+                            child: SizedBox.fromSize(
+                              size: Size.fromRadius(48),
+                              child: Image.file(File(profilImage!.path), fit: BoxFit.cover),
+                            ),
+                          )) :Container(),
+
+                          SizedBox(height: 30,),
+
+                      !showSignIn ? 
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          primary: greenMajor,
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: greenMajor, width: 1),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                        ),
+                        onPressed: () {filePicker();}, 
+                        child: Text('Ajouter une image'))
+                      : Container(),
+
+                      
+
+                      SizedBox(height:20),
+
+                      !showSignIn ?
+                      TextFormField(
+                        controller: bioController,
+                        maxLines: 4,
+                        decoration: textInputDecoration.copyWith(hintText: 'Votre biographie'), 
+                            
+                      )
+                       :Container(),
+                       SizedBox(height: 30,),
 
                       Center(child: 
                       GestureDetector(
@@ -215,18 +251,19 @@
                                   var name = nameController.value.text;
                                   var prenom = prenomController.value.text;
                                   var role = roleController.value.text;
+                                  var bio = bioController.value.text;
 
                                   dynamic result = showSignIn
                                       ? await _auth.signInWithEmailAndPassword(
                                           email, password)
 
                                       : await _auth.registerWithEmailAndPassword(
-                                          name, prenom, email, password, role);
+                                          name, prenom, email, password, role, bio);
 
                                   if (result == null) {
                                     setState(() {
                                       loading = false;
-                                      error = 'Please supply a valid email';
+                                      error = "Il y une erreur dans votre inscription";
                                     });
                                   }
                                 }
@@ -260,6 +297,7 @@
         ],
       )
                     );
+          
     }
   }
 

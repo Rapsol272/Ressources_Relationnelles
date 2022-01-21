@@ -29,7 +29,6 @@ dependencies:
   firebase_storage: "^9.0.0"
   firebase_messaging: "^10.0.3"
 
-  image_picker: 0.7.4
   fluttertoast: 8.0.6
   intl: 0.17.0
   cloud_firestore: "^2.2.0"
@@ -58,7 +57,7 @@ dependencies:
   sliver_header_delegate: ^0.0.5
   draggable_home: ^1.0.2
   search_page: ^2.0.0+1
-  checkbox_grouped: ^1.7.1
+  image_picker: ^0.8.4+4
   
 
 dev_dependencies:

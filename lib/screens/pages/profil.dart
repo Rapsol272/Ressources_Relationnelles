@@ -29,7 +29,7 @@ class _ProfilPageState extends State<Profil> {
 
   @override
   Widget build(BuildContext context) {
-    final user = UserPreferences.myUser;
+    //final user = UserPreferences.myUser;
 
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
@@ -155,7 +155,7 @@ Widget buildAbout(AppUserData user) => Container(
           ),
           const SizedBox(height: 16),
           Text(
-            user.about,
+            user.bio,
             style: TextStyle(fontSize: 16, height: 1.4),
           ),
         ],

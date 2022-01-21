@@ -14,7 +14,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  AppUserData user = UserPreferences.myUser;
+  //AppUserData user = UserPreferences.myUser;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -23,7 +23,7 @@ class _EditProfileState extends State<EditProfile> {
           padding: EdgeInsets.symmetric(horizontal: 32),
           physics: BouncingScrollPhysics(),
           children: [
-            ProfileWidget(
+           /* ProfileWidget(
                 imagePath: user.image, isEdit: true, onClicked: () async {}),
             const SizedBox(height: 24),
             TextFieldWidget(
@@ -40,10 +40,10 @@ class _EditProfileState extends State<EditProfile> {
             const SizedBox(height: 24),
             TextFieldWidget(
               label: 'Bio',
-              text: user.about,
+              text: user.bio,
               maxLines: 5,
               onChanged: (about) {},
-            )
+            )*/
           ],
         ),
       );
