@@ -229,7 +229,11 @@ void filePicker() async {
                       TextFormField(
                         controller: bioController,
                         maxLines: 4,
-                        decoration: textInputDecoration.copyWith(hintText: 'Votre biographie'), 
+                        decoration: InputDecoration(
+                          fillColor: Colors.grey,
+                          focusColor: Colors.grey,
+                          hintText: 'Votre Biographie'
+                        ), 
                             
                       )
                        :Container(),
