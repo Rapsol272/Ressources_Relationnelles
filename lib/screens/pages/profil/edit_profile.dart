@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/models/user.dart';
+import 'package:flutter_firebase/screens/home/home_screen.dart';
+import 'package:flutter_firebase/screens/pages/accueil.dart';
+import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/widget/appbar_widget.dart';
@@ -74,7 +77,8 @@ class _EditProfileState extends State<EditProfile> {
               ),
               onPressed: () async {
                 await updateProfileData();
-                Navigator.pop(context); // pop current page
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
               },
             ),
           ],

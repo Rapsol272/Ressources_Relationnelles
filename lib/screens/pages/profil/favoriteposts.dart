@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AccountTab1 extends StatelessWidget {
+class FavoritePosts extends StatelessWidget {
   final List<String> userPosts = [];
 
   @override

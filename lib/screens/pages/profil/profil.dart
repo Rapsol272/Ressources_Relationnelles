@@ -8,7 +8,8 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
 import 'package:flutter_firebase/screens/pages/commentPage.dart';
-import 'package:flutter_firebase/screens/pages/profil/tab1.dart';
+import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
+import 'package:flutter_firebase/screens/pages/profil/friends.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/widget/profile_widget.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
@@ -50,8 +51,9 @@ class _ProfilPageState extends State<Profil> {
 
       var postSnap = await FirebaseFirestore.instance
           .collection('posts')
-          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('postId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
+
       userData = userSnap.data()!;
       postLen = postSnap.docs.length;
       setState(() {});
@@ -158,7 +160,7 @@ class _ProfilPageState extends State<Profil> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          Accueil()));
+                                                          Friends()));
                                             },
                                             child: Text(
                                               'Amis',
@@ -210,7 +212,6 @@ class _ProfilPageState extends State<Profil> {
                               child: CircularProgressIndicator(),
                             );
                           }
-
                           final data = snapshot.requireData;
                           return ListView.builder(
                             itemCount: 1,
@@ -421,7 +422,7 @@ class _ProfilPageState extends State<Profil> {
                           );
                         },
                       ),
-                      AccountTab1()
+                      FavoritePosts()
                     ]),
                   )
                 ],
