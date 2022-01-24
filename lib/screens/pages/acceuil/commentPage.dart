@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/screens/home/home_screen.dart';
-import 'package:flutter_firebase/screens/pages/profil.dart';
 import 'package:flutter_firebase/services/authentication.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:favorite_button/favorite_button.dart';
-import 'package:flutter_firebase/screens/pages/postHelper.dart';
-import 'package:flutter_firebase/screens/pages/postItem.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import '../components/help.dart';
+import '../components/params.dart';
 
-import 'components/help.dart';
-import 'components/params.dart';
-
+// ignore: camel_case_types
 class commentPage extends StatefulWidget {
   commentPage({Key? key}) : super(key: key);
 
@@ -19,6 +13,7 @@ class commentPage extends StatefulWidget {
   _commentPageState createState() => _commentPageState();
 }
 
+// ignore: camel_case_types
 class _commentPageState extends State<commentPage> {
   final AuthenticationService _auth = AuthenticationService();
   @override
@@ -61,8 +56,9 @@ class _commentPageState extends State<commentPage> {
             },
             itemBuilder: (context) => [
               PopupMenuItem(
-                  value: 0,
-                  child: Row(children: <Widget>[
+                value: 0,
+                child: Row(
+                  children: <Widget>[
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
@@ -70,10 +66,13 @@ class _commentPageState extends State<commentPage> {
                           color: greenMajor,
                         )),
                     Text('Paramètres')
-                  ])),
+                  ],
+                ),
+              ),
               PopupMenuItem(
-                  value: 1,
-                  child: Row(children: <Widget>[
+                value: 1,
+                child: Row(
+                  children: <Widget>[
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
@@ -81,10 +80,13 @@ class _commentPageState extends State<commentPage> {
                           color: greenMajor,
                         )),
                     Text('Aide')
-                  ])),
+                  ],
+                ),
+              ),
               PopupMenuItem(
-                  onTap: () async {},
-                  child: Row(children: <Widget>[
+                onTap: () async {},
+                child: Row(
+                  children: <Widget>[
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
@@ -92,12 +94,15 @@ class _commentPageState extends State<commentPage> {
                           color: greenMajor,
                         )),
                     Text('Modifier mon profil')
-                  ])),
+                  ],
+                ),
+              ),
               PopupMenuItem(
-                  onTap: () async {
-                    await _auth.signOut();
-                  },
-                  child: Row(children: <Widget>[
+                onTap: () async {
+                  await _auth.signOut();
+                },
+                child: Row(
+                  children: <Widget>[
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
@@ -105,7 +110,9 @@ class _commentPageState extends State<commentPage> {
                           color: greenMajor,
                         )),
                     Text('Se déconnecter')
-                  ]))
+                  ],
+                ),
+              ),
             ],
           ),
         ],
@@ -218,7 +225,7 @@ class _commentPageState extends State<commentPage> {
                                                       ],
                                                     ),
                                                     child: FavoriteButton(
-                                                      iconSize: 20,
+                                                      iconSize: 40,
                                                       iconColor: Colors.red,
                                                       valueChanged:
                                                           (_isFavorite) {

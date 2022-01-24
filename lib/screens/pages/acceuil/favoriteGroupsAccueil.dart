@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 
-import 'package:flutter_firebase/screens/pages/bodyAccueil.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:favorite_button/favorite_button.dart';
-import 'package:flutter_firebase/screens/pages/postHelper.dart';
-import 'package:flutter_firebase/screens/pages/postItem.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_firebase/common/constants.dart';
-
 class FavoriteSection extends StatelessWidget {
   FavoriteSection({Key? key}) : super(key: key);
   final List favoriteContact = [
@@ -34,10 +24,11 @@ class FavoriteSection extends StatelessWidget {
     },
   ];
 
+  var boxColor = Colors.white;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
       padding: EdgeInsets.all(7),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 15),
@@ -63,6 +54,7 @@ class FavoriteSection extends StatelessWidget {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: favoriteContact.map((favorite) {
                   return Container(
                     margin: EdgeInsets.only(
@@ -71,26 +63,34 @@ class FavoriteSection extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Container(
-                          width: 75,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black38,
-                                spreadRadius: 1,
-                                blurRadius: 6,
-                                offset:
-                                    Offset(0, 1), // changes position of shadow
+                        Ink(
+                          child: InkWell(
+                            child: Container(
+                              width: 75,
+                              height: 70,
+                              decoration: BoxDecoration(
+                                color: boxColor,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black38,
+                                    spreadRadius: 1,
+                                    blurRadius: 6,
+                                    offset: Offset(
+                                      0,
+                                      1,
+                                    ), // changes position of shadow
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          padding: const EdgeInsets.all(4),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset('images/pokemon.png'),
+                              padding: const EdgeInsets.all(4),
+                              child: IconButton(
+                                onPressed: () {
+                                  boxColor = greenMajor;
+                                },
+                                icon: Image.asset('images/pokemon.png'),
+                              ),
+                            ),
                           ),
                         ),
                         Padding(
@@ -100,7 +100,7 @@ class FavoriteSection extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 15,
                               color: Colors.white,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         )
@@ -116,3 +116,32 @@ class FavoriteSection extends StatelessWidget {
     );
   }
 }
+
+
+
+
+/* Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              height: 35,
+              width: 350,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black38,
+                    spreadRadius: 1.5,
+                    blurRadius: 3,
+                    offset: Offset(0, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.search),
+                  )
+                ],
+              ),
+            ), */

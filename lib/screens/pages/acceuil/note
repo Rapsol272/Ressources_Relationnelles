@@ -273,3 +273,60 @@ SingleChildScrollView(
         }).toList(),
       ),
     );
+
+
+
+    INk favoriteSection
+
+
+    Ink(
+                                  child: InkWell(
+                                    child: Container(
+                                      
+                                      width: 75,
+                                      height: 70,
+                                      decoration: BoxDecoration(
+                                        color: boxColor,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black38,
+                                            spreadRadius: 1,
+                                            blurRadius: 6,
+                                            offset: Offset(0,
+                                                1), // changes position of shadow
+                                          ),
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(4),
+                                      child: IconButton(
+                                        onPressed: () {
+                                          boxColor = greenMajor;
+                                        },
+                                        icon: Image.asset('images/pokemon.png'),
+                                      ),
+                                    ),
+                                  ),
+                                );
+
+    PADDING favoriteSection 
+
+
+    Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: ListView.builder(
+                                itemCount: data.size,
+                                itemBuilder: (BuildContext context, int i) {
+                                  return Text(
+                                    '${data.docs[i]['categorie']}',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+
+

@@ -1,18 +1,6 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/screens/pages/bodyAccueil.dart';
-import 'package:flutter_firebase/screens/pages/edit_profile.dart';
-import 'package:flutter_firebase/services/authentication.dart';
-import 'package:flutter_firebase/utils/user_preferences.dart';
-import 'package:flutter_firebase/widget/profile_widget.dart';
-import 'package:flutter_firebase/widget/numbers_widgets.dart';
-import 'package:flutter_firebase/screens/pages/accueil.dart';
 
 class Profil extends StatefulWidget {
   /* final String userId;
@@ -29,8 +17,6 @@ class _ProfilPageState extends State<Profil> {
 
   @override
   Widget build(BuildContext context) {
-    final user = UserPreferences.myUser;
-
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
           stream: users,
@@ -62,7 +48,7 @@ class _ProfilPageState extends State<Profil> {
                         Column(
                           children: [
                             Text(
-                              '${data.docs[4]['prenom']} ${data.docs[4]['name']}',
+                              'test',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),

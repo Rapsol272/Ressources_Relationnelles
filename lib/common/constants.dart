@@ -17,7 +17,6 @@ MaterialColor customColor = MaterialColor(0xff03989E, colorCodes);
 
 const greenMajor = Color(0xff03989E);
 const or = Color(0xffFABD5A);
-var tokenConnected;
 
 var textInputDecoration = InputDecoration(
   fillColor: Colors.white30,

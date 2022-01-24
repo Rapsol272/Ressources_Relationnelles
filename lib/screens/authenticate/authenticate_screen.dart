@@ -1,19 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/screens/pages/components/radioButton.dart';
 import 'package:flutter_firebase/services/authentication.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:select_form_field/select_form_field.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:sliver_header_delegate/sliver_header_delegate.dart';
-
-import 'package:flutter/cupertino.dart';
-
-import 'package:checkbox_grouped/checkbox_grouped.dart';
 
 enum SingingCharacter { lafayette, jefferson }
 
@@ -75,11 +63,10 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     });
   }
 
-  SingingCharacter? _character = SingingCharacter.lafayette;
-
   @override
   Widget build(BuildContext context) {
     //Color for checkbox
+    // ignore: unused_element
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,
@@ -250,6 +237,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                 ),
                               ),
                               onPressed: () async {
+                                // ignore: unused_local_variable
                                 dynamic result =
                                     await _auth.signInAnonymously();
                               },

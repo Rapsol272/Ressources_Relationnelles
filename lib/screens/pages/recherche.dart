@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/common/loading.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'dart:async';
-import 'dart:math';
 import 'package:paginated_search_bar/paginated_search_bar.dart';
 import 'package:endless/endless.dart';
 
@@ -16,7 +11,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  bool _counter = false;
   bool isPressed = false;
   var isLiked = Icon(
     Icons.favorite,
@@ -33,11 +27,6 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     ExampleItemPager pager = ExampleItemPager();
 
-    bool _show = true;
-    //ExampleItemPager pager = ExampleItemPager();
-    TextEditingController textController = TextEditingController();
-
-    TextEditingController _textController = TextEditingController();
     return Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(

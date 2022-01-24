@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/services/database.dart';
 
@@ -31,7 +30,6 @@ class AuthenticationService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
-      tokenConnected = user?.uid;
       return _userFromFirebaseUser(user);
     } catch (exception) {
       print(exception.toString());

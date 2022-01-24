@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:draggable_home/draggable_home.dart';
-import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/authenticate/authenticate_screen.dart';
 
 class Scroll extends StatelessWidget {
@@ -8,14 +7,17 @@ class Scroll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    // ignore: unused_element
     Widget landscape() {
-    return Center(child:Text('Hello'));
-  }
+      return Center(child: Text('Hello'));
+    }
 
-  Widget portrait(){
-    return 
-        Center(child: Text('Portrait'),);  }
+    // ignore: unused_element
+    Widget portrait() {
+      return Center(
+        child: Text('Portrait'),
+      );
+    }
 
     return DraggableHome(
       title: Text("Ressources Relationnelles"),
@@ -37,11 +39,9 @@ class Scroll extends StatelessWidget {
     );
   }
 
-  
-
   Container headerWidget(BuildContext context) => Container(
         child: Center(
-          child: Image.asset('images/ressources_relationnelles_transparent.png')
-        ),
+            child: Image.asset(
+                'images/ressources_relationnelles_transparent.png')),
       );
 }
