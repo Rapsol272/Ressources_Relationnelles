@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/addPostPage.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/favoriteGroupsAccueil.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/test.dart';
 
 class Accueil extends StatelessWidget {
   @override

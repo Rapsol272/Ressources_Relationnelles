@@ -22,82 +22,82 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  List<String> l1 = [];
-  List<List<String>> l2 = [];
-  List<String> tags = <String>[];
+  List<String> favIdPostUser = [];
+  Map<String, bool> allPostsWFav = {};
+  var _iconFav = Colors.grey;
 
-  // Récupère depuis Firestore l'ensemble des id des documents de la collection posts dans une liste postId
-  getListIdPosts() {
-    FirebaseFirestore.instance.collection('posts').get().then(
+  // Initalise tout
+  initAll(String idUser) async {
+    // Initalise la map allPostsWFav sans les fav du user
+    await FirebaseFirestore.instance.collection('posts').get().then(
           (querySnapshot) => {
             querySnapshot.docs.forEach(
-              (doc) => {l1.add(doc.id)},
+              (doc) => {allPostsWFav[doc.id] = false},
             ),
           },
         );
-  }
-
-  Map<String, int> test = {
-    'test': 1,
-  };
-  // Récupère un par un les tags associé au post avec l'Id en paramètre
-
-  // Retourne la liste des éléments contenu dans la liste listTagsById à l'index
-  String afficheList(int index) {
-    var l3 = l2[index];
-    String txt = '';
-    for (var i = 0; i < l3.length; i++) {
-      txt = txt + l3[i] + ', ';
-    }
-    return txt;
-  }
-
-  // Retourne String avec l'ensemble des données vis-à-vis de tous les
-  String afficheIdByTag() {
-    String txt = '';
-    for (var i = 0; i < l2.length; i++) {
-      txt = txt + l1[i] + ' : ' + afficheList(i) + '\n';
-    }
-    return txt;
-  }
-
-// Afficher l'ensemble des id des documents de la collection Posts
-  String afficheListPostId() {
-    String listeTags = '';
-    for (int i = 0; i < l1.length; i++) {
-      if (i == tags.length - 1) {
-        listeTags = listeTags + l1[i];
-      } else {
-        listeTags = listeTags + l1[i] + '\n ';
+    // Initialise la liste des post like par l'utilisateur courant
+    await FirebaseFirestore.instance.collection('like').get().then(
+          (querySnapshot) => {
+            querySnapshot.docs.forEach(
+              (doc) => {
+                doc.data()['idUser'] == idUser
+                    ? favIdPostUser.add(doc.data()['idPost'])
+                    : null
+              },
+            ),
+          },
+        );
+    // Value == true signifie que le post a été like par l'utilisateur
+    for (var i = 0; i < favIdPostUser.length; i++) {
+      for (var j = 0; j < allPostsWFav.length; j++) {
+        if (favIdPostUser[i] == allPostsWFav.keys.elementAt(j))
+          allPostsWFav.update(
+              allPostsWFav.keys.elementAt(j), (value) => value = true);
       }
     }
-    return listeTags;
   }
 
-  // Complete list l2 with list associated
-  initListTagsById() {}
+  // Verif if idPost is liked
+  verifIdPost(String idPost) {
+    for (var i = 0; i < favIdPostUser.length; i++) {
+      if (favIdPostUser[i] == idPost)
+        return true;
+      else
+        return false;
+    }
+  }
 
-  void initState() {
+  initState() {
     super.initState();
-    getListIdPosts();
-    initListTagsById();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text(
-        afficheListPostId() +
-            '\n' +
-            afficheIdByTag() +
-            '\n' +
-            l2.toString() +
-            ' \n l1 = ' +
-            l1.length.toString() +
-            ' \n l2 = ' +
-            l2.length.toString(),
-        style: TextStyle(color: Colors.black, fontSize: 15),
-      ),
+    return FutureBuilder(
+      future: initAll('gwyc9IUyPsheUpUDa3Lq3jCEZrJ2'),
+      builder: (context, snapshot) {
+        return Container(
+          child: Column(
+            children: [
+              Text(
+                favIdPostUser.toString() + allPostsWFav.toString(),
+                style: TextStyle(color: Colors.black, fontSize: 15),
+              ),
+              IconButton(
+                padding: const EdgeInsets.only(bottom: 12),
+                onPressed: () {},
+                icon: Icon(
+                  FontAwesomeIcons.heart,
+                  color: verifIdPost('I4Ej3bZxF4cpNtwPOECe')
+                      ? Colors.red
+                      : Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

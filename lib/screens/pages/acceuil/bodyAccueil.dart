@@ -22,9 +22,13 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
 
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
-  List<String> array = [];
+  var _iconFav = Colors.grey;
+  var isPostLiked;
 
-  // Pour récupérer les ids de tous les documents afin de les parcourir pour récupérer leurs tags (champ tags)
+  List<String> array = [];
+  List favIdPostUser = [];
+  Map<String, bool> allPostsWFav = {};
+
   @override
   void initState() {
     super.initState();
@@ -179,6 +183,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                       icon: Icon(FontAwesomeIcons.comment),
                                       color: Colors.grey,
                                     ),
+                                    // Button share et/ ou création d'un nouveau groupe
                                     IconButton(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
@@ -196,6 +201,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         color: _iconColorShare,
                                       ),
                                     ),
+                                    // Button Add  : a regarder plus tard
                                     IconButton(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
@@ -213,17 +219,36 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         color: _iconColorAdd,
                                       ),
                                     ),
-                                    Container(
+                                    // Button like
+                                    IconButton(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
-                                      child: FavoriteButton(
-                                        iconSize: 50,
-                                        iconColor: Colors.red,
-                                        valueChanged: (_isFavorite) {
-                                          print('Is Favorite $_isFavorite)');
-                                        },
+                                      onPressed: () {
+                                        setState(() {
+                                          if (_iconFav == Colors.grey) {
+                                            _iconFav = Colors.red;
+                                          } else {
+                                            _iconFav = Colors.grey;
+                                          }
+                                        });
+                                      },
+                                      icon: Icon(
+                                        FontAwesomeIcons.heart,
+                                        color: _iconFav,
                                       ),
-                                    )
+                                    ),
+                                    /*GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: FavoriteButton(
+                                          iconSize: 50,
+                                          iconColor: _iconFav,
+                                          valueChanged: (_isFavorite) {},
+                                        ),
+                                      ),
+                                    )*/
                                   ],
                                 ),
                               ],
@@ -300,7 +325,7 @@ unitTags(List array, int i) {
             array[i],
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: 8,
             ),
           ),
         ],
