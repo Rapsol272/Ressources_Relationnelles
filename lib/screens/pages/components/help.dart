@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/screens/pages/components/help/sendMail.dart';
 
 class Help extends StatefulWidget {
   Help({Key? key}) : super(key: key);
@@ -35,7 +36,6 @@ class _HelpState extends State<Help> {
           Card(
             child:ListTile(
               onTap: () {
-
               },
               leading: Icon(Icons.report_problem),
               title: Text('Signaler un problème'),

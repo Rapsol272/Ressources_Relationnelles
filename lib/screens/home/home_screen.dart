@@ -111,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
               PopupMenuItem(
                   onTap: () async {
                     await _auth.signOut();
+                    //await _auth.deleteUser();
                   },
                   child: Row(children: <Widget>[
                     Padding(

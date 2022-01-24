@@ -18,7 +18,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  AppUserData user = UserPreferences.myUser;
+  //AppUserData user = UserPreferences.myUser;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
@@ -40,7 +40,7 @@ class _EditProfileState extends State<EditProfile> {
     DocumentSnapshot doc = await usersRef.doc(widget.currentUserUid).get();
     user_fire = AppUserData.fromDocument(doc);
     nameController.text = user_fire.name;
-    bioController.text = user_fire.about;
+    bioController.text = user_fire.bio;
     setState(() {
       isLoading = true;
     });
@@ -53,8 +53,7 @@ class _EditProfileState extends State<EditProfile> {
           padding: EdgeInsets.symmetric(horizontal: 32),
           physics: BouncingScrollPhysics(),
           children: [
-            ProfileWidget(
-                imagePath: user.image, isEdit: true, onClicked: () async {}),
+            //ProfileWidget(imagePath: '', isEdit: true, onClicked: () async {}),
             const SizedBox(height: 24),
             buildNameField(),
             const SizedBox(height: 24),
@@ -74,8 +73,7 @@ class _EditProfileState extends State<EditProfile> {
                 "Sauvegarder",
               ),
               onPressed: () {
-                updateProfileData;
-                //Navigator.pop(context);
+                updateProfileData();
               },
             ),
           ],
@@ -126,12 +124,13 @@ class _EditProfileState extends State<EditProfile> {
           : _bioValid = true;
     });
 
-    if (_displayNameValid /* && _bioValid */) {
-      usersRef.doc(widget.currentUserUid).update({
-        "name": nameController.text, /* "bio": bioController.text */
-      });
+    if (_displayNameValid && _bioValid) {
+      usersRef
+          .doc(widget.currentUserUid)
+          .update({"name": nameController.text, "bio": bioController.text});
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Votre profil a été modifié")));
+      Navigator.pop(context);
     }
   }
 }

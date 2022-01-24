@@ -10,31 +10,25 @@ class AppUserData {
   final String uid;
   final String name;
   final String prenom;
-  final String date;
   final String email;
   final String role;
-  final String about;
-  final String image;
+  final String bio;
 
   const AppUserData(
       {required this.uid,
       required this.name,
       required this.prenom,
-      required this.date,
       required this.role,
-      required this.about,
-      required this.image,
+      required this.bio,
       required this.email});
 
   factory AppUserData.fromDocument(DocumentSnapshot doc) {
     return AppUserData(
         uid: doc['token'],
-        prenom: doc['name'],
+        prenom: doc['prenom'],
         email: doc['email'],
-        date: doc['date'],
         role: doc['role'],
-        name: doc['displayName'],
-        image: doc['photoUrl'],
-        about: doc['bio']);
+        name: doc['name'],
+        bio: doc['bio']);
   }
 }

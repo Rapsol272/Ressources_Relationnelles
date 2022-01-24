@@ -65,7 +65,7 @@ class _ProfilPageState extends State<Profil> {
 
   @override
   Widget build(BuildContext context) {
-    final user = UserPreferences.myUser;
+    //final user = UserPreferences.myUser;
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(),
@@ -82,8 +82,9 @@ class _ProfilPageState extends State<Profil> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // profile picture
-                        ProfileWidget(
-                            imagePath: user.image, onClicked: () async {}),
+                        /* ProfileWidget(
+                            imagePath: /* user.image */ '',
+                            onClicked: () async {}), */
 
                         // number of posts, followers, following
                         Expanded(
@@ -92,14 +93,12 @@ class _ProfilPageState extends State<Profil> {
                             children: [
                               Column(
                                 children: [
-                                  Text(
-                                      //'${data.docs[3]['prenom']} ${data.docs[3]['name']}',
-                                      userData['name'].toString(),
+                                  Text(userData['name'].toString(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16)),
                                   Text(
-                                    'Développeur',
+                                    userData['bio'].toString(),
                                     style: TextStyle(color: Colors.black54),
                                   ),
                                 ],
