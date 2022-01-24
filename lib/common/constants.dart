@@ -38,6 +38,14 @@ var textInputDecoration = InputDecoration(
   ),
 );
 
+var textOutlineDecoration = InputDecoration(
+  focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: or, width: 1.0),
+        ),
+      enabledBorder: OutlineInputBorder(
+  borderSide: BorderSide(color: greenMajor,width: 1.0),
+    ));
+
 final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
   primary: Colors.red,
   minimumSize: Size(88, 36),

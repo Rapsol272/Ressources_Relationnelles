@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
   import 'package:image_picker/image_picker.dart';
   import 'package:firebase_storage/firebase_storage.dart';
 
-  enum SingingCharacter { lafayette, jefferson }
+  enum SingingCharacter { lecteur, redacteur }
   class AuthenticateScreen extends StatefulWidget {
     @override
     _AuthenticateScreenState createState() => _AuthenticateScreenState();
@@ -38,6 +38,7 @@ import 'package:flutter/material.dart';
     
     bool showSignIn = true;
     bool changeT = true;
+    bool obscureText = true;
 
 
     @override
@@ -72,7 +73,7 @@ import 'package:flutter/material.dart';
       });
     }
 
-  SingingCharacter? _character = SingingCharacter.lafayette;
+  SingingCharacter? _character = SingingCharacter.lecteur;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -148,23 +149,27 @@ void filePicker() async {
                       SizedBox(height: 20.0),
                       TextFormField(
                         controller: passwordController,
-                        decoration: textInputDecoration.copyWith(hintText: 'Votre mot de passe'),
-                        obscureText: true,
+                        decoration: textInputDecoration.copyWith(
+                          hintText: 'Votre mot de passe',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                              color: greenMajor,
+                              ),
+                            onPressed: () {
+                              setState(() {
+                                  obscureText = !obscureText;
+                              });
+                            },
+                            ),),
+                        obscureText: !obscureText,
                         validator: (value) => value != null && value.length < 6
                             ? "Entrez un mot de passe d'au moins 6 caractères"
                             : null,
                       ),
                       SizedBox(height: 20.0),
-                      !showSignIn ?
-                      TextFormField(
-                        controller: confirmPasswordController,
-                        decoration: textInputDecoration.copyWith(hintText: 'Confirmez mot de passe'),
-                        obscureText: true,
-                        validator: (value) => value == passwordController.text
-                            ? null
-                            : "Les mots de passes ne se correspondent pas !",
-                      ):  Container(),
-                      SizedBox(height: 30.0),
 
                       !showSignIn ? 
                       Column(
@@ -229,11 +234,7 @@ void filePicker() async {
                       TextFormField(
                         controller: bioController,
                         maxLines: 4,
-                        decoration: InputDecoration(
-                          fillColor: Colors.grey,
-                          focusColor: Colors.grey,
-                          hintText: 'Votre Biographie'
-                        ), 
+                        decoration: textOutlineDecoration.copyWith(hintText: 'Votre Biographie') 
                             
                       )
                        :Container(),
