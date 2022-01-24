@@ -9,14 +9,12 @@ import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import 'models/chat_params.dart';
 import 'models/user.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 // If you're going to use other Firebase services in the background, such as Firestore,
 // make sure you call `initializeApp` before using other Firebase services.
-// await Firebase.initializeApp();
+await Firebase.initializeApp();
   print('Background message ${message.messageId}');
 }
 

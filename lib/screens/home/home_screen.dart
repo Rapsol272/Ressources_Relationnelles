@@ -4,6 +4,7 @@ import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/authenticate/scrollAuth.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
+import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
 import 'package:flutter_firebase/screens/pages/edit_profile.dart';
@@ -27,7 +28,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var _currentIndex = 0;
   final List<Widget> _pages = [
-    Accueil(),
+    bodyAcceuil(),
     Groupes(),
     Search(),
     Profil(),
@@ -40,17 +41,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: greenMajor,
         elevation: 0.0,
         title: Text(
           'Ressources Relationnelles',
-          style: TextStyle(color: greenMajor),
+          style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
           PopupMenuButton(
             icon: Icon(
               Icons.more_vert,
-              color: greenMajor,
+              color: Colors.white,
             ),
             onSelected: (choice) {
               switch (choice) {

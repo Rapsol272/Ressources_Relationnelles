@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
+
 class Params extends StatefulWidget {
   Params({Key? key}) : super(key: key);
 
@@ -10,7 +11,7 @@ class Params extends StatefulWidget {
 }
 
 class _ParamsState extends State<Params> {
-  bool status8 = false;
+  bool isDarkModeEnabled = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,9 +69,11 @@ class _ParamsState extends State<Params> {
             title: Text('Standard de la communautés'),
           ),
          ),
-          
-        ],
+
+       ],
       )
     );
   }
+  
 }
+

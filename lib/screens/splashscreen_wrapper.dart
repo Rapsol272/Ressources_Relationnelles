@@ -8,9 +8,14 @@ import 'package:provider/provider.dart';
 class SplashScreenWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var hasWidthPage = MediaQuery.of(context).size.width;
     final user = Provider.of<AppUser?>(context);
     if (user == null) {
-      return ScrollAuth();
+      if (hasWidthPage < 600) {
+        return ScrollAuth();
+      }
+      return //Scaffold(body: AuthenticateScreen(),)
+      HomeScreen();
     } else {
       return HomeScreen();
     }

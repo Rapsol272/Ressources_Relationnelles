@@ -1,6 +1,7 @@
   import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
   import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
   import 'package:flutter_firebase/common/constants.dart';
   import 'package:flutter_firebase/common/loading.dart';
   import 'package:flutter_firebase/services/authentication.dart';
@@ -23,6 +24,8 @@ import 'package:flutter/material.dart';
   }
 
   class _AuthenticateScreenState extends State<AuthenticateScreen> {
+
+
     final AuthenticationService _auth = AuthenticationService();
     final _formKey = GlobalKey<FormState>();
     String error = '';
@@ -38,7 +41,7 @@ import 'package:flutter/material.dart';
     
     bool showSignIn = true;
     bool changeT = true;
-    bool obscureText = true;
+    bool obscureText = false;
 
 
     @override
@@ -103,20 +106,38 @@ void filePicker() async {
 
     @override
     Widget build(BuildContext context) {
+
+      var hasWidthPage = MediaQuery.of(context).size.width;
+
       String imageLink;
       File _image;
       return loading
           ? Loading()
-          : SingleChildScrollView(
-                    child: 
+          : 
+          SingleChildScrollView(
+                    child:
                       Column(
                         children: [
+                    hasWidthPage > 600 ?  ClipOval(
+                            child: SizedBox.fromSize(
+                              size: Size.fromRadius(hasWidthPage * 0.1),
+                              child: Image.asset('images/ressources_relationnelles.png', fit: BoxFit.cover),
+                            ),
+                          ) : Container(),
                     Text(showSignIn ? 'Se connecter' : 'S\'inscrire',  style: TextStyle(color: greenMajor, fontSize: 25, fontWeight: FontWeight.bold)),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
+                      padding: hasWidthPage < 600 ? EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0)
+                      :EdgeInsets.symmetric(vertical: 0.0, horizontal: 400.0),
                       child: Form(
                   key: _formKey,
-                  child: Column(
+                  child: Container(
+                    margin: hasWidthPage > 600 ? EdgeInsets.only(bottom: 50, top: 10) : EdgeInsets.symmetric(),
+                    padding: hasWidthPage > 600 ? EdgeInsets.symmetric(vertical: 00, horizontal: 20) : EdgeInsets.symmetric(),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: hasWidthPage > 600 ? Colors.grey[100] : Colors.transparent,
+                      ),
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       SizedBox(height: 20,),
@@ -142,7 +163,8 @@ void filePicker() async {
                       SizedBox(height: 20.0) : Container(),
                       TextFormField(
                         controller: emailController,
-                        decoration: textInputDecoration.copyWith(hintText: 'Votre adresse email'),
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: textInputDecoration.copyWith(hintText: 'Votre adresse email',),
                         validator: (value) =>
                             value == null || value.isEmpty ? "Entrez votre adresse email" : null,
                       ),
@@ -173,7 +195,8 @@ void filePicker() async {
 
                       !showSignIn ? 
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text('Votre rôle est :', style: TextStyle(
                             fontSize: 15
@@ -199,7 +222,7 @@ void filePicker() async {
                       )
                        : Container(),
                       
-                      SizedBox(height: 30.0),
+                      !showSignIn ? SizedBox(height: 30,) : Container(),
 
                      !showSignIn ?
                       Center(
@@ -212,7 +235,7 @@ void filePicker() async {
                             ),
                           )) :Container(),
 
-                          SizedBox(height: 30,),
+                      !showSignIn ? SizedBox(height: 30,) : Container(),
 
                       !showSignIn ? 
                       OutlinedButton(
@@ -228,17 +251,21 @@ void filePicker() async {
 
                       
 
-                      SizedBox(height:20),
+                      !showSignIn ? SizedBox(height: 30,) : Container(),
 
                       !showSignIn ?
                       TextFormField(
                         controller: bioController,
                         maxLines: 4,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(100)
+                        ],
                         decoration: textOutlineDecoration.copyWith(hintText: 'Votre Biographie') 
                             
                       )
                        :Container(),
-                       SizedBox(height: 30,),
+                       
+                       !showSignIn ? SizedBox(height: 30,) : Container(),
 
                       Center(child: 
                       GestureDetector(
@@ -288,6 +315,7 @@ void filePicker() async {
                                 }
                               },
                               ),
+                              SizedBox(height: 10,),
                             showSignIn
                                 ? OutlinedButton(
                                     style: OutlinedButton.styleFrom(
@@ -311,6 +339,7 @@ void filePicker() async {
                             )
                           ],
                         ),
+                  )
                       ),
                     ),
         ],
