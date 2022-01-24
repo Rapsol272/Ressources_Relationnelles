@@ -72,8 +72,9 @@ class _EditProfileState extends State<EditProfile> {
               child: Text(
                 "Sauvegarder",
               ),
-              onPressed: () {
-                updateProfileData();
+              onPressed: () async {
+                await updateProfileData();
+                Navigator.pop(context); // pop current page
               },
             ),
           ],
@@ -119,6 +120,7 @@ class _EditProfileState extends State<EditProfile> {
       nameController.text.trim().length < 3 || nameController.text.isEmpty
           ? _displayNameValid = false
           : _displayNameValid = true;
+
       bioController.text.trim().length > 100
           ? _bioValid = false
           : _bioValid = true;
@@ -130,7 +132,6 @@ class _EditProfileState extends State<EditProfile> {
           .update({"name": nameController.text, "bio": bioController.text});
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Votre profil a été modifié")));
-      Navigator.pop(context);
     }
   }
 }
