@@ -15,20 +15,22 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 // If you're going to use other Firebase services in the background, such as Firestore,
 // make sure you call `initializeApp` before using other Firebase services.
 await Firebase.initializeApp(
+  /*options: FirebaseOptions(
+    apiKey: "AIzaSyCiPHPmxFyIkQwcOUk7eI63LHTllTEzzJk",
+    projectId: "formfirebase-e7d6e",
+    messagingSenderId: "945171425010",
+    appId: "1:945171425010:web:87787301a2d95437a7126b",)*/
 );
+
   print('Background message ${message.messageId}');
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+  );
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  if (!kIsWeb) {
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(kDebugMode ? false : true);
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  }
   runApp(MyApp());
 }
 
