@@ -14,8 +14,7 @@ class SplashScreenWrapper extends StatelessWidget {
       if (hasWidthPage < 600) {
         return ScrollAuth();
       }
-      return //Scaffold(body: AuthenticateScreen(),)
-      HomeScreen();
+      return Scaffold(body: AuthenticateScreen(),);
     } else {
       return HomeScreen();
     }
