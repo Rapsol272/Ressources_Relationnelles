@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/favoriteGroupsAccueil.dart';
 import 'package:flutter_firebase/screens/pages/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:favorite_button/favorite_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
@@ -44,7 +43,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
             return Text("Il y a eu une erreur");
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('En chargement');
+            return Loading();
           }
           final data = snapshot.requireData;
 
