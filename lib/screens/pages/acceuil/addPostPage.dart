@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase/models/user.dart';
+import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
@@ -385,7 +386,7 @@ class _AddPostPageState extends State<AddPostPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Accueil(),
+                builder: (context) => HomeScreen(),
               ),
             );
           } else if (icon == Icons.publish_sharp) {
