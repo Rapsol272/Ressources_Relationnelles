@@ -51,7 +51,7 @@ class _ProfilPageState extends State<Profil> {
 
       var postSnap = await FirebaseFirestore.instance
           .collection('posts')
-          .where('postId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('idUser', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
       userData = userSnap.data()!;
@@ -203,7 +203,8 @@ class _ProfilPageState extends State<Profil> {
                       FutureBuilder(
                         future: FirebaseFirestore.instance
                             .collection('posts')
-                            .where('auteur', isEqualTo: 'Anthony')
+                            .where('idUser',
+                                isEqualTo: 'EqY6DuPnynUxsNec4NyUUeU9bJ72')
                             .get(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
