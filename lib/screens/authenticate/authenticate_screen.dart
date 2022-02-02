@@ -1,13 +1,21 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/screens/authenticate/confirmation.dart';
 import 'package:flutter_firebase/services/authentication.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:select_form_field/select_form_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sliver_header_delegate/sliver_header_delegate.dart';
+
+import 'package:flutter/cupertino.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
+enum SingingCharacter { lafayette, jefferson }
 
 class AuthenticateScreen extends StatefulWidget {
   @override
@@ -15,7 +23,6 @@ class AuthenticateScreen extends StatefulWidget {
 }
 
 class _AuthenticateScreenState extends State<AuthenticateScreen> {
-  
   final AuthenticationService _auth = AuthenticationService();
   final _formKey = GlobalKey<FormState>();
   String error = '';
@@ -26,21 +33,28 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   final prenomController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final dateController = TextEditingController();
-  bool showSignIn = true;
+  final roleController = TextEditingController();
+  final bioController = TextEditingController();
 
-  final format = DateFormat("yyyy-MM-dd");
-  DateTime? value;
+  bool showSignIn = true;
+  bool changeT = true;
 
   @override
-  
   void dispose() {
     nameController.dispose();
     prenomController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    dateController.dispose();
+    roleController.dispose();
+    bioController.dispose();
     super.dispose();
+  }
+
+  void change() {
+    setState(() {
+      roleController.text = 'Rédacteur';
+      changeT = !changeT;
+    });
   }
 
   void toggleView() {
@@ -51,230 +65,256 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       nameController.text = '';
       prenomController.text = '';
       passwordController.text = '';
-      dateController.text = '';
+      roleController.text = '';
+      bioController.text = '';
       showSignIn = !showSignIn;
     });
   }
-  TextEditingController? _controller;
-  //String _initialValue;
-  String _valueChanged = '';
-  String _valueToValidate = '';
-  String _valueSaved = '';
 
-   final List<Map<String, dynamic>> _items = [
-   
-    {
-      'value': 'redacValue',
-      'label': 'Rédacteur',
-      'icon': Icon(Icons.pending_actions),
-    },
-    {
-      'value': 'lecteurValue',
-      'label': 'Lecteur',
-      'icon': Icon(Icons.book),
-    },
-  ];
+  SingingCharacter? _character = SingingCharacter.lafayette;
 
-  @override
-  void initState() {
-    super.initState();
+  final ImagePicker _picker = ImagePicker();
 
-    //_initialValue = 'starValue';
-    _controller = TextEditingController(text: '2');
+  XFile? profilImage;
 
-    _getValue();
-  }
-
-  Future<void> _getValue() async {
-    await Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        //_initialValue = 'circleValue';
-        _controller?.text = 'lecteurValue';
-      });
+  void filePicker() async {
+    final XFile? selectImage =
+        await _picker.pickImage(source: ImageSource.camera);
+    setState(() {
+      profilImage = selectImage;
     });
   }
 
+  var storage = FirebaseStorage.instance;
+
   @override
-  
-  
   Widget build(BuildContext context) {
     return loading
         ? Loading()
-        : Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xff03989E ), Color(0xffF9E79F)])),
-              child:
-        Scaffold(
-            backgroundColor: Colors.transparent,
-            body: SingleChildScrollView(
-              child:
-              Column(
-                children : [
-                  Container(
-                    child: Image.asset('images/ressources_relationnelles_transparent.png', height: 300,),
-                  ),
-              
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 20,),
-                    !showSignIn
-                        ? TextFormField(
-                            controller: nameController,
-                            decoration: textInputDecoration.copyWith(hintText: 'Votre nom'),
-                            validator: (value) =>
-                                value == null || value.isEmpty ? "Entrez votre nom" : null,
-                          )
-                        : Container(),
-                        SizedBox(height: 20,),
-                        !showSignIn
-                        ? TextFormField(
-                            controller: prenomController,
-                            decoration: textInputDecoration.copyWith(hintText: 'Votre prénom'),
-                            validator: (value) =>
-                                value == null || value.isEmpty ? "Entrez votre prénom" : null,
-                          )
-                        : Container(),
-                        SizedBox(height: 20,),
-                        !showSignIn ? Column(children: <Widget>[
-                            DateTimeField(
-                              controller: dateController,
-                              decoration: textInputDecoration.copyWith(hintText: 'Votre date de naissance'),
-                              format: format,
-                              onShowPicker: (context, currentValue) {
-                                return showDatePicker(
-                                    context: context,
-                                    firstDate: DateTime(1900),
-                                    initialDate: currentValue ?? DateTime(2000),
-                                    lastDate: DateTime.now());
-                              },
-                            ),
-                          ]) : Container(),
-
-                          SizedBox(height: 20,),
-
-                        !showSignIn ?
-                          Column(
-                            children: <Widget>[
-                              SelectFormField(
-                                decoration: textInputDecoration,
-                                type: SelectFormFieldType.dialog,
-                                controller: _controller,
-                                icon: Icon(Icons.collections_bookmark),
-                                labelText: 'Choisir votre rôle',
-                                changeIcon: true,
-                                dialogTitle: 'Choisissez votre rôle',
-                                dialogCancelBtn: 'Fermer',
-                                items: _items,
-                                onChanged: (val) => setState(() => _valueChanged = val),
-                                validator: (val) {
-                                  setState(() => _valueToValidate = val ?? '');
-                                  return null;
-                                },
-                                onSaved: (val) => setState(() => _valueSaved = val ?? ''),
-                              ),
-                            ],
-                          ) : Container(),
-
-                    !showSignIn ? SizedBox(height: 20.0) : Container(),
-                    TextFormField(
-                      controller: emailController,
-                      decoration: textInputDecoration.copyWith(hintText: 'Votre adresse email'),
-                      validator: (value) =>
-                          value == null || value.isEmpty ? "Entrez votre adresse email" : null,
-                    ),
-                    SizedBox(height: 20.0),
-                    TextFormField(
-                      controller: passwordController,
-                      decoration: textInputDecoration.copyWith(hintText: 'Votre mot de passe'),
-                      obscureText: true,
-                      validator: (value) => value != null && value.length < 6
-                          ? "Entrez un mot de passe d'au moins 6 caractères"
-                          : null,
-                    ),
-                    SizedBox(height: 20.0),
-                    !showSignIn ?
-                    TextFormField(
-                      controller: confirmPasswordController,
-                      decoration: textInputDecoration.copyWith(hintText: 'Confirmez mot de passe'),
-                      obscureText: true,
-                      validator: (value) => value == passwordController.text
-                          ? null
-                          : "Les mots de passes ne se correspondent pas !",
-                    ):  Container(),
-                    SizedBox(height: 10.0),
-                    Center(child: 
-                    GestureDetector(
-                      onTap: () => toggleView(), 
-                      child: Text(showSignIn ? 'Créer un compte ?' : 'Déjà un compte ? Connectez vous !', 
-                      style: TextStyle(
-                        color: greenMajor
-                      )
-                      ,))),
-                      SizedBox(height: 10,),
-                    ElevatedButton(
-                       style: ElevatedButton.styleFrom(
-                            primary: Color(0xff148F77),
-                            onPrimary: Colors.white,
-                            shadowColor: Colors.greenAccent,
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            minimumSize: Size(200, 40),
-                        ),
-                      child: Text(
-                        showSignIn ? "Se connecter" : "Suivant",
+        : SingleChildScrollView(
+            child: Column(
+            children: [
+              Text(showSignIn ? 'Se connecter' : 'S\'inscrire',
+                  style: TextStyle(
+                      color: greenMajor,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold)),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 20,
                       ),
-                      onPressed: () async {
-                        if (_formKey.currentState?.validate() == true) {
-                          setState(() => loading = true);
-                          var password = passwordController.value.text;
-                          var email = emailController.value.text;
-                          var name = nameController.value.text;
-                          var prenom = prenomController.value.text;
-                          var date = dateController.value.text;
+                      !showSignIn
+                          ? TextFormField(
+                              controller: nameController,
+                              decoration: textInputDecoration.copyWith(
+                                  hintText: 'Votre nom'),
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                      ? "Entrez votre nom"
+                                      : null,
+                            )
+                          : Container(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      !showSignIn
+                          ? TextFormField(
+                              controller: prenomController,
+                              decoration: textInputDecoration.copyWith(
+                                  hintText: 'Votre prénom'),
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                      ? "Entrez votre prénom"
+                                      : null,
+                            )
+                          : Container(),
+                      !showSignIn ? SizedBox(height: 20.0) : Container(),
+                      TextFormField(
+                        controller: emailController,
+                        decoration: textInputDecoration.copyWith(
+                            hintText: 'Votre adresse email'),
+                        validator: (value) => value == null || value.isEmpty
+                            ? "Entrez votre adresse email"
+                            : null,
+                      ),
+                      SizedBox(height: 20.0),
+                      TextFormField(
+                        controller: passwordController,
+                        decoration: textInputDecoration.copyWith(
+                            hintText: 'Votre mot de passe'),
+                        obscureText: true,
+                        validator: (value) => value != null && value.length < 6
+                            ? "Entrez un mot de passe d'au moins 6 caractères"
+                            : null,
+                      ),
+                      SizedBox(height: 20.0),
+                      !showSignIn
+                          ? TextFormField(
+                              controller: confirmPasswordController,
+                              decoration: textInputDecoration.copyWith(
+                                  hintText: 'Confirmez mot de passe'),
+                              obscureText: true,
+                              validator: (value) => value ==
+                                      passwordController.text
+                                  ? null
+                                  : "Les mots de passes ne se correspondent pas !",
+                            )
+                          : Container(),
+                      SizedBox(height: 30.0),
+                      !showSignIn
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Votre rôle est :',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                GestureDetector(
+                                  onTap: () => change(),
+                                  child: TextFormField(
+                                    textAlignVertical: TextAlignVertical.center,
+                                    textAlign: TextAlign.left,
+                                    controller: roleController
+                                      ..text =
+                                          changeT ? 'Lecteur' : 'Rédacteur',
+                                    style: TextStyle(color: greenMajor),
+                                    enabled: false,
+                                    decoration: textInputDecoration.copyWith(
+                                      prefixIcon: Icon(Icons.swap_vert,
+                                          color: greenMajor),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                      SizedBox(height: 30.0),
+                      !showSignIn
+                          ? Center(
+                              child: profilImage == null
+                                  ? Text(
+                                      'Pas d\'image de profil sélectionnée !')
+                                  : ClipOval(
+                                      child: SizedBox.fromSize(
+                                        size: Size.fromRadius(48),
+                                        child: Image.file(
+                                            File(profilImage!.path),
+                                            fit: BoxFit.cover),
+                                      ),
+                                    ))
+                          : Container(),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      !showSignIn
+                          ? OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                primary: greenMajor,
+                                backgroundColor: Colors.transparent,
+                                side: BorderSide(color: greenMajor, width: 1),
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                              ),
+                              onPressed: () {
+                                filePicker();
+                              },
+                              child: Text('Ajouter une image'))
+                          : Container(),
+                      SizedBox(height: 20),
+                      !showSignIn
+                          ? TextFormField(
+                              controller: bioController,
+                              maxLines: 4,
+                              decoration: textInputDecoration.copyWith(
+                                  hintText: 'Votre biographie'),
+                            )
+                          : Container(),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Center(
+                          child: GestureDetector(
+                              onTap: () => toggleView(),
+                              child: Text(
+                                showSignIn
+                                    ? 'Créer un compte ?'
+                                    : 'Déjà un compte ? Connectez vous !',
+                                style: TextStyle(color: greenMajor),
+                              ))),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: greenMajor,
+                          onPrimary: Colors.white,
+                          shadowColor: or,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          minimumSize: Size(200, 40),
+                        ),
+                        child: Text(
+                          showSignIn ? "Se connecter" : "S\'inscrire",
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState?.validate() == true) {
+                            setState(() => loading = true);
+                            var password = passwordController.value.text;
+                            var email = emailController.value.text;
+                            var name = nameController.value.text;
+                            var prenom = prenomController.value.text;
+                            var role = roleController.value.text;
+                            var bio = bioController.value.text;
 
-                          dynamic result = showSignIn
-                              ? await _auth.signInWithEmailAndPassword(email, password)
-                              : await _auth.registerWithEmailAndPassword(name, prenom, date, email, password);
-                          if (result == null) {
-                            setState(() {
-                              loading = false;
-                              error = 'Please supply a valid email';
-                            });
+                            dynamic result = showSignIn
+                                ? await _auth.signInWithEmailAndPassword(
+                                    email, password)
+                                : await _auth.registerWithEmailAndPassword(
+                                    name, prenom, email, password, role, bio);
+
+                            if (result == null) {
+                              setState(() {
+                                loading = false;
+                                error =
+                                    "Il y une erreur dans votre inscription";
+                              });
+                            }
                           }
-                        }
-                      },
-                    ),
-                      
-                      showSignIn ? OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: greenMajor, width: 2),
-                            primary: greenMajor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),),
-                            ),
-                      onPressed: () async {
-                         dynamic result = await _auth.signInAnonymously();
-                      }, 
-                      child: Text('Se connecter en Anonyme')) : Container(),
-                    SizedBox(height: 10.0),
-                    Text(
-                      error,
-                      style: TextStyle(color: Colors.red, fontSize: 15.0),
-                    )
-                  ],
+                        },
+                      ),
+                      showSignIn
+                          ? OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: greenMajor, width: 2),
+                                primary: greenMajor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                              onPressed: () async {
+                                dynamic result =
+                                    await _auth.signInAnonymously();
+                              },
+                              child: Text('Se connecter en Anonyme'))
+                          : Container(),
+                      SizedBox(height: 10.0),
+                      Text(
+                        error,
+                        style: TextStyle(color: Colors.red, fontSize: 15.0),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-              ])))
-          );
+            ],
+          ));
   }
 }

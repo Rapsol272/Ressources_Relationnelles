@@ -1,6 +1,8 @@
 import 'package:flutter_firebase/models/user.dart';
+import 'package:flutter_firebase/models/user.dart';
+import 'user.dart';
 
-class ChatParams{
+class ChatParams {
   final String userUid;
   final AppUserData peer;
 
