@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/models/user.dart';
@@ -10,93 +9,79 @@ import 'package:flutter_firebase/services/authentication.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
+import 'package:image_picker/image_picker.dart';
 
 class Test extends StatefulWidget {
   Test({Key? key}) : super(key: key);
 
   @override
-  _TestState createState() => _TestState();
+  State<Test> createState() => _TestState();
 }
 
 class _TestState extends State<Test> {
-  List<String> favIdPostUser = [];
-  Map<String, bool> allPostsWFav = {};
-  var _iconFav = Colors.grey;
+  late File imageFile;
+  late String url;
+  bool created = false;
 
-  // Initalise tout
-  initAll(String idUser) async {
-    // Initalise la map allPostsWFav sans les fav du user
-    await FirebaseFirestore.instance.collection('posts').get().then(
-          (querySnapshot) => {
-            querySnapshot.docs.forEach(
-              (doc) => {allPostsWFav[doc.id] = false},
-            ),
-          },
-        );
-    // Initialise la liste des post like par l'utilisateur courant
-    await FirebaseFirestore.instance.collection('like').get().then(
-          (querySnapshot) => {
-            querySnapshot.docs.forEach(
-              (doc) => {
-                doc.data()['idUser'] == idUser
-                    ? favIdPostUser.add(doc.data()['idPost'])
-                    : null
-              },
-            ),
-          },
-        );
-    // Value == true signifie que le post a été like par l'utilisateur
-    for (var i = 0; i < favIdPostUser.length; i++) {
-      for (var j = 0; j < allPostsWFav.length; j++) {
-        if (favIdPostUser[i] == allPostsWFav.keys.elementAt(j))
-          allPostsWFav.update(
-              allPostsWFav.keys.elementAt(j), (value) => value = true);
-      }
-    }
+  Future<String> _openGallery(BuildContext context) async {
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    File selected = File(pickedFile!.path);
+    setState(() {
+      imageFile = selected;
+    });
+    String fileName = imageFile.path;
+    Reference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('images/$fileName');
+    UploadTask uploadTask = firebaseStorageRef.putFile(imageFile);
+
+    uploadTask.whenComplete(() async {
+      String test = await firebaseStorageRef.getDownloadURL();
+    });
+
+    return test;
   }
 
-  // Verif if idPost is liked
-  verifIdPost(String idPost) {
-    for (var i = 0; i < favIdPostUser.length; i++) {
-      if (favIdPostUser[i] == idPost)
-        return true;
-      else
-        return false;
-    }
-  }
+  //Future uploadImageToFirebase(BuildContext context) async {
 
-  initState() {
-    super.initState();
-  }
+  //}
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: initAll('gwyc9IUyPsheUpUDa3Lq3jCEZrJ2'),
-      builder: (context, snapshot) {
-        return Container(
-          child: Column(
-            children: [
-              Text(
-                favIdPostUser.toString() + allPostsWFav.toString(),
-                style: TextStyle(color: Colors.black, fontSize: 15),
-              ),
-              IconButton(
-                padding: const EdgeInsets.only(bottom: 12),
-                onPressed: () {},
-                icon: Icon(
-                  FontAwesomeIcons.heart,
-                  color: verifIdPost('I4Ej3bZxF4cpNtwPOECe')
-                      ? Colors.red
-                      : Colors.grey,
-                ),
-              ),
-            ],
+    return Container(
+      color: Colors.blue,
+      height: 500,
+      width: 500,
+      child: Column(
+        children: [
+          IconButton(
+            onPressed: () {
+              url = _openGallery(context) as String;
+              created = true;
+            },
+            icon: Icon(Icons.ac_unit_sharp),
+            color: Colors.white,
           ),
-        );
-      },
+          created
+              ? Image.network(
+                  url,
+                )
+              : Container(
+                  color: Colors.red,
+                  height: 50,
+                  width: 300,
+                ),
+        ],
+      ),
     );
   }
 }

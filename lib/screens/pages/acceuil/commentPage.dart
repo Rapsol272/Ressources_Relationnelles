@@ -16,6 +16,8 @@ class commentPage extends StatefulWidget {
 // ignore: camel_case_types
 class _commentPageState extends State<commentPage> {
   final AuthenticationService _auth = AuthenticationService();
+  var myControllerTitle = TextEditingController();
+  var myControllerContent = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,87 +37,6 @@ class _commentPageState extends State<commentPage> {
             textAlign: TextAlign.center,
           ),
         ),
-        actions: <Widget>[
-          PopupMenuButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.white,
-            ),
-            onSelected: (choice) {
-              switch (choice) {
-                case 0:
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Params()));
-                  break;
-                case 1:
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Help()));
-                  break;
-                // other cases...
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 0,
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
-                        child: Icon(
-                          Icons.settings,
-                          color: greenMajor,
-                        )),
-                    Text('Paramètres')
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
-                        child: Icon(
-                          Icons.help,
-                          color: greenMajor,
-                        )),
-                    Text('Aide')
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                onTap: () async {},
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
-                        child: Icon(
-                          Icons.edit,
-                          color: greenMajor,
-                        )),
-                    Text('Modifier mon profil')
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                onTap: () async {
-                  await _auth.signOut();
-                },
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
-                        child: Icon(
-                          Icons.logout,
-                          color: greenMajor,
-                        )),
-                    Text('Se déconnecter')
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
       body: Container(
         child: Column(
@@ -254,6 +175,23 @@ class _commentPageState extends State<commentPage> {
           ],
         ),
       ),
+    );
+  }
+
+  txtEditingCont(String label, int max) {
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        TextField(
+          controller: myControllerTitle,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          maxLines: max,
+        ),
+      ],
     );
   }
 }
