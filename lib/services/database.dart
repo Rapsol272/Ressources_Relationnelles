@@ -9,8 +9,8 @@ class DatabaseService {
   final CollectionReference<Map<String, dynamic>> userCollection =
       FirebaseFirestore.instance.collection("users");
 
-  Future<void> saveUser(String name, String prenom, String date, String email) async {
-    return await userCollection.doc(uid).set({'name': name, 'prenom': prenom, 'date': date, 'email': email});
+  Future<void> saveUser(String name, String prenom, String email, String role, String bio) async {
+    return await userCollection.doc(uid).set({'name': name, 'prenom': prenom, 'email': email, 'role' : role, 'bio': bio});
   }
 
   Future<void> saveToken(String? token) async {
@@ -24,8 +24,9 @@ class DatabaseService {
       uid: snapshot.id,
       name: data['name'],
       prenom: data['prenom'],
-      date: data['date'],
-      email: data['email']
+      email: data['email'],
+      role : data['role'],
+      bio: data['bio']
     );
   }
 
