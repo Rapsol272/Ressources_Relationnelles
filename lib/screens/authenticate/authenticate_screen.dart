@@ -50,13 +50,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     super.dispose();
   }
 
-  void change() {
-    setState(() {
-      roleController.text = 'Rédacteur';
-      changeT = !changeT;
-    });
-  }
-
   void toggleView() {
     setState(() {
       _formKey.currentState?.reset();
@@ -71,7 +64,20 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     });
   }
 
-  SingingCharacter? _character = SingingCharacter.lafayette;
+  void change() {
+    setState(() {
+      roleController.text = 'Rédacteur';
+      TextFormField(
+        controller: roleController..text = 'Redacteur',
+        style: TextStyle(color: changeT ? greenMajor : Colors.grey),
+        enabled: false,
+        decoration: textInputDecoration.copyWith(hintText: 'Role'),
+        validator: (value) =>
+            value == null || value.isEmpty ? "Entrez votre role" : null,
+      );
+      changeT = !changeT;
+    });
+  }
 
   final ImagePicker _picker = ImagePicker();
 

@@ -1,9 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/screens/authenticate/scrollAuth.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
@@ -12,13 +9,10 @@ import 'package:flutter_firebase/screens/pages/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/screens/pages/recherche.dart';
 import 'package:flutter_firebase/services/authentication.dart';
-import 'package:flutter_firebase/services/database.dart';
 import 'package:flutter_firebase/services/notification_service.dart';
-import 'package:provider/provider.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class HomeScreen extends StatefulWidget {
-  final AuthenticationService _auth = AuthenticationService();
   HomeScreen({Key? key}) : super(key: key);
 
   @override
