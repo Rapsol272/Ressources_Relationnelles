@@ -6,7 +6,7 @@ import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
-import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/widget/appbar_widget.dart';

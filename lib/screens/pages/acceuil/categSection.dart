@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
-import 'package:flutter_firebase/screens/pages/profil.dart';
+import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:favorite_button/favorite_button.dart';

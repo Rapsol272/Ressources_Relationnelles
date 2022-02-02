@@ -25,7 +25,6 @@ Color _colorContainer2 = Color(0xffaefea01);
 bool verif = true;
 
 class _AddPostPageState extends State<AddPostPage> {
-  AppUserData user = UserPreferences.myUser;
   String dropdownValue = 'Categorie';
   String lastKey = '';
   String myTitle = '';
