@@ -8,12 +8,12 @@ class ScrollAuth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableHome(
-      title: Text('Ressources Relationnelles'), 
-      headerWidget: Center(child:Image.asset('images/ressources_relationnelles_transparent.png')), 
-      body: [
-        AuthenticateScreen()
-      ],
+      title: Text('Ressources Relationnelles'),
+      headerWidget: Center(
+          child:
+              Image.asset('images/ressources_relationnelles_transparent.png')),
+      body: [AuthenticateScreen()],
       fullyStretchable: false,
-      );
+    );
   }
 }
