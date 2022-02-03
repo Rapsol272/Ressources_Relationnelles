@@ -24,6 +24,7 @@ class _EditProfileState extends State<EditProfile> {
   //AppUserData user = UserPreferences.myUser;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController nameController = TextEditingController();
+  TextEditingController prenomController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   bool isLoading = false;
   late AppUserData user_fire;
@@ -43,6 +44,7 @@ class _EditProfileState extends State<EditProfile> {
     DocumentSnapshot doc = await usersRef.doc(widget.currentUserUid).get();
     user_fire = AppUserData.fromDocument(doc);
     nameController.text = user_fire.name;
+    prenomController.text = user_fire.prenom;
     bioController.text = user_fire.bio;
     setState(() {
       isLoading = true;
@@ -59,6 +61,8 @@ class _EditProfileState extends State<EditProfile> {
             //ProfileWidget(imagePath: '', isEdit: true, onClicked: () async {}),
             const SizedBox(height: 24),
             buildNameField(),
+            const SizedBox(height: 24),
+            buildPrenomField(),
             const SizedBox(height: 24),
             buildBioField(),
             const SizedBox(height: 24),
@@ -102,6 +106,23 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  Column buildPrenomField() {
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        TextField(
+          controller: prenomController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          maxLines: 1,
+        ),
+      ],
+    );
+  }
+
   Column buildBioField() {
     return Column(
       children: [
@@ -131,9 +152,11 @@ class _EditProfileState extends State<EditProfile> {
     });
 
     if (_displayNameValid && _bioValid) {
-      usersRef
-          .doc(widget.currentUserUid)
-          .update({"name": nameController.text, "bio": bioController.text});
+      usersRef.doc(widget.currentUserUid).update({
+        "name": nameController.text,
+        "prenom": prenomController.text,
+        "bio": bioController.text
+      });
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Votre profil a été modifié")));
     }

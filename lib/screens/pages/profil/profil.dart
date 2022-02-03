@@ -41,6 +41,8 @@ class _ProfilPageState extends State<Profil> {
 
   getData() async {
     setState(() {
+      var user = FirebaseAuth.instance.authStateChanges();
+
       isLoading = true;
     });
     try {
@@ -103,9 +105,9 @@ class _ProfilPageState extends State<Profil> {
                               Column(
                                 children: [
                                   Text(
-                                      userData['name'].toString() +
+                                      userData['prenom'].toString() +
                                           ' ' +
-                                          userData['prenom'].toString(),
+                                          userData['name'].toString(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16)),
@@ -204,7 +206,8 @@ class _ProfilPageState extends State<Profil> {
                         future: FirebaseFirestore.instance
                             .collection('posts')
                             .where('idUser',
-                                isEqualTo: 'EqY6DuPnynUxsNec4NyUUeU9bJ72')
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser!.uid)
                             .get(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -215,7 +218,7 @@ class _ProfilPageState extends State<Profil> {
                           }
                           final data = snapshot.requireData;
                           return ListView.builder(
-                            itemCount: 1,
+                            itemCount: postLen,
                             itemBuilder: (context, index) {
                               DocumentSnapshot snap =
                                   (snapshot.data! as dynamic).docs[index];
