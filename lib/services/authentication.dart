@@ -27,8 +27,8 @@ class AuthenticationService {
 
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      UserCredential result =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
       return _userFromFirebaseUser(user);
     } catch (exception) {
@@ -37,15 +37,17 @@ class AuthenticationService {
     }
   }
 
-  Future registerWithEmailAndPassword(String name, String prenom, String email, String password, String role, String bio) async {
+  Future registerWithEmailAndPassword(String name, String prenom, String email,
+      String password, String role, String bio) async {
     try {
-      UserCredential result =
-          await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
       if (user == null) {
         throw Exception("No user found");
       } else {
-        await DatabaseService(user.uid).saveUser(name, prenom, email, role, bio);
+        await DatabaseService(user.uid)
+            .saveUser(name, prenom, email, role, bio);
 
         return _userFromFirebaseUser(user);
       }
@@ -60,13 +62,11 @@ class AuthenticationService {
       UserCredential result = await _auth.signInAnonymously();
       User? user = result.user;
       return user;
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
       return null;
     }
-
   }
-  
 
   Future signOut() async {
     try {

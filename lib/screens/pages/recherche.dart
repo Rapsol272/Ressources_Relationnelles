@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/common/loading.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'dart:async';
-import 'dart:math';
 import 'package:paginated_search_bar/paginated_search_bar.dart';
 import 'package:endless/endless.dart';
 
@@ -16,12 +11,13 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  bool _counter = false;
   bool isPressed = false;
-  var isLiked = Icon(Icons.favorite, color: Colors.red,);
+  var isLiked = Icon(
+    Icons.favorite,
+    color: Colors.red,
+  );
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
 
   static int refreshNum = 10; // number that changes when refreshed
   Stream<int> counterStream =
@@ -29,75 +25,68 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+    ExampleItemPager pager = ExampleItemPager();
 
-    bool _show = true;
-  ExampleItemPager pager = ExampleItemPager();
-  TextEditingController textController = TextEditingController();
-
-
-    TextEditingController _textController = TextEditingController();
     return Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff03989E ), Color(0xffF9E79F)])),
-              child: 
-    Scaffold(
-      backgroundColor: Colors.transparent,
-      key: _scaffoldKey,
-      body: 
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff03989E), Color(0xffF9E79F)])),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          key: _scaffoldKey,
+          body: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(top: 20),
+                child: Container(
+                  width: 600,
+                  child: PaginatedSearchBar<ExampleItem>(
+                    maxHeight: 200,
+                    hintText: 'Tapez votre recherche ici ...',
+                    emptyBuilder: (context) {
+                      return const Text("I'm an empty state!");
+                    },
+                    placeholderBuilder: (context) {
+                      return const Text("");
+                    },
+                    paginationDelegate: EndlessPaginationDelegate(
+                      pageSize: 20,
+                      maxPages: 3,
+                    ),
+                    onSearch: ({
+                      required pageIndex,
+                      required pageSize,
+                      required searchQuery,
+                    }) async {
+                      return Future.delayed(const Duration(milliseconds: 1300),
+                          () {
+                        if (searchQuery == "empty") {
+                          return [];
+                        }
 
-      Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 20),
-            child: Container(
-              width: 600,
-              child: PaginatedSearchBar<ExampleItem>(
-                maxHeight: 200,
-                hintText: 'Tapez votre recherche ici ...',
-                emptyBuilder: (context) {
-                  return const Text("I'm an empty state!");
-                },
-                placeholderBuilder: (context) {
-                  return const Text("");
-                },
-                paginationDelegate: EndlessPaginationDelegate(
-                  pageSize: 20,
-                  maxPages: 3,
+                        if (pageIndex == 0) {
+                          pager = ExampleItemPager();
+                        }
+
+                        return pager.nextBatch();
+                      });
+                    },
+                    itemBuilder: (
+                      context, {
+                      required item,
+                      required index,
+                    }) {
+                      return Text(item.title);
+                    },
+                  ),
                 ),
-                onSearch: ({
-                  required pageIndex,
-                  required pageSize,
-                  required searchQuery,
-                }) async {
-                  return Future.delayed(const Duration(milliseconds: 1300), () {
-                    if (searchQuery == "empty") {
-                      return [];
-                    }
-
-                    if (pageIndex == 0) {
-                      pager = ExampleItemPager();
-                    }
-
-                    return pager.nextBatch();
-                  });
-                },
-                itemBuilder: (
-                  context, {
-                  required item,
-                  required index,
-                }) {
-                  return Text(item.title);
-                },
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-      
-      /*Center(
+
+          /*Center(
         child: TextField(
           style: TextStyle(
             color: Colors.white
@@ -114,7 +103,7 @@ class _SearchState extends State<Search> {
           },
         )
       )*/
-      /*StreamBuilder<int>(
+          /*StreamBuilder<int>(
             stream: counterStream,
             builder: (context, snapshot) {
               return StreamBuilder(
@@ -130,7 +119,8 @@ class _SearchState extends State<Search> {
             }).toList(),
           );
         },);
-            })*/));
+            })*/
+        ));
   }
 }
 
@@ -163,12 +153,8 @@ class ExampleItemPager {
   }
 }
 
-
-
 class CustomSearchDelegate extends SearchDelegate {
-  
-  
-  List <String> searchTerms = [
+  List<String> searchTerms = [
     'Adrien',
     'Anthony',
     'Loic',
@@ -180,22 +166,21 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
-      IconButton(onPressed: () {
-        query = '';
-      }, 
-      icon: Icon(Icons.clear)
-      )
+      IconButton(
+          onPressed: () {
+            query = '';
+          },
+          icon: Icon(Icons.clear))
     ];
   }
 
   @override
- Widget buildLeading(BuildContext context) {
-    return 
-      IconButton(onPressed: () {
-        close(context, null);
-      }, 
-      icon: Icon(Icons.arrow_back_ios)
-      );
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          close(context, null);
+        },
+        icon: Icon(Icons.arrow_back_ios));
   }
 
   @override
@@ -207,14 +192,13 @@ class CustomSearchDelegate extends SearchDelegate {
       }
     }
     return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(result),
-        );
-      }
-    );
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = matchQuery[index];
+          return ListTile(
+            title: Text(result),
+          );
+        });
   }
 
   @override
@@ -226,13 +210,12 @@ class CustomSearchDelegate extends SearchDelegate {
       }
     }
     return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(result),
-        );
-      }
-    );
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = matchQuery[index];
+          return ListTile(
+            title: Text(result),
+          );
+        });
   }
 }

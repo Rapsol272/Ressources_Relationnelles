@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class ProfileWidget extends StatelessWidget {
@@ -16,8 +14,6 @@ class ProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
-
     return Center(
       child: Stack(
         children: [
@@ -36,8 +32,8 @@ class ProfileWidget extends StatelessWidget {
         child: Ink.image(
           image: image,
           fit: BoxFit.cover,
-          width: 50,
-          height: 50,
+          width: 90,
+          height: 90,
           child: InkWell(onTap: onClicked),
         ),
       ),

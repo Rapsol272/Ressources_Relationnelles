@@ -1,24 +1,45 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/screens/pages/commentPage.dart';
-import 'package:flutter_firebase/screens/pages/profil.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
+import 'package:flutter_firebase/screens/pages/profil/profil.dart';
+
+import 'package:flutter_firebase/common/loading.dart';
+import 'package:flutter_firebase/screens/home/home_screen.dart';
+
+import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:favorite_button/favorite_button.dart';
-import 'package:flutter_firebase/screens/pages/postHelper.dart';
-import 'package:flutter_firebase/screens/pages/postItem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
+// ignore: camel_case_types
 
 class bodyAcceuil extends StatefulWidget {
   @override
   _bodyAcceuilState createState() => _bodyAcceuilState();
 }
 
+// ignore: camel_case_types
 class _bodyAcceuilState extends State<bodyAcceuil> {
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
-  var _iconColor = Colors.grey;
+
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
+  var _iconFav = Colors.grey;
+  var isPostLiked;
+
+  List<String> array = [];
+  List favIdPostUser = [];
+  Map<String, bool> allPostsWFav = {};
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +54,25 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
             return Loading();
           }
           final data = snapshot.requireData;
+
+          // Première Listview builder : création d'une page scrollable
           return ListView.builder(
             itemCount: 1,
-            itemBuilder: (context, index) {
+            itemBuilder: (context, i) {
               return SingleChildScrollView(
                 physics: ScrollPhysics(),
                 child: Column(
                   children: <Widget>[
+                    // Appel du constructeur de la barre des catégories
+                    CategSection(),
+
+                    // Seconde Listview builder : création d'une liste de post en correspondance avec la collection post dans firestore
                     ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: data.size,
                       itemBuilder: (context, index) {
+                        array = data.docs[index]["tags"].cast<String>();
                         return Container(
                           padding: const EdgeInsets.only(
                             left: 10,
@@ -52,6 +80,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                             top: 5,
                             bottom: 5,
                           ),
+                          // Création de la card avec l'ensemble du contenu
                           child: Card(
                             elevation: 15,
                             margin: EdgeInsets.all(5),
@@ -63,12 +92,15 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                             child: Column(
                               children: [
                                 ListTile(
+                                  // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
                                   leading: ElevatedButton(
                                     onPressed: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Profil()),
+                                            builder: (context) => Profil(
+                                                uId: FirebaseAuth.instance
+                                                    .currentUser!.uid)),
                                       );
                                     },
                                     child: Icon(
@@ -78,11 +110,10 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     style: ElevatedButton.styleFrom(
                                       shape: CircleBorder(),
                                       padding: EdgeInsets.all(10),
-                                      primary:
-                                          Color(0xff03989E), // <-- Button color
-                                      onPrimary: Colors.red, // <-- Splash color
+                                      primary: Color(0xff03989E),
                                     ),
                                   ),
+
                                   title: Text(
                                     '${data.docs[index]['title']}',
                                     style: TextStyle(
@@ -96,32 +127,39 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         fontStyle: FontStyle.italic),
                                   ),
                                 ),
+
+                                // Affichage de l'image associé au post TODO
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12.0),
                                   child: Image.asset(
-                                    "images/test1.jpeg",
+                                    "images/test1.jpg",
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 4.0, bottom: 4.0),
+                                    top: 4.0,
+                                    bottom: 4.0,
+                                  ),
+                                  // Partie déroulante du widget card
                                   child: ExpansionTile(
-                                    title: Text(
-                                      posts.toString(),
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Color(0xff03989E),
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    // Affichage des tags associé au post
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        for (var i = 0; i < array.length; i++)
+                                          unitTags(array, i)
+                                      ],
                                     ),
+                                    // Date de création du post
                                     leading: Text(
-                                      '${data.docs[index]['dateCreation']}',
+                                      '${convertDateTimeDisplay(data.docs[index]['dateCreation'].toDate().toString())}',
                                       style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: 12,
                                       ),
                                     ),
+                                    // Contenu textuel du post
                                     children: <Widget>[
                                       Container(
                                         alignment: Alignment.center,
@@ -134,10 +172,12 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ],
                                   ),
                                 ),
+                                // Barre d'action du post (favoris, share, add, comment)
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
+                                    // Comment button
                                     IconButton(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
@@ -152,6 +192,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                       icon: Icon(FontAwesomeIcons.comment),
                                       color: Colors.grey,
                                     ),
+                                    // Button share et/ ou création d'un nouveau groupe
                                     IconButton(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
@@ -169,6 +210,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         color: _iconColorShare,
                                       ),
                                     ),
+                                    // Button Add  : a regarder plus tard
                                     IconButton(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
@@ -186,17 +228,36 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         color: _iconColorAdd,
                                       ),
                                     ),
-                                    Container(
+                                    // Button like
+                                    IconButton(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
-                                      child: FavoriteButton(
-                                        iconSize: 50,
-                                        iconColor: Colors.red,
-                                        valueChanged: (_isFavorite) {
-                                          print('Is Favorite $_isFavorite)');
-                                        },
+                                      onPressed: () {
+                                        setState(() {
+                                          if (_iconFav == Colors.grey) {
+                                            _iconFav = Colors.red;
+                                          } else {
+                                            _iconFav = Colors.grey;
+                                          }
+                                        });
+                                      },
+                                      icon: Icon(
+                                        FontAwesomeIcons.heart,
+                                        color: _iconFav,
                                       ),
-                                    )
+                                    ),
+                                    /*GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: FavoriteButton(
+                                          iconSize: 50,
+                                          iconColor: _iconFav,
+                                          valueChanged: (_isFavorite) {},
+                                        ),
+                                      ),
+                                    )*/
                                   ],
                                 ),
                               ],
@@ -214,4 +275,70 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
       ),
     );
   }
+}
+
+String convertDateTimeDisplay(String date) {
+  final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
+  final DateFormat serverFormater = DateFormat('dd-MM-yyyy');
+  final DateTime displayDate = displayFormater.parse(date);
+  final String formatted = serverFormater.format(displayDate);
+  return formatted;
+}
+
+void getUser() {
+  StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('users').doc().snapshots(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return Text("Loading");
+        }
+        var userDocument = snapshot.data;
+        return Container();
+      });
+}
+
+// Create une pillule dans la barre des tags pour un tag i dans la list array
+unitTags(List array, int i) {
+  return Flexible(
+    child: Container(
+      margin: const EdgeInsets.only(right: 5, left: 5),
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(15),
+          topLeft: Radius.circular(15),
+          bottomRight: Radius.circular(15),
+          bottomLeft: Radius.circular(15),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: Offset(0, 1), // changes position of shadow
+          ),
+        ],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            greenMajor,
+            Color(0xffaefea01),
+          ],
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            array[i],
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 8,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

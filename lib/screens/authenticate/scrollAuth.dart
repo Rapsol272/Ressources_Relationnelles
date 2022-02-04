@@ -20,6 +20,6 @@ class ScrollAuth extends StatelessWidget {
         AuthenticateScreen()
       ],
       fullyStretchable: false,
-      );
+    );
   }
 }

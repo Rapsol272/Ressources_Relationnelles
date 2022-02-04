@@ -1,4 +1,4 @@
-  import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
   import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
@@ -43,40 +43,37 @@ import 'package:flutter/services.dart';
     bool changeT = true;
     bool obscureText = false;
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    prenomController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    roleController.dispose();
+    bioController.dispose();
+    super.dispose();
+  }
 
-    @override
-    void dispose() {
-      nameController.dispose();
-      prenomController.dispose();
-      emailController.dispose();
-      passwordController.dispose();
-      roleController.dispose();
-      bioController.dispose();
-      super.dispose();
-    }
-
-    void change() {
+  void change() {
       setState(() {
         roleController.text = 'Rédacteur';
         changeT = !changeT;
       });
     }
 
-    void toggleView() {
-      setState(() {
-        _formKey.currentState?.reset();
-        error = '';
-        emailController.text = '';
-        nameController.text = '';
-        prenomController.text = '';
-        passwordController.text = '';
-        roleController.text = '';
-        bioController.text = '';
-        showSignIn = !showSignIn;
-      });
-    }
-
-  SingingCharacter? _character = SingingCharacter.lecteur;
+  void toggleView() {
+    setState(() {
+      _formKey.currentState?.reset();
+      error = '';
+      emailController.text = '';
+      nameController.text = '';
+      prenomController.text = '';
+      passwordController.text = '';
+      roleController.text = '';
+      bioController.text = '';
+      showSignIn = !showSignIn;
+    });
+  }SingingCharacter? _character = SingingCharacter.lecteur;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -92,7 +89,6 @@ void filePicker() async {
     /*pictureFolderRef.putFile(profilImage).onComplete.then((storageTask) async{
       String link = await storageTask.ref.getDownloadURL();
       setState(() {
-
       });
     });
     setState(() {
@@ -105,6 +101,9 @@ void filePicker() async {
   var storage = FirebaseStorage.instance;
 
     @override
+
+  
+   @override
     Widget build(BuildContext context) {
 
       var hasWidthPage = MediaQuery.of(context).size.width;
@@ -349,5 +348,3 @@ void filePicker() async {
     }
     
   }
-
-
