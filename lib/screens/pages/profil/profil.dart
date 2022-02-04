@@ -282,7 +282,9 @@ class _ProfilPageState extends State<Profil> {
                                               ),
                                               subtitle: Text(
                                                 //'${data.docs[index]['auteur']}',
-                                                snap['auteur'].toString(),
+                                                userData['name'].toString() +
+                                                    userData['prenom']
+                                                        .toString(),
                                                 style: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(0.6),
