@@ -295,9 +295,13 @@ class _ProfilPageState extends State<Profil> {
                                             ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
-                                              child: Image.asset(
-                                                "images/test1.jpeg",
-                                              ),
+                                              child: snap['reference'] == ""
+                                                  ? Image.asset(
+                                                      "images/test1.jpg",
+                                                    )
+                                                  : Image.network(
+                                                      '${snap['reference']}',
+                                                    ),
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
