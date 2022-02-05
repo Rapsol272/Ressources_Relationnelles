@@ -351,7 +351,11 @@ class _ProfilPageState extends State<Profil> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            commentPage(),
+                                                            commentPage(
+                                                          idPost: snap.id,
+                                                          titlePost:
+                                                              snap['title'],
+                                                        ),
                                                       ),
                                                     );
                                                   },
