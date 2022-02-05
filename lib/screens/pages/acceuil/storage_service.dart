@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
@@ -34,10 +35,45 @@ class Storage {
     return results;
   }
 
-  Future<String> downloadUrl(String imageName) async {
-    String downloadUrl =
-        await storage.ref().child('images/$imageName').getDownloadURL();
+  // Pour vérifier si le document avec les paramètres ci-dessous, existe dans la collection like
+  Future<bool> verifyLikePost(String idPost, String idUser) async {
+    bool verif = false;
+    await FirebaseFirestore.instance.collection('like').get().then(
+          (querySnapshot) => {
+            querySnapshot.docs.forEach(
+              (doc) => {
+                if (doc['idPost'] == idPost && doc['idUser'] == idUser)
+                  verif = true,
+              },
+            ),
+          },
+        );
+    return verif;
+  }
 
-    return downloadUrl;
+  //
+  Future<void> changeLikePost(String idPost, String idUser) async {
+    bool verif = await verifyLikePost(idPost, idUser);
+    if (verif == false) {
+      var myData = {
+        'idUser': idUser,
+        'idPost': idPost,
+      };
+      var collection = FirebaseFirestore.instance.collection('like');
+      collection
+          .add(myData) // <-- Your data
+          .then((_) => print('Added'))
+          .catchError((error) => print('Add failed: $error'));
+    } else {
+      var collection = FirebaseFirestore.instance.collection('like');
+      var snapshot = await collection
+          .where('idPost', isEqualTo: idPost)
+          .where('idPost', isEqualTo: idUser)
+          .get();
+
+      for (var doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
+    }
   }
 }

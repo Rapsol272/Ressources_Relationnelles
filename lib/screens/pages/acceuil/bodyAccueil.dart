@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
@@ -7,6 +8,12 @@ import 'package:flutter_firebase/screens/pages/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_firebase/common/loading.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:file_picker/file_picker.dart';
 
 // ignore: camel_case_types
 class bodyAcceuil extends StatefulWidget {
@@ -19,6 +26,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
 
+  var myUserId = FirebaseAuth.instance.currentUser!.uid;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   var _iconFav = Colors.grey;
@@ -35,6 +43,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
 
   @override
   Widget build(BuildContext context) {
+    Storage storage = new Storage();
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
         stream: posts,
@@ -229,18 +238,20 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     IconButton(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
-                                      onPressed: () {
-                                        setState(() {
-                                          if (_iconFav == Colors.grey) {
-                                            _iconFav = Colors.red;
-                                          } else {
-                                            _iconFav = Colors.grey;
-                                          }
-                                        });
+                                      onPressed: () async {
+                                        storage.changeLikePost(
+                                            '${data.docs[index].id}', myUserId);
+                                        setState(() {});
                                       },
                                       icon: Icon(
                                         FontAwesomeIcons.heart,
-                                        color: _iconFav,
+                                        color: storage.verifyLikePost(
+                                                  '${data.docs[index].id}',
+                                                  myUserId,
+                                                ) ==
+                                                false
+                                            ? Colors.red
+                                            : Colors.grey,
                                       ),
                                     ),
                                     /*GestureDetector(
