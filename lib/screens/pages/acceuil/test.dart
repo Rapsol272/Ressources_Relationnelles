@@ -1,24 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
-import 'package:flutter_firebase/screens/pages/profil.dart';
-import 'package:flutter_firebase/services/authentication.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:favorite_button/favorite_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart' as path;
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_firebase/common/loading.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:file_picker/file_picker.dart';
 
 class Test extends StatefulWidget {
   Test({Key? key}) : super(key: key);
@@ -28,11 +12,110 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  late File imageFile;
+  @override
+  Widget build(BuildContext context) {
+    final Storage storage = Storage();
+    return Container(
+      width: 800,
+      height: 600,
+      color: Colors.blue,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              final results = await FilePicker.platform.pickFiles(
+                allowMultiple: false,
+                type: FileType.custom,
+                allowedExtensions: ['png', 'jpg'],
+              );
+
+              if (results == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('No file'),
+                  ),
+                );
+                return null;
+              }
+
+              final path = results.files.single.path!;
+              final fileName = results.files.single.name;
+
+              storage
+                  .uploadFile(
+                    path,
+                    fileName,
+                  )
+                  .then(
+                    (value) => print('Done'),
+                  );
+
+              print(path);
+              print(fileName);
+            },
+            child: Text('Upload file'),
+          ),
+          FutureBuilder(
+            future: storage.listFiles(),
+            builder: (BuildContext context,
+                AsyncSnapshot<firebase_storage.ListResult> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                return Container(
+                  height: 100,
+                  child: ListView.builder(
+                      itemCount: snapshot.data!.items.length,
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ElevatedButton(
+                          onPressed: () {},
+                          child: Text(snapshot.data!.items[index].name),
+                        );
+                      }),
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  !snapshot.hasData) {
+                return Loading();
+              }
+              return Container();
+            },
+          ),
+          FutureBuilder(
+            future: storage.downloadUrl('IMG_20220130_151000.jpg'),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                return Container(
+                    width: 300,
+                    height: 250,
+                    child: Image.network(
+                      snapshot.data!,
+                      fit: BoxFit.cover,
+                    ));
+              }
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  !snapshot.hasData) {
+                return Loading();
+              }
+              return Container();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+/* late File imageFile;
   late String url;
   bool created = false;
 
-  Future<String> _openGallery(BuildContext context) async {
+   Future<String> _openGallery(BuildContext context) async {
     final pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery);
     File selected = File(pickedFile!.path);
@@ -53,35 +136,4 @@ class _TestState extends State<Test> {
 
   //Future uploadImageToFirebase(BuildContext context) async {
 
-  //}
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      height: 500,
-      width: 500,
-      child: Column(
-        children: [
-          IconButton(
-            onPressed: () {
-              url = _openGallery(context) as String;
-              created = true;
-            },
-            icon: Icon(Icons.ac_unit_sharp),
-            color: Colors.white,
-          ),
-          created
-              ? Image.network(
-                  url,
-                )
-              : Container(
-                  color: Colors.red,
-                  height: 50,
-                  width: 300,
-                ),
-        ],
-      ),
-    );
-  }
-}
+  //} */

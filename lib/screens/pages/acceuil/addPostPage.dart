@@ -4,13 +4,11 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/services/authentication.dart';
-import 'package:flutter_firebase/screens/pages/accueil.dart';
-import 'package:flutter_firebase/widget/textfield_widget.dart';
-import 'package:image_picker/image_picker.dart';
-import '../components/help.dart';
-import '../components/params.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 
 class AddPostPage extends StatefulWidget {
   AddPostPage({Key? key}) : super(key: key);
@@ -24,6 +22,10 @@ Color _colorContainer1 = greenMajor;
 Color _colorContainer2 = Color(0xffaefea01);
 bool verif = true;
 
+var _path;
+var _fileName;
+final Storage storage = Storage();
+
 class _AddPostPageState extends State<AddPostPage> {
   AppUserData user = UserPreferences.myUser;
   String dropdownValue = 'Categorie';
@@ -33,14 +35,14 @@ class _AddPostPageState extends State<AddPostPage> {
   var name = '';
   var prenom = '';
   var currentColor = Color(0xff03989E);
-  // FirebaseAuth.instance.currentUser!.uid
-  var myUserId = 'EqY6DuPnynUxsNec4NyUUeU9bJ72';
+
+  var myUserId = FirebaseAuth.instance.currentUser!.uid;
   var myControllerTitle = TextEditingController();
   var myControllerContent = TextEditingController();
 
   List<String> array = [];
 
-  // A recupérer correctement
+  // Categorie possible de post
   Map<String, bool> array2 = {
     'Code': false,
     'Gastronomie': false,
@@ -53,27 +55,20 @@ class _AddPostPageState extends State<AddPostPage> {
 
   // Charge les données de l'utilisateur courant nécessaire avant de construire le widget
   getData() async {
-    FirebaseFirestore.instance.collection('users').get().then(
+    await FirebaseFirestore.instance.collection('users').get().then(
           (querySnapshot) => {
             querySnapshot.docs.forEach(
               (doc) => {
                 if (doc.id == myUserId)
-                  {
-                    name = doc.data()['name'],
-                    prenom = doc.data()['prenom'],
-                  }
+                  if (doc.data()['name'] != null)
+                    {
+                      name = doc.data()['name'],
+                      prenom = doc.data()['prenom'],
+                    }
               },
             )
           },
         );
-    /*FirebaseFirestore.instance.collection('categorie').get().then(
-          (querySnapshot) => {
-            querySnapshot.docs.forEach(
-              (doc) => {array.add(doc.id)},
-            ),
-          },
-        );
-    await initArray2(); */
   }
 
   initArray2() async {
@@ -98,7 +93,7 @@ class _AddPostPageState extends State<AddPostPage> {
     for (var i = 0; i < array2.length; i++) {
       if (array2.values.elementAt(i) == true) n += 1;
     }
-    if (n < 3)
+    if (n < 4)
       return true;
     else
       return false;
@@ -115,126 +110,149 @@ class _AddPostPageState extends State<AddPostPage> {
   @override
   void initState() {
     super.initState();
+    getData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getData(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Scaffold(
-          // Barre verte d'action "Création du nouveau Post"
-          appBar: AppBar(
-            foregroundColor: Colors.black12,
-            backgroundColor: greenMajor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(30),
-              ),
-            ),
-            title: Title(
-              color: Colors.white,
-              child: Text(
-                'Création du nouveau post',
-                style: TextStyle(color: Colors.white, fontSize: 19),
-                textAlign: TextAlign.center,
-              ),
-            ),
+    return Scaffold(
+      // Barre verte d'action "Création du nouveau Post"
+      appBar: AppBar(
+        foregroundColor: Colors.black12,
+        backgroundColor: greenMajor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
           ),
+        ),
+        title: Title(
+          color: Colors.white,
+          child: Text(
+            'Création du nouveau post',
+            style: TextStyle(color: Colors.white, fontSize: 19),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
 
-          // Front de la page AddPostPage
-          body: Container(
-            padding: EdgeInsets.all(7),
-            child: Flexible(
-              child: Container(
-                height: 1000,
-                padding: EdgeInsets.symmetric(vertical: 15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    topLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: greenMajor.withOpacity(1),
-                      spreadRadius: 1,
-                      blurRadius: 10,
-                      offset: Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
+      // Front de la page AddPostPage
+      body: Container(
+        padding: EdgeInsets.all(7),
+        child: Flexible(
+          child: Container(
+            height: 1000,
+            padding: EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: greenMajor.withOpacity(1),
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: Offset(0, 1), // changes position of shadow
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+              ],
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    physics: BouncingScrollPhysics(),
                     children: [
-                      ListView(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.symmetric(horizontal: 32),
-                        physics: BouncingScrollPhysics(),
-                        children: [
-                          const SizedBox(height: 24),
-                          txtEditingCont('Titre', 1),
-                          const SizedBox(height: 24),
-                          txtEditingCont('Contenu', 10),
-                        ],
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 30,
-                          bottom: 10,
-                          left: 30,
-                          right: 30,
-                        ),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Catégorie(s)',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 400,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(15),
-                            topLeft: Radius.circular(15),
-                            bottomRight: Radius.circular(15),
-                            bottomLeft: Radius.circular(15),
-                          ),
-                        ),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              for (var i = 0; i < array2.length; i++)
-                                unitPilCat(array2, i)
-                            ],
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          buttonStyle(238, Icons.publish_sharp),
-                          // Ajout d'une image pour le post
-                          buttonStyle(50, Icons.add_a_photo_outlined),
-                        ],
-                      ),
+                      const SizedBox(height: 24),
+                      txtEditingCont('Titre', 1),
+                      const SizedBox(height: 24),
+                      txtEditingCont('Contenu', 10),
                     ],
                   ),
-                ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 30,
+                      bottom: 10,
+                      left: 30,
+                      right: 30,
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Catégorie(s)',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 50,
+                    width: 400,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(15),
+                        topLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for (var i = 0; i < array2.length; i++)
+                            unitPilCat(array2, i)
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 15,
+                      bottom: 10,
+                      left: 30,
+                      right: 30,
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Image',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: _path == null
+                        ? Container()
+                        : Image.file(
+                            File(_path),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      buttonStyle(238, Icons.publish_sharp),
+                      // Ajout d'une image pour le post
+                      buttonStyle(50, Icons.add_a_photo_outlined),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -366,17 +384,19 @@ class _AddPostPageState extends State<AddPostPage> {
         ],
       ),
       child: IconButton(
-        onPressed: () {
-          if (icon == Icons.publish_sharp && (!verifNumberCat())) {
+        onPressed: () async {
+          if (icon == Icons.publish_sharp &&
+              verifNumberCat() &&
+              _fileName != null) {
             var myData = {
               'idUser': myUserId,
               'auteur': prenom + ' ' + name,
               'content': myControllerContent.text,
               'dateCreation': DateTime.now(),
               'title': myControllerTitle.text,
+              'reference': await storage.uploadFile(_path, _fileName),
               'tags': getTags(),
             };
-
             var collection = FirebaseFirestore.instance.collection('posts');
             collection
                 .add(myData) // <-- Your data
@@ -393,6 +413,27 @@ class _AddPostPageState extends State<AddPostPage> {
             setState(() {
               currentColor = Color(0xffb72c1c);
             });
+          } else if (icon == Icons.add_a_photo_outlined) {
+            final results = await FilePicker.platform.pickFiles(
+              allowMultiple: false,
+              type: FileType.custom,
+              allowedExtensions: ['png', 'jpg'],
+            );
+
+            if (results == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('No file'),
+                ),
+              );
+              return null;
+            }
+
+            final path = results.files.single.path!;
+            _path = path;
+            final fileName = results.files.single.name;
+            _fileName = fileName;
+            setState(() {});
           }
         },
         iconSize: 25,

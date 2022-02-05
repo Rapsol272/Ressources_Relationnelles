@@ -9,7 +9,6 @@ class Accueil extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          Test(),
           Expanded(
             child: bodyAcceuil(),
           ),
