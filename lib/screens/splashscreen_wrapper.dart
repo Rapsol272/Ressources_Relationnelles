@@ -9,7 +9,7 @@ class SplashScreenWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<AppUser?>(context);
     if (user == null) {
-      return Scroll();
+      return ScrollAuth();
     } else {
       return HomeScreen();
     }

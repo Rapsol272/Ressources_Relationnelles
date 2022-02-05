@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
-import 'package:flutter_firebase/screens/pages/edit_profile.dart';
+import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
 import 'package:flutter_firebase/screens/pages/groupes.dart';
-import 'package:flutter_firebase/screens/pages/profil.dart';
+import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/screens/pages/recherche.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/services/notification_service.dart';
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Accueil(),
     Groupes(),
     Search(),
-    Profil(),
+    Profil(uId: FirebaseAuth.instance.currentUser!.uid),
   ];
   final AuthenticationService _auth = AuthenticationService();
 
@@ -57,8 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       context, MaterialPageRoute(builder: (context) => Help()));
                   break;
                 case 2:
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditProfile()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditProfile(
+                                currentUserUid:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                              )));
                 // other cases...
               }
             },
@@ -99,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
               PopupMenuItem(
                   onTap: () async {
                     await _auth.signOut();
+                    //await _auth.deleteUser();
                   },
                   child: Row(children: <Widget>[
                     Padding(

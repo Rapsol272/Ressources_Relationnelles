@@ -1,7 +1,19 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/services/authentication.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:select_form_field/select_form_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sliver_header_delegate/sliver_header_delegate.dart';
+
+import 'package:flutter/cupertino.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 enum SingingCharacter { lafayette, jefferson }
 
@@ -22,6 +34,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final roleController = TextEditingController();
+  final bioController = TextEditingController();
+
   bool showSignIn = true;
   bool changeT = true;
 
@@ -32,7 +46,22 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     emailController.dispose();
     passwordController.dispose();
     roleController.dispose();
+    bioController.dispose();
     super.dispose();
+  }
+
+  void toggleView() {
+    setState(() {
+      _formKey.currentState?.reset();
+      error = '';
+      emailController.text = '';
+      nameController.text = '';
+      prenomController.text = '';
+      passwordController.text = '';
+      roleController.text = '';
+      bioController.text = '';
+      showSignIn = !showSignIn;
+    });
   }
 
   void change() {
@@ -50,35 +79,22 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     });
   }
 
-  void toggleView() {
+  final ImagePicker _picker = ImagePicker();
+
+  XFile? profilImage;
+
+  void filePicker() async {
+    final XFile? selectImage =
+        await _picker.pickImage(source: ImageSource.camera);
     setState(() {
-      _formKey.currentState?.reset();
-      error = '';
-      emailController.text = '';
-      nameController.text = '';
-      prenomController.text = '';
-      passwordController.text = '';
-      roleController.text = '';
-      showSignIn = !showSignIn;
+      profilImage = selectImage;
     });
   }
 
+  var storage = FirebaseStorage.instance;
+
   @override
   Widget build(BuildContext context) {
-    //Color for checkbox
-    // ignore: unused_element
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return greenMajor;
-      }
-      return greenMajor;
-    }
-
     return loading
         ? Loading()
         : SingleChildScrollView(
@@ -158,26 +174,77 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                           : Container(),
                       SizedBox(height: 30.0),
                       !showSignIn
-                          ? GestureDetector(
-                              onTap: () => change(),
-                              child: Container(
-                                child: TextFormField(
-                                  controller: roleController
-                                    ..text = changeT ? 'lecteur' : 'Redacteur',
-                                  style: TextStyle(
-                                      color:
-                                          changeT ? greenMajor : Colors.grey),
-                                  enabled: false,
-                                  decoration: textInputDecoration.copyWith(
-                                      hintText: 'Role'),
-                                  validator: (value) =>
-                                      value == null || value.isEmpty
-                                          ? "Entrez votre role"
-                                          : null,
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Votre rôle est :',
+                                  style: TextStyle(fontSize: 15),
                                 ),
-                              ))
+                                GestureDetector(
+                                  onTap: () => change(),
+                                  child: TextFormField(
+                                    textAlignVertical: TextAlignVertical.center,
+                                    textAlign: TextAlign.left,
+                                    controller: roleController
+                                      ..text =
+                                          changeT ? 'Lecteur' : 'Rédacteur',
+                                    style: TextStyle(color: greenMajor),
+                                    enabled: false,
+                                    decoration: textInputDecoration.copyWith(
+                                      prefixIcon: Icon(Icons.swap_vert,
+                                          color: greenMajor),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                           : Container(),
                       SizedBox(height: 30.0),
+                      !showSignIn
+                          ? Center(
+                              child: profilImage == null
+                                  ? Text(
+                                      'Pas d\'image de profil sélectionnée !')
+                                  : ClipOval(
+                                      child: SizedBox.fromSize(
+                                        size: Size.fromRadius(48),
+                                        child: Image.file(
+                                            File(profilImage!.path),
+                                            fit: BoxFit.cover),
+                                      ),
+                                    ))
+                          : Container(),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      !showSignIn
+                          ? OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                primary: greenMajor,
+                                backgroundColor: Colors.transparent,
+                                side: BorderSide(color: greenMajor, width: 1),
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                              ),
+                              onPressed: () {
+                                filePicker();
+                              },
+                              child: Text('Ajouter une image'))
+                          : Container(),
+                      SizedBox(height: 20),
+                      !showSignIn
+                          ? TextFormField(
+                              controller: bioController,
+                              maxLines: 4,
+                              decoration: textInputDecoration.copyWith(
+                                  hintText: 'Votre biographie'),
+                            )
+                          : Container(),
+                      SizedBox(
+                        height: 30,
+                      ),
                       Center(
                           child: GestureDetector(
                               onTap: () => toggleView(),
@@ -211,17 +278,19 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                             var name = nameController.value.text;
                             var prenom = prenomController.value.text;
                             var role = roleController.value.text;
+                            var bio = bioController.value.text;
 
                             dynamic result = showSignIn
                                 ? await _auth.signInWithEmailAndPassword(
                                     email, password)
                                 : await _auth.registerWithEmailAndPassword(
-                                    name, prenom, email, password, role);
+                                    name, prenom, email, password, role, bio);
 
                             if (result == null) {
                               setState(() {
                                 loading = false;
-                                error = 'Please supply a valid email';
+                                error =
+                                    "Il y une erreur dans votre inscription";
                               });
                             }
                           }
@@ -237,7 +306,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                                 ),
                               ),
                               onPressed: () async {
-                                // ignore: unused_local_variable
                                 dynamic result =
                                     await _auth.signInAnonymously();
                               },

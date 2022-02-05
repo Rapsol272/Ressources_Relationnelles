@@ -27,7 +27,6 @@ var _fileName;
 final Storage storage = Storage();
 
 class _AddPostPageState extends State<AddPostPage> {
-  AppUserData user = UserPreferences.myUser;
   String dropdownValue = 'Categorie';
   String lastKey = '';
   String myTitle = '';
@@ -35,7 +34,6 @@ class _AddPostPageState extends State<AddPostPage> {
   var name = '';
   var prenom = '';
   var currentColor = Color(0xff03989E);
-
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
   var myControllerTitle = TextEditingController();
   var myControllerContent = TextEditingController();

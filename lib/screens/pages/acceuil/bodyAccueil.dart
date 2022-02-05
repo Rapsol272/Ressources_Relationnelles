@@ -1,10 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
-import 'package:flutter_firebase/screens/pages/profil.dart';
+import 'package:flutter_firebase/screens/pages/profil/profil.dart';
+
+import 'package:flutter_firebase/common/loading.dart';
+import 'package:flutter_firebase/screens/home/home_screen.dart';
+
+import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +22,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:file_picker/file_picker.dart';
 
 // ignore: camel_case_types
+
 class bodyAcceuil extends StatefulWidget {
   @override
   _bodyAcceuilState createState() => _bodyAcceuilState();
@@ -99,7 +106,9 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Profil()),
+                                            builder: (context) => Profil(
+                                                uId: FirebaseAuth.instance
+                                                    .currentUser!.uid)),
                                       );
                                     },
                                     child: Icon(
