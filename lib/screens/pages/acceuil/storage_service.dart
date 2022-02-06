@@ -35,7 +35,43 @@ class Storage {
     return results;
   }
 
-  // Pour vérifier si le document avec les paramètres ci-dessous, existe dans la collection like
+  Future<bool> existLikeUser(String idPost, String idUser) async {
+    List<String> lst = [];
+    bool verif = false;
+    await FirebaseFirestore.instance.collection('posts').get().then(
+          (querySnapshot) => {
+            querySnapshot.docs.forEach(
+              (doc) => {
+                if (doc.id == idUser) lst = doc["idLikeUsers"].cast<String>(),
+              },
+            ),
+          },
+        );
+    for (int i = 0; i < lst.length; i++) {
+      if (idPost == lst[i]) {
+        verif = true;
+      }
+    }
+    return verif;
+  }
+
+  Future<bool> changeLikePost(String idPost, String idUser, bool b) async {
+    List<String> lst = [];
+    bool verif = false;
+    await FirebaseFirestore.instance.collection('posts').get().then(
+          (querySnapshot) => {
+            querySnapshot.docs.forEach(
+              (doc) => {
+                if (doc.id == idUser) lst = doc["idLikePost"].cast<String>(),
+              },
+            ),
+          },
+        );
+
+    return verif;
+  }
+
+  /*// Pour vérifier si le document avec les paramètres ci-dessous, existe dans la collection like
   Future<bool> verifyLikePost(String idPost, String idUser) async {
     bool verif = false;
     await FirebaseFirestore.instance.collection('like').get().then(
@@ -75,5 +111,5 @@ class Storage {
         await doc.reference.delete();
       }
     }
-  }
+  } */
 }
