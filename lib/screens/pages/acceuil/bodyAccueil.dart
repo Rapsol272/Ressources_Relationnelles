@@ -130,11 +130,14 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
 
                                 // Affichage de l'image associé au post TODO
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  child: Image.asset(
-                                    "images/test1.jpg",
-                                  ),
-                                ),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    child: data.docs[index]['reference'] == ""
+                                        ? Image.asset(
+                                            "images/test1.jpg",
+                                          )
+                                        : Image.network(
+                                            '${data.docs[index]['reference']}',
+                                          )),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     top: 4.0,
@@ -185,7 +188,11 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => commentPage(),
+                                            builder: (context) => commentPage(
+                                              idPost: data.docs[index].id,
+                                              titlePost: data.docs[index]
+                                                  ['title'],
+                                            ),
                                           ),
                                         );
                                       },
