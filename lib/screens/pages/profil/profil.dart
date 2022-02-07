@@ -282,7 +282,9 @@ class _ProfilPageState extends State<Profil> {
                                               ),
                                               subtitle: Text(
                                                 //'${data.docs[index]['auteur']}',
-                                                snap['auteur'].toString(),
+                                                userData['name'].toString() +
+                                                    userData['prenom']
+                                                        .toString(),
                                                 style: TextStyle(
                                                     color: Colors.black
                                                         .withOpacity(0.6),
@@ -293,9 +295,13 @@ class _ProfilPageState extends State<Profil> {
                                             ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
-                                              child: Image.asset(
-                                                "images/test1.jpeg",
-                                              ),
+                                              child: snap['reference'] == ""
+                                                  ? Image.asset(
+                                                      "images/test1.jpg",
+                                                    )
+                                                  : Image.network(
+                                                      '${snap['reference']}',
+                                                    ),
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
@@ -349,7 +355,11 @@ class _ProfilPageState extends State<Profil> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            commentPage(),
+                                                            commentPage(
+                                                          idPost: snap.id,
+                                                          titlePost:
+                                                              snap['title'],
+                                                        ),
                                                       ),
                                                     );
                                                   },
