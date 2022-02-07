@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
-import 'package:flutter_firebase/screens/pages/bodyAcceuil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
 import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
@@ -12,6 +12,8 @@ import 'package:flutter_firebase/screens/pages/recherche.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/services/notification_service.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+
+import 'package:anim_search_bar/anim_search_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -29,9 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Profil(uId: FirebaseAuth.instance.currentUser!.uid),
   ];
   final AuthenticationService _auth = AuthenticationService();
+  TextEditingController textController = TextEditingController();
+  
 
   @override
   Widget build(BuildContext context) {
+    var hasWidthPage = MediaQuery.of(context).size.width;
     NotificationService.initialize();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -43,6 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
+          AnimSearchBar(
+            color: greenMajor,
+            style: TextStyle(
+              color: Colors.white, 
+            ),
+            width: hasWidthPage * 0.8,
+            textController: textController,
+            helpText: 'Rechercher...',
+            onSuffixTap: () {
+              setState(() {
+                textController.clear();
+              });
+            },
+          ),
           PopupMenuButton(
             icon: Icon(
               Icons.more_vert,

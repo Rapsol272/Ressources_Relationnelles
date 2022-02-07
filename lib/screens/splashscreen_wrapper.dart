@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/models/user.dart';
+import 'package:flutter_firebase/screens/authenticate/authenticate_screen.dart';
 import 'package:flutter_firebase/screens/authenticate/scrollAuth.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
