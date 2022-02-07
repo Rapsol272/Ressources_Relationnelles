@@ -290,21 +290,22 @@ import 'package:flutter/services.dart';
                           showSignIn? "Se connecter" : "S\'inscrire",
                         ),
                         onPressed: () async {
-                                if (_formKey.currentState?.validate() == true) {
-                                  setState(() => loading = true);
-                                  var password = passwordController.value.text;
-                                  var email = emailController.value.text;
-                                  var name = nameController.value.text;
-                                  var prenom = prenomController.value.text;
-                                  var role = roleController.value.text;
-                                  var bio = bioController.value.text;
-                                  var mod = false;
-                                  var admin = false;
-                                  var image = storage.uploadFile(_path, _fileName);
+                          if (_formKey.currentState?.validate() == true) {
+                            setState(() => loading = true);
+                            var password = passwordController.value.text;
+                            var email = emailController.value.text;
+                            var name = nameController.value.text;
+                            var prenom = prenomController.value.text;
+                            var role = roleController.value.text;
+                            var bio = bioController.value.text;
+                            var modo = false;
+                            var admin = false;
 
-                                  dynamic result = showSignIn
-                                      ? await _auth.signInWithEmailAndPassword(
-                                          email, password)
+                            dynamic result = showSignIn
+                                ? await _auth.signInWithEmailAndPassword(
+                                    email, password)
+                                : await _auth.registerWithEmailAndPassword(
+                                    name, prenom, email, password, role, bio, modo, admin);
 
                                       : await _auth.registerWithEmailAndPassword(
                                           name, prenom, email, password, role, bio, mod, admin, 'image');

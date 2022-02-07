@@ -13,9 +13,8 @@ class AppUserData {
   final String email;
   final String role;
   final String bio;
-  final bool mod;
+  final bool modo;
   final bool admin;
-  final String image;
 
   const AppUserData(
       {required this.uid,
@@ -24,9 +23,8 @@ class AppUserData {
       required this.role,
       required this.bio,
       required this.email,
-      required this.mod,
-      required this.admin,
-      required this.image});
+      required this.modo,
+      required this.admin});
 
   factory AppUserData.fromDocument(DocumentSnapshot doc) {
     return AppUserData(
@@ -36,9 +34,7 @@ class AppUserData {
         role: doc['role'],
         name: doc['name'],
         bio: doc['bio'],
-        mod: doc['mod'],
-        admin: doc['admin'],
-        image: doc['image']
-        );
+        modo: doc['modo'],
+        admin: doc['admin']);
   }
 }
