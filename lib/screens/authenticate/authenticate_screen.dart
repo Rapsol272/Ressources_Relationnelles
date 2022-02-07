@@ -297,13 +297,15 @@ void filePicker() async {
                                   var prenom = prenomController.value.text;
                                   var role = roleController.value.text;
                                   var bio = bioController.value.text;
+                                  var mod = false;
+                                  var admin = false;
 
                                   dynamic result = showSignIn
                                       ? await _auth.signInWithEmailAndPassword(
                                           email, password)
 
                                       : await _auth.registerWithEmailAndPassword(
-                                          name, prenom, email, password, role, bio);
+                                          name, prenom, email, password, role, bio, mod, admin);
 
                                   if (result == null) {
                                     setState(() {
