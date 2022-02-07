@@ -70,8 +70,8 @@ class _CategSectionState extends State<CategSection> {
                             Ink(
                               child: InkWell(
                                 child: Container(
-                                  width: 75,
-                                  height: 70,
+                                  width: 65,
+                                  height: 50,
                                   decoration: BoxDecoration(
                                     color: boxColor,
                                     shape: BoxShape.circle,

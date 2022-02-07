@@ -28,7 +28,7 @@ class Storage {
       (
         firebase_storage.Reference ref,
       ) {
-        print('Foud file: $ref');
+        print('Found file: $ref');
       },
     );
     return results;

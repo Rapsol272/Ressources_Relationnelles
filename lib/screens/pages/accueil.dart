@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/addPostPage.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 
@@ -14,8 +15,8 @@ class Accueil extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xff03dac6),
-        foregroundColor: Colors.black,
+        backgroundColor: or,
+        foregroundColor: Colors.white,
         onPressed: () {
           Navigator.push(
             context,

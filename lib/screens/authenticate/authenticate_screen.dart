@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
   import 'package:flutter/cupertino.dart';
   import 'dart:io';
   import 'package:image_picker/image_picker.dart';
+  import 'package:file_picker/file_picker.dart';
   import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 
 
@@ -72,23 +73,6 @@ import 'package:flutter/services.dart';
   final ImagePicker _picker = ImagePicker();
 
   XFile? profilImage;
-
-void filePicker() async {
-    final XFile? selectImage = await _picker.pickImage(source:ImageSource.camera);
-
-    FirebaseStorage fs = FirebaseStorage.instance;
-    Reference rootReference = fs.ref();
-    Reference pictureFolderRef = rootReference.child("pictures").child("image");
-
-    /*pictureFolderRef.putFile(profilImage).onComplete.then((storageTask) async{
-      String link = await storageTask.ref.getDownloadURL();
-      setState(() {
-      });
-    });
-    setState(() {
-      profilImage = selectImage;
-    });*/
-  }
   
   
 
@@ -102,10 +86,10 @@ void filePicker() async {
 
       var hasWidthPage = MediaQuery.of(context).size.width;
 
-      String imageLink;
-      File _image;
       var _path;
       var _fileName;
+      final Storage storage = Storage();
+
       return loading
           ? Loading()
           : 
@@ -221,14 +205,14 @@ void filePicker() async {
 
                      !showSignIn ?
                       Center(
-                        child: profilImage == null ? 
-                        Text('Pas d\'image de profil sélectionnée !')
-                        : ClipOval(
-                            child: SizedBox.fromSize(
-                              size: Size.fromRadius(48),
-                              child: Image.file(File(profilImage!.path), fit: BoxFit.cover),
-                            ),
-                          )) :Container(),
+                        child: _path == null
+                            ? Container()
+                            : Image.asset(
+                                'images/film.jpeg',
+                                fit: BoxFit.cover,
+                                width: hasWidthPage * 0.3
+                              ),
+                      ) : Container(),
 
                       !showSignIn ? SizedBox(height: 30,) : Container(),
 
@@ -240,7 +224,28 @@ void filePicker() async {
                           side: BorderSide(color: greenMajor, width: 1),
                           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                         ),
-                        onPressed: () {filePicker();}, 
+                        onPressed: () async {
+                          final results = await FilePicker.platform.pickFiles(
+                            allowMultiple: false,
+                            type: FileType.custom,
+                            allowedExtensions: ['png', 'jpg'],
+                          );
+
+                          if (results == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('No file'),
+                              ),
+                            );
+                            return null;
+                          }
+
+                          final path = results.files.single.path!;
+                          _path = path;
+                          final fileName = results.files.single.name;
+                          _fileName = fileName;
+                          setState(() {});
+                        }, 
                         child: Text('Ajouter une image'))
                       : Container(),
 
@@ -295,13 +300,14 @@ void filePicker() async {
                                   var bio = bioController.value.text;
                                   var mod = false;
                                   var admin = false;
+                                  var image = storage.uploadFile(_path, _fileName);
 
                                   dynamic result = showSignIn
                                       ? await _auth.signInWithEmailAndPassword(
                                           email, password)
 
                                       : await _auth.registerWithEmailAndPassword(
-                                          name, prenom, email, password, role, bio, mod, admin);
+                                          name, prenom, email, password, role, bio, mod, admin, 'image');
 
                                   if (result == null) {
                                     setState(() {

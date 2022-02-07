@@ -132,9 +132,9 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                 ClipRRect(
                                     borderRadius: BorderRadius.circular(12.0),
                                     child: data.docs[index]['reference'] == ""
-                                        ? Image.asset(
-                                            "images/test1.jpg",
-                                          )
+                                        ? Container(
+                                          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                                          child: Text('${data.docs[index]['content']}'),)
                                         : Image.network(
                                             '${data.docs[index]['reference']}',
                                           )),
@@ -164,7 +164,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ),
                                     // Contenu textuel du post
                                     children: <Widget>[
-                                      Container(
+                                     data.docs[index]['reference'] == "" ? Container() : Container(
                                         alignment: Alignment.center,
                                         padding:
                                             const EdgeInsets.only(bottom: 5),
@@ -172,7 +172,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         child: Text(
                                             '${data.docs[index]['content']}'),
                                       ),
-                                    ],
+                                    ]
                                   ),
                                 ),
                                 // Barre d'action du post (favoris, share, add, comment)
