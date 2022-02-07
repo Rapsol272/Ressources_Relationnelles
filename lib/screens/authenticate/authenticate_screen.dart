@@ -307,9 +307,6 @@ import 'package:flutter/services.dart';
                                 : await _auth.registerWithEmailAndPassword(
                                     name, prenom, email, password, role, bio, modo, admin);
 
-                                      : await _auth.registerWithEmailAndPassword(
-                                          name, prenom, email, password, role, bio, mod, admin, 'image');
-
                                   if (result == null) {
                                     setState(() {
                                       loading = false;

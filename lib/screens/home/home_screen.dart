@@ -5,6 +5,7 @@ import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
+import 'package:flutter_firebase/screens/pages/components/params/infosPerso.dart';
 import 'package:flutter_firebase/screens/pages/dashboard/dashboard.dart';
 import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
 import 'package:flutter_firebase/screens/pages/groupes.dart';
@@ -28,7 +29,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   
   var _currentIndex = 0;
-  bool mod=true;
+  bool mod = true;
   final List<Widget> _pages = [
     Accueil(),
     Groupes(),

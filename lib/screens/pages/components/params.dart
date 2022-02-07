@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/widget.dart';
+import 'package:flutter_firebase/screens/pages/components/params/donnes.dart';
 import 'package:flutter_firebase/screens/pages/components/params/infosPerso.dart';
 
 
@@ -48,7 +49,8 @@ class _ParamsState extends State<Params> {
             Card(
               child: ListTile(
                 onTap: () {
-                  print('salut');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Donnees()));
                 },
                 leading: Icon(Icons.analytics),
                 title: Text('Politique d\'utilisation des données'),

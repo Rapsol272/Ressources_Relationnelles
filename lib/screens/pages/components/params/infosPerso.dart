@@ -56,7 +56,8 @@ class _InfosPersoState extends State<InfosPerso> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: upBar(context, 'Informations Personnelles'),
-      body: Padding(
+      body: SingleChildScrollView(
+        child: Padding(
         padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child:
           Column(
@@ -100,9 +101,26 @@ class _InfosPersoState extends State<InfosPerso> {
                 subtitle: Text(userData['bio']),
               ),
             ),
+            SizedBox(height:20),
+            Card(
+              child: ListTile(
+                onTap: () {},
+                title: Text('Modérateur'),
+                subtitle: Text(userData['modo'].toString()),
+              ),
+            ),
+            SizedBox(height:20),
+            Card(
+              child: ListTile(
+                onTap: () {},
+                title: Text('Administrateur'),
+                subtitle: Text(userData['admin'].toString()),
+              ),
+            ),
         ],
       )
-        )
+        ),
+      )
     );
   }
 }
