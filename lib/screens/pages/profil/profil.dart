@@ -5,6 +5,7 @@ import 'package:favorite_button/favorite_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
@@ -79,9 +80,7 @@ class _ProfilPageState extends State<Profil> {
     //final user = UserPreferences.myUser;
     setState(() {});
     return isLoading
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
+        ? Loading()
         : DefaultTabController(
             length: 2,
             child: Scaffold(

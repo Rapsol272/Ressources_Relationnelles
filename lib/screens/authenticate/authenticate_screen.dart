@@ -5,17 +5,11 @@ import 'package:flutter/services.dart';
   import 'package:flutter_firebase/common/constants.dart';
   import 'package:flutter_firebase/common/loading.dart';
   import 'package:flutter_firebase/services/authentication.dart';
-  import 'package:intl/intl.dart';
-  import 'package:flutter/cupertino.dart';
-  import 'package:select_form_field/select_form_field.dart';
-  import 'package:cloud_firestore/cloud_firestore.dart';
-  import 'package:google_fonts/google_fonts.dart';
-  import 'package:sliver_header_delegate/sliver_header_delegate.dart';
-
   import 'package:flutter/cupertino.dart';
   import 'dart:io';
   import 'package:image_picker/image_picker.dart';
-  import 'package:firebase_storage/firebase_storage.dart';
+  import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
+
 
   enum SingingCharacter { lecteur, redacteur }
   class AuthenticateScreen extends StatefulWidget {
@@ -110,6 +104,8 @@ void filePicker() async {
 
       String imageLink;
       File _image;
+      var _path;
+      var _fileName;
       return loading
           ? Loading()
           : 

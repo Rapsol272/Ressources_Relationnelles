@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/common/widget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
   
  
@@ -32,10 +33,7 @@ class _DashboardState extends State<Dashboard> {
      
  
         return Scaffold(
-          appBar: AppBar(
-            title: Text('Tableau de bord'),
-            leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios)),
-          ),
+          appBar: upBar(context, 'Tableau de bord'),
             body: SfCartesianChart(
             primaryXAxis: CategoryAxis(),
             primaryYAxis: NumericAxis(minimum: 0, maximum: 40, interval: 10),
