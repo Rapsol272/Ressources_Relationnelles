@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var haswidth = MediaQuery.of(context).size.width;
     NotificationService.initialize();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0.0,
         title: Text(
           'Ressources Relationnelles',
-          style: TextStyle(color: greenMajor),
+          style: TextStyle(color: greenMajor, fontSize: haswidth * 0.05),
         ),
         actions: <Widget>[
           PopupMenuButton(
