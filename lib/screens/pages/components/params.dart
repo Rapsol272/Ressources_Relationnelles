@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/common/widget.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/screens/pages/components/params/donnes.dart';
 import 'package:flutter_firebase/screens/pages/components/params/infosPerso.dart';
 

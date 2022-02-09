@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/common/widget.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
   
  

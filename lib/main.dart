@@ -47,6 +47,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
         theme: ThemeData(
+          appBarTheme: AppBarTheme(),
           primarySwatch: customColor,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),

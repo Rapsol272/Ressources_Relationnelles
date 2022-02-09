@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_firebase/common/widget.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';

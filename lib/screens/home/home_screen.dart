@@ -1,21 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
+import 'package:flutter_firebase/services/searchDelagate.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
-import 'package:flutter_firebase/screens/pages/components/params/infosPerso.dart';
 import 'package:flutter_firebase/screens/pages/dashboard/dashboard.dart';
 import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
 import 'package:flutter_firebase/screens/pages/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
-import 'package:flutter_firebase/screens/pages/recherche.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/services/notification_service.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-import 'package:anim_search_bar/anim_search_bar.dart';
 
 
 
@@ -33,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     Accueil(),
     Groupes(),
-    Search(),
     Profil(uId: FirebaseAuth.instance.currentUser!.uid),
   ];
   final AuthenticationService _auth = AuthenticationService();
@@ -55,20 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
-          AnimSearchBar(
-            color: greenMajor,
-            style: TextStyle(
-              color: Colors.white, 
-            ),
-            width: hasWidthPage * 0.8,
-            textController: textController,
-            helpText: 'Rechercher...',
-            onSuffixTap: () {
-              setState(() {
-                textController.clear();
-              });
-            },
-          ),
+          IconButton(
+        onPressed: () {
+          showSearch(
+            context: context, 
+            delegate: CustomSearchDelegate());
+        },
+        icon: Icon(Icons.search)),
           PopupMenuButton(
             icon: Icon(
               Icons.more_vert,
@@ -133,7 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
               PopupMenuItem(
                   onTap: () async {
                     await _auth.signOut();
-                    //await _auth.deleteUser();
                   },
                   child: Row(children: <Widget>[
                     Padding(
@@ -167,13 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text("Mes groupes"),
             selectedColor: or,
           ),
-
-           //Recherche
-          SalomonBottomBarItem(
-            icon: Icon(Icons.search),
-            title: Text("Recherche"),
-            selectedColor: greenMajor,
-          ),
+          
 
           /// Mon profil
           SalomonBottomBarItem(

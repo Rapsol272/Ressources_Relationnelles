@@ -1,12 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/utils/user_preferences.dart';
-import 'package:flutter_firebase/widget/appbar_widget.dart';
-import 'package:flutter_firebase/widget/profile_widget.dart';
-import 'package:flutter_firebase/widget/textfield_widget.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -18,7 +12,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: buildAppBar(context),
+        appBar: upBar(context, 'Ressources Relationnelles'),
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 32),
           physics: BouncingScrollPhysics(),
