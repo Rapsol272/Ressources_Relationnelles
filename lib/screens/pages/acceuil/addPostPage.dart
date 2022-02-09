@@ -32,7 +32,6 @@ class _AddPostPageState extends State<AddPostPage> {
   var name = '';
   var prenom = '';
   var currentColor = Color(0xff03989E);
-  // FirebaseAuth.instance.currentUser!.uid
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
   var myControllerTitle = TextEditingController();
   var myControllerContent = TextEditingController();

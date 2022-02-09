@@ -14,6 +14,7 @@ import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/widget/profile_widget.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 final usersRef = FirebaseFirestore.instance.collection('users');
 
@@ -32,6 +33,7 @@ class _ProfilPageState extends State<Profil> {
   var _iconColor = Colors.grey;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
+  List<String> array = [];
 
   @override
   void initState() {
@@ -303,19 +305,20 @@ class _ProfilPageState extends State<Profil> {
                                               padding: const EdgeInsets.only(
                                                   top: 4.0, bottom: 4.0),
                                               child: ExpansionTile(
-                                                title: Text(
-                                                  snap.toString(),
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Color(0xff03989E),
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    for (var i = 0;
+                                                        i < array.length;
+                                                        i++)
+                                                      unitTagsmdr(array, i)
+                                                  ],
                                                 ),
                                                 leading: Text(
                                                   //'${data.docs[index]['dateCreation']}',
-                                                  snap['dateCreation']
-                                                      .toString(),
+                                                  '${convertDateTimeDisplay(snap['dateCreation'].toDate().toString())}',
                                                   style: TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 12,
@@ -456,4 +459,57 @@ class _ProfilPageState extends State<Profil> {
       ],
     );
   }
+}
+
+String convertDateTimeDisplay(String date) {
+  final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
+  final DateFormat serverFormater = DateFormat('dd-MM-yyyy');
+  final DateTime displayDate = displayFormater.parse(date);
+  final String formatted = serverFormater.format(displayDate);
+  return formatted;
+}
+
+unitTagsmdr(List array, int i) {
+  return Flexible(
+    child: Container(
+      margin: const EdgeInsets.only(right: 5, left: 5),
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(15),
+          topLeft: Radius.circular(15),
+          bottomRight: Radius.circular(15),
+          bottomLeft: Radius.circular(15),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: Offset(0, 1), // changes position of shadow
+          ),
+        ],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            greenMajor,
+            Color(0xffaefea01),
+          ],
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            array[i],
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 8,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
