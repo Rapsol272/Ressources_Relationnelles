@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
@@ -61,6 +60,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
                         final String auteur = data.get('auteur');
                         final String title = data.get('title');
+                        final String idUser = data.get('idUser');
 
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -76,24 +76,15 @@ class CustomSearchDelegate extends SearchDelegate {
                                                 )),
                                           );},
                               child: Card(
-                              color: Colors.grey[300],
+                              color: Colors.grey[200],
                             child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    greenMajor,
-                                    or
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                              ),
                             padding: EdgeInsets.all(20),
                               child: Column(
                                 children: [
                                     Text(auteur, style: TextStyle(color: greenMajor, fontWeight: FontWeight.bold),),
                                     SizedBox(height: 10,),
-                                    Text(title)
+                                    Text(title),
+                                    Text(idUser)
                                   ],
                                 )
                               )
@@ -130,7 +121,18 @@ class CustomSearchDelegate extends SearchDelegate {
 
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                            child: Card(
+                            child: GestureDetector(
+                              onTap: () {Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Scaffold(
+                                                  appBar: upBar(context, 'Ressources Relationnelles'),
+                                                  body: Profil(
+                                                    uId: FirebaseAuth.instance
+                                                        .currentUser!.uid),
+                                                )),
+                                          );},
+                              child: Card(
                             child: Container(
                             padding: EdgeInsets.all(20),
                               child: Column(
@@ -140,7 +142,7 @@ class CustomSearchDelegate extends SearchDelegate {
                                 ],
                               )
                             )
-                          ),);
+                          ),));
                     })
               ],
             );

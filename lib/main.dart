@@ -4,6 +4,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/models/chat_params.dart';
+import 'package:flutter_firebase/screens/chat/chat_screen.dart';
 import 'package:flutter_firebase/screens/splashscreen_wrapper.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
@@ -61,7 +63,23 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (context) => SplashScreenWrapper());
-      //chat
+      case '/chat':
+        var arguments = settings.arguments;
+        if (arguments != null) {
+          return PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  ChatScreen(chatParams : arguments as ChatParams),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                animation = CurvedAnimation(curve: Curves.ease, parent: animation);
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              }
+          );
+        } else {
+          return pageNotFound();
+        }
 
       default:
         return pageNotFound();

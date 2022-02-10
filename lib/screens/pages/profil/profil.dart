@@ -6,22 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/widget/upBar.dart';
-import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/friends.dart';
-import 'package:flutter_firebase/utils/user_preferences.dart';
-import 'package:flutter_firebase/widget/profile_widget.dart';
-import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final usersRef = FirebaseFirestore.instance.collection('users');
 
 class Profil extends StatefulWidget {
   final String? uId;
-  const Profil({Key? key, required this.uId}) : super(key: key);
+  const Profil({Key? key, required this.uId,}) : super(key: key);
 
   @override
   _ProfilPageState createState() => _ProfilPageState();

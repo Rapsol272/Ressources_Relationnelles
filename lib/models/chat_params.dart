@@ -1,17 +1,16 @@
 import 'package:flutter_firebase/models/user.dart';
-import 'user.dart';
 
-class ChatParams {
-  final String userUid;
+class ChatParams{
+  final String uid;
   final AppUserData peer;
 
-  ChatParams(this.userUid, this.peer);
+  ChatParams(this.uid, this.peer);
 
   String getChatGroupId() {
-    if (userUid.hashCode <= peer.uid.hashCode) {
-      return '$userUid-${peer.uid}';
+    if (uid.hashCode <= peer.uid.hashCode) {
+      return '$uid-${peer.uid}';
     } else {
-      return '${peer.uid}-$userUid';
+      return '${peer.uid}-$uid';
     }
   }
 }
