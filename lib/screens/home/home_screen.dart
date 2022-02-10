@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
@@ -17,13 +18,52 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  
+  HomeScreen({Key? key, required this.uId}) : super(key: key);
+  final String? uId;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var userData = {};
+  bool isLoading = true;
+  
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    setState(() {
+      var user = FirebaseAuth.instance.authStateChanges();
+
+      isLoading = true;
+    });
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uId)
+          .get();
+
+      userData = userSnap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(BuildContext context, String text) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(text),
+          ),
+        );
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
   
   var _currentIndex = 0;
   bool mod = true;
@@ -34,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   final AuthenticationService _auth = AuthenticationService();
   TextEditingController textController = TextEditingController();
-  
+
   
 
   @override

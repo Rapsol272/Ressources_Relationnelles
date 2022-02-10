@@ -390,7 +390,8 @@ class _AddPostPageState extends State<AddPostPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomeScreen(),
+                builder: (context) => HomeScreen(uId:
+                                    FirebaseAuth.instance.currentUser!.uid,),
               ),
             );
           } else if (icon == Icons.publish_sharp) {

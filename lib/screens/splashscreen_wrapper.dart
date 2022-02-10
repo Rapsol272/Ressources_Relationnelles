@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/authenticate/authenticate_screen.dart';
@@ -16,7 +17,8 @@ class SplashScreenWrapper extends StatelessWidget {
       }
       return Scaffold(body: AuthenticateScreen(),);
     } else {
-      return HomeScreen();
+      return HomeScreen(uId:
+                                    FirebaseAuth.instance.currentUser!.uid,);
     }
   }
 }

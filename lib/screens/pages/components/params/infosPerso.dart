@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 final usersRef = FirebaseFirestore.instance.collection('users');
@@ -17,6 +20,7 @@ class InfosPerso extends StatefulWidget {
 class _InfosPersoState extends State<InfosPerso> {
   var userData = {};
   bool isLoading = true;
+  
 
   @override
   void initState() {
@@ -117,10 +121,54 @@ class _InfosPersoState extends State<InfosPerso> {
                 subtitle: Text(userData['admin'].toString()),
               ),
             ),
+            SizedBox(height:20),
+            GestureDetector(
+              child: Text('Supprimer votre compte ?', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+              onTap: () {
+                showDialog(
+              context: context,
+              builder: (BuildContext context) => _buildPopupDialog(context),
+            );
+              },
+            )
         ],
       )
         ),
       )
     );
   }
+}
+
+_buildPopupDialog(BuildContext context) {
+  return new AlertDialog(
+    backgroundColor: Colors.grey[200],
+    shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
+    title: const Text('Supprimer votre compte ?', style: TextStyle(color: Colors.red),),
+    content: new Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text("En cliquant sur \'Oui\', vous faites une demande de supression de votre compte !", style: TextStyle(fontSize: 15),),
+      ],
+    ),
+    actions: <Widget>[
+      new ElevatedButton(
+        onPressed: () {
+          final Uri _emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: 'adrienberard@hotmail.fr',
+    queryParameters: {'subject': "Demande de supression", 'body': "Je voudrais supprimer mon compte !"},
+  );
+          launch(_emailLaunchUri.toString());
+        },
+        child: const Text('Oui !'),
+      ),
+      ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        }, 
+        child: Text('Fermer'))
+    ],
+  );
 }
