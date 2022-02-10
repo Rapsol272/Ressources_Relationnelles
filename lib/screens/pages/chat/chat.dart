@@ -10,7 +10,7 @@ import 'package:flutter_firebase/services/message_database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'message_item.dart';
+import 'message.dart';
 
 class Chat extends StatefulWidget {
   const Chat({Key? key, required this.chatParams}) : super(key: key);
@@ -72,7 +72,7 @@ class _ChatState extends State<Chat> {
                 padding: EdgeInsets.all(10.0),
                 itemBuilder: (context, index) => MessageItem(
                   message: listMessage[index],
-                  userId: chatParams.uid,
+                  userId: chatParams.userUid,
                   isLastMessage: isLastMessage(index, listMessage)
                 ),
               itemCount: listMessage.length,
@@ -184,7 +184,7 @@ class _ChatState extends State<Chat> {
       messageService.onSendMessage(
           chatParams.getChatGroupId(),
           Message(
-              idFrom: chatParams.uid,
+              idFrom: chatParams.userUid,
               idTo: chatParams.peer.uid,
               timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
               content: content,

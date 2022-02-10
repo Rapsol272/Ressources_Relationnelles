@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/screens/pages/profil/profil.dart';
-
+import 'package:flutter_firebase/models/user.dart';
+import 'package:flutter_firebase/screens/home/userList.dart';
+import 'package:provider/provider.dart';
 class Groupes extends StatelessWidget {
   const Groupes({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: or,
-    );
+    return Provider<UserList>(create: (_) => UserList(),child:  Text('data'),);
   }
 }

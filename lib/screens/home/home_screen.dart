@@ -1,9 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/models/chat_params.dart';
-import 'package:flutter_firebase/screens/chat/chat.dart';
-import 'package:flutter_firebase/screens/chat/chat_screen.dart';
 import 'package:flutter_firebase/services/searchDelagate.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
@@ -139,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: //UserList(),
+      body:
           _pages[_currentIndex],
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,

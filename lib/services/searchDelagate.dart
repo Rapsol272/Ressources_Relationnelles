@@ -118,6 +118,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
                         final String auteur = data.get('auteur');
                         final String title = data.get('title');
+                        final String image = data.get('reference');
 
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
