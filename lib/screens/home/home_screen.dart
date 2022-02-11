@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isLoading = false;
     });
   }
+
   
   var _currentIndex = 0;
   bool mod = true;
@@ -80,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var hasWidthPage = MediaQuery.of(context).size.width;
-    NotificationService.initialize();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   break;
                 case 1:
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => !mod ? Help() : Dashboard()));
+                      context, MaterialPageRoute(builder: (context) => (userData['admin']==true) ? Dashboard() : Help()));
                   break;
                 case 2:
                   Navigator.push(
@@ -142,11 +142,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
-                          !mod ?
-                          Icons.help : Icons.dashboard,
+                          (userData['admin']==true) ?
+                          Icons.dashboard : Icons.help,
                           color: greenMajor,
                         )),
-                    Text(!mod ? 'Aide' : 'Tableau de bord')
+                    Text((userData['admin']==true) ? 'Tableau de bord' : 'Aide')
                   ])),
               PopupMenuItem(
                   value: 2,

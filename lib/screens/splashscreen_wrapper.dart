@@ -17,8 +17,7 @@ class SplashScreenWrapper extends StatelessWidget {
       }
       return Scaffold(body: AuthenticateScreen(),);
     } else {
-      return HomeScreen(uId:
-                                    FirebaseAuth.instance.currentUser!.uid,);
+      return HomeScreen(uId:FirebaseAuth.instance.currentUser!.uid,);
     }
   }
 }

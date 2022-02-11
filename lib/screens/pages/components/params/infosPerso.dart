@@ -56,11 +56,14 @@ class _InfosPersoState extends State<InfosPerso> {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: upBar(context, 'Informations Personnelles'),
-      body: SingleChildScrollView(
+      body: 
+      SingleChildScrollView(
         child: Padding(
         padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child:
@@ -110,7 +113,7 @@ class _InfosPersoState extends State<InfosPerso> {
               child: ListTile(
                 onTap: () {},
                 title: Text('Modérateur'),
-                subtitle: Text(userData['modo'].toString()),
+                subtitle: Text((userData['modo']==true) ? 'Compte Modérateur' : 'Compte Non-Modérateur'),
               ),
             ),
             SizedBox(height:20),
@@ -118,7 +121,7 @@ class _InfosPersoState extends State<InfosPerso> {
               child: ListTile(
                 onTap: () {},
                 title: Text('Administrateur'),
-                subtitle: Text(userData['admin'].toString()),
+                subtitle: Text((userData['admin']==true) ? 'Compte administrateur' : 'Compte Non-Administrateur'),
               ),
             ),
             SizedBox(height:20),
