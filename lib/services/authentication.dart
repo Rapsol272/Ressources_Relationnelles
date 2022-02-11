@@ -77,3 +77,30 @@ class AuthenticationService {
     }
   }
 }
+
+Future dataUser() async {
+var userData = {};
+
+try{
+  var user = FirebaseAuth.instance.authStateChanges();
+getData() async {
+
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc()
+          .get();
+
+      userData = userSnap.data()!;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  return getData();
+}catch (exception){
+  print(exception.toString());
+  return null;
+}
+
+
+}

@@ -7,6 +7,8 @@ class Groupes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<UserList>(create: (_) => UserList(),child:  Text('data'),);
+    return Scaffold(body: Container(),);
+    
+    //Provider<UserList>(create: (_) => UserList(),child:  Text('data'),);
   }
 }

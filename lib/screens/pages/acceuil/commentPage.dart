@@ -5,6 +5,7 @@ import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 
 // ignore: camel_case_types
 class commentPage extends StatefulWidget {
@@ -29,23 +30,7 @@ class _commentPageState extends State<commentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.black12,
-        backgroundColor: greenMajor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
-        title: Title(
-          color: Colors.white,
-          child: Text(
-            widget.titlePost,
-            style: TextStyle(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
+      appBar: upBar(context, widget.titlePost,),
       bottomNavigationBar: Container(
         width: 300,
         height: 85,

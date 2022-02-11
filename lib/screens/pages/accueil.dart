@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/addPostPage.dart';
@@ -10,10 +11,10 @@ class Accueil extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: bodyAcceuil(),
-          ),
+            child: bodyAcceuil(uId: FirebaseAuth.instance.currentUser!.uid),),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: or,
         foregroundColor: Colors.white,
