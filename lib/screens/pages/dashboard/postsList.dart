@@ -5,17 +5,17 @@ import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 
-class UsersList extends StatefulWidget {
-  UsersList({Key? key}) : super(key: key);
+class PostsList extends StatefulWidget {
+  PostsList({Key? key}) : super(key: key);
 
   @override
-  State<UsersList> createState() => _UsersListState();
+  State<PostsList> createState() => _PostsListState();
 }
 
-class _UsersListState extends State<UsersList> {
+class _PostsListState extends State<PostsList> {
   Storage storage = new Storage();
   final Stream<QuerySnapshot> posts =
-      FirebaseFirestore.instance.collection('users').snapshots();
+      FirebaseFirestore.instance.collection('posts').snapshots();
 
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -25,15 +25,32 @@ class _UsersListState extends State<UsersList> {
   getData() async {
     List<String> temp = [];
 
-    await FirebaseFirestore.instance.collection('users').get().then(
+    await FirebaseFirestore.instance.collection('posts').get().then(
           (querySnapshot) => {
             querySnapshot.docs.forEach(
               (doc) => {allPosts.add(doc.id)},
             )
           },
         );
+    await FirebaseFirestore.instance.collection('posts').get().then(
+          (querySnapshot) => {
+            querySnapshot.docs.forEach(
+              (doc) => {temp.add(doc["idLikeUsers"].cast<String>())},
+            )
+          },
+        );
 
-  
+    for (int i = 0; i < temp.length; i++) {
+      for (int j = 0; j < temp[i].length; j++) {
+        if (myUserId == temp[i][j]) {
+          allFavPostUser.add(Colors.red);
+        } else {
+          allFavPostUser.add(Colors.grey);
+        }
+      }
+    }
+    print(allPosts);
+    print(allFavPostUser);
     setState(() {});
   }
 
@@ -84,17 +101,36 @@ class _UsersListState extends State<UsersList> {
                                             clipBehavior: Clip.antiAlias,
                                             child: Column(children: [
                                               ListTile(
+                                                // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
+                                                leading: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                    child: data.docs[index]
+                                                                ['reference'] ==
+                                                            ""
+                                                        ? Image.asset(
+                                                            "images/ressources_relationnelles.png",
+                                                          )
+                                                        : Image.network(
+                                                            '${data.docs[index]['reference']}',
+                                                          )),
 
-                                                title: 
-                                                data.docs[index]['name']==null ? Text('Anonyme'):
-                                                Text(
-                                                  '${data.docs[index]['name']}',
+                                                title: Text(
+                                                  '${data.docs[index]['title']}',
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                
+                                                subtitle: Text(
+                                                  'Posté par : ${data.docs[index]['auteur']}',
+                                                  style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(0.6),
+                                                      fontStyle:
+                                                          FontStyle.italic),
+                                                ),
                                                 trailing: IconButton(
                                                     onPressed: () {
                                                       

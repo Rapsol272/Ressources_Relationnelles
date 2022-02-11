@@ -79,7 +79,8 @@ class _ProfilPageState extends State<Profil> {
         : DefaultTabController(
             length: 2,
             child: Scaffold(
-              body: Column(
+              body: 
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
@@ -351,6 +352,7 @@ class _ProfilPageState extends State<Profil> {
                                                       MaterialPageRoute(
                                                         builder: (context) =>
                                                             commentPage(
+                                                              uId: FirebaseAuth.instance.currentUser!.uid,
                                                           idPost: snap.id,
                                                           titlePost:
                                                               snap['title'],

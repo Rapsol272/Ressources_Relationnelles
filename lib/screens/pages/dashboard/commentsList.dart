@@ -5,35 +5,32 @@ import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 
-class UsersList extends StatefulWidget {
-  UsersList({Key? key}) : super(key: key);
+class CommentsList extends StatefulWidget {
+  CommentsList({Key? key}) : super(key: key);
 
   @override
-  State<UsersList> createState() => _UsersListState();
+  State<CommentsList> createState() => _CommentsListState();
 }
 
-class _UsersListState extends State<UsersList> {
+class _CommentsListState extends State<CommentsList> {
   Storage storage = new Storage();
   final Stream<QuerySnapshot> posts =
-      FirebaseFirestore.instance.collection('users').snapshots();
+      FirebaseFirestore.instance.collection('comments').snapshots();
 
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
 
-  List<String> allPosts = [];
-  List<Color> allFavPostUser = [];
+  List<String> allComments = [];
 
   getData() async {
     List<String> temp = [];
 
-    await FirebaseFirestore.instance.collection('users').get().then(
+    await FirebaseFirestore.instance.collection('comments').get().then(
           (querySnapshot) => {
             querySnapshot.docs.forEach(
-              (doc) => {allPosts.add(doc.id)},
+              (doc) => {allComments.add(doc.id)},
             )
           },
         );
-
-  
     setState(() {});
   }
 
@@ -84,17 +81,15 @@ class _UsersListState extends State<UsersList> {
                                             clipBehavior: Clip.antiAlias,
                                             child: Column(children: [
                                               ListTile(
+                                                // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
 
-                                                title: 
-                                                data.docs[index]['name']==null ? Text('Anonyme'):
-                                                Text(
-                                                  '${data.docs[index]['name']}',
+                                                title: Text(
+                                                  '${data.docs[index]['content']}',
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                
                                                 trailing: IconButton(
                                                     onPressed: () {
                                                       

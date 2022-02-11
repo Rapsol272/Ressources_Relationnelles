@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var _currentIndex = 0;
   bool mod = true;
   final List<Widget> _pages = [
-    Accueil(),
+    Accueil(uId: FirebaseAuth.instance.currentUser!.uid),
     Groupes(),
     Profil(uId: FirebaseAuth.instance.currentUser!.uid),
   ];

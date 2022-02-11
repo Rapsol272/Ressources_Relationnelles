@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/screens/pages/dashboard/commentsList.dart';
+import 'package:flutter_firebase/screens/pages/dashboard/postsList.dart';
 import 'package:flutter_firebase/screens/pages/dashboard/usersList.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 
@@ -17,12 +20,9 @@ class _DashboardState extends State<Dashboard> {
       appBar: upBar(context, 'Ressources Relationnelles'),
       body: Column(
         children: [
-          Row(
-            children: [
-              Text('Utilitaires'),
-              Text('See all')
-            ],
-          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+            child: Text('Utilitaires', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),),
 
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
@@ -57,6 +57,10 @@ class _DashboardState extends State<Dashboard> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: ListTile(
+                  onTap: () {
+                    Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PostsList()));
+                  },
                   title: Text('Tous les posts'),
                   leading: Container(
                     width: 40, 
@@ -75,6 +79,10 @@ class _DashboardState extends State<Dashboard> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: ListTile(
+                  onTap: () {
+                    Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CommentsList()));
+                  },
                   title: Text('Tous les commentaires'),
                   leading: Container(
                     width: 40, 
@@ -88,11 +96,9 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),),
 
-          Row(
-            children: [
-              Text('Statistiques')
-            ],
-          ),
+         Padding(
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+            child: Text('Statistiques', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

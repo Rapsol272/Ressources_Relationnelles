@@ -379,7 +379,8 @@ class _AddPostPageState extends State<AddPostPage> {
               'title': myControllerTitle.text,
               'reference': await storage.uploadFile(_path, _fileName),
               'tags': getTags(),
-              'idLikeUsers': []
+              'idLikeUsers': [],
+              'idPost': DateTime.now().toString()+myUserId
             };
             var collection = FirebaseFirestore.instance.collection('posts');
             collection

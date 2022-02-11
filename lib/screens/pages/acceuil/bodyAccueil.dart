@@ -93,6 +93,10 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
     }
   }
 
+  deletePost() async{
+    await FirebaseFirestore.instance.collection('posts').doc();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -258,6 +262,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     commentPage(
+                                                      uId: FirebaseAuth.instance.currentUser!.uid,
                                                   idPost: data.docs[index].id,
                                                   titlePost: data.docs[index]
                                                       ['title'],
@@ -322,9 +327,9 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                           padding:
                                               const EdgeInsets.only(bottom: 12),
                                           onPressed: () {
-                                            showDialog(
+                                            /*showDialog(
                                               context: context,
-                                              builder: (BuildContext context) => _deletePopupPost(context));
+                                              builder: (BuildContext context) => _deletePopupPost(context, getData()));*/
                                           }, 
                                           icon: Icon(
                                             Icons.delete_outline,
@@ -351,7 +356,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   }
 }
 
-_deletePopupPost(BuildContext context) {
+_deletePopupPost(BuildContext context, getData()) {
   return new AlertDialog(
     backgroundColor: Colors.grey[200],
     shape: RoundedRectangleBorder(
