@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
@@ -20,10 +23,15 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController nameController = TextEditingController();
   TextEditingController prenomController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  final reference = '';
   bool isLoading = false;
   late AppUserData user_fire;
   bool _displayNameValid = true;
   bool _bioValid = true;
+
+  var _path;
+  var _fileName;
+  final Storage storage = Storage();
 
   @override
   void initState() {
@@ -60,6 +68,7 @@ class _EditProfileState extends State<EditProfile> {
             const SizedBox(height: 24),
             buildBioField(),
             const SizedBox(height: 24),
+            buildImgField(),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 primary: Color(0xff148F77),
@@ -75,9 +84,12 @@ class _EditProfileState extends State<EditProfile> {
               ),
               onPressed: () async {
                 await updateProfileData();
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen(uId:
-                                    FirebaseAuth.instance.currentUser!.uid,)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen(
+                              uId: FirebaseAuth.instance.currentUser!.uid,
+                            )));
               },
             ),
           ],
@@ -91,6 +103,7 @@ class _EditProfileState extends State<EditProfile> {
         TextField(
           controller: nameController,
           decoration: InputDecoration(
+            label: Text('Votre Nom'),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -108,6 +121,7 @@ class _EditProfileState extends State<EditProfile> {
         TextField(
           controller: prenomController,
           decoration: InputDecoration(
+            label: Text('Votre Prenom'),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -125,12 +139,52 @@ class _EditProfileState extends State<EditProfile> {
         TextField(
           controller: bioController,
           decoration: InputDecoration(
+            label: Text('Votre Biographie'),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
           maxLines: 1,
         ),
+      ],
+    );
+  }
+
+  Column buildImgField() {
+    return Column(
+      children: [
+        OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              primary: greenMajor,
+              backgroundColor: Colors.transparent,
+              side: BorderSide(color: greenMajor, width: 1),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+            ),
+            onPressed: () async {
+              final results = await FilePicker.platform.pickFiles(
+                allowMultiple: false,
+                type: FileType.custom,
+                allowedExtensions: ['png', 'jpg'],
+              );
+
+              if (results == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('No file'),
+                  ),
+                );
+                return null;
+              }
+
+              final path = results.files.single.path!;
+              _path = path;
+              final fileName = results.files.single.name;
+              _fileName = fileName;
+              setState(() {});
+              print(_fileName);
+            },
+            child: Text('Ajouter une image'))
       ],
     );
   }
@@ -150,7 +204,8 @@ class _EditProfileState extends State<EditProfile> {
       usersRef.doc(widget.currentUserUid).update({
         "name": nameController.text,
         "prenom": prenomController.text,
-        "bio": bioController.text
+        "bio": bioController.text,
+        "reference": storage.uploadFile(_path, _fileName),
       });
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Votre profil a été modifié")));

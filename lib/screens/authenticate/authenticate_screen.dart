@@ -70,15 +70,10 @@ import 'package:flutter/services.dart';
     });
   }SingingCharacter? _character = SingingCharacter.lecteur;
 
-  final ImagePicker _picker = ImagePicker();
-
-  XFile? profilImage;
-  
-  
-
-  var storage = FirebaseStorage.instance;
-
-    @override
+      var _path;
+      var _fileName;
+      final Storage storage = Storage();
+      var currentColor = Color(0xff03989E);
 
   
    @override
@@ -86,9 +81,7 @@ import 'package:flutter/services.dart';
 
       var hasWidthPage = MediaQuery.of(context).size.width;
 
-      var _path;
-      var _fileName;
-      final Storage storage = Storage();
+      
 
       return loading
           ? Loading()
@@ -202,16 +195,18 @@ import 'package:flutter/services.dart';
                        : Container(),
                       
                       !showSignIn ? SizedBox(height: 30,) : Container(),
-
-                     !showSignIn ?
-                      Center(
-                        child: _path == null
-                            ? Container()
-                            : Image.asset(
-                                'images/film.jpeg',
-                                fit: BoxFit.cover,
-                                width: hasWidthPage * 0.3
-                              ),
+                      !showSignIn ?
+                      Container(
+                        child: 
+                        _path == null ?
+                       Center(
+                         child: Text('Aucune Image de Profil sélectionnée !'),
+                       )
+                              : CircleAvatar(
+                                 radius: hasWidthPage*0.2,
+                                backgroundImage: 
+                                FileImage(File(_path)),
+                              )
                       ) : Container(),
 
                       !showSignIn ? SizedBox(height: 30,) : Container(),
@@ -227,8 +222,8 @@ import 'package:flutter/services.dart';
                         onPressed: () async {
                           final results = await FilePicker.platform.pickFiles(
                             allowMultiple: false,
-                            type: FileType.custom,
-                            allowedExtensions: ['png', 'jpg'],
+                            type: FileType.image,
+                            
                           );
 
                           if (results == null) {
@@ -245,6 +240,7 @@ import 'package:flutter/services.dart';
                           final fileName = results.files.single.name;
                           _fileName = fileName;
                           setState(() {});
+                          print(_path);
                         }, 
                         child: Text('Ajouter une image'))
                       : Container(),
@@ -278,7 +274,7 @@ import 'package:flutter/services.dart';
                         SizedBox(height: 20,),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                              primary: greenMajor,
+                              primary: currentColor,
                               onPrimary: Colors.white,
                               shadowColor: or,
                               elevation: 3,
@@ -290,7 +286,8 @@ import 'package:flutter/services.dart';
                           showSignIn? "Se connecter" : "S\'inscrire",
                         ),
                         onPressed: () async {
-                          if (_formKey.currentState?.validate() == true) {
+                          if (_fileName != null){
+                            if (_formKey.currentState?.validate() == true) {
                             setState(() => loading = true);
                             var password = passwordController.value.text;
                             var email = emailController.value.text;
@@ -300,12 +297,13 @@ import 'package:flutter/services.dart';
                             var bio = bioController.value.text;
                             var modo = false;
                             var admin = false;
+                            var reference = await storage.uploadFile(_path, _fileName);
 
                             dynamic result = showSignIn
                                 ? await _auth.signInWithEmailAndPassword(
                                     email, password)
                                 : await _auth.registerWithEmailAndPassword(
-                                    name, prenom, email, password, role, bio, modo, admin);
+                                    name, prenom, email, password, role, bio, modo, admin, reference);
 
                                   if (result == null) {
                                     setState(() {
@@ -314,7 +312,14 @@ import 'package:flutter/services.dart';
                                     });
                                   }
                                 }
-                              },
+                              } else{
+                                setState(() {
+                                  currentColor = Colors.red;
+                                });
+                              }
+                          }
+
+                          
                               ),
                               SizedBox(height: 10,),
                             showSignIn
@@ -350,3 +355,4 @@ import 'package:flutter/services.dart';
     }
     
   }
+

@@ -15,7 +15,10 @@ final usersRef = FirebaseFirestore.instance.collection('users');
 
 class Profil extends StatefulWidget {
   final String? uId;
-  const Profil({Key? key, required this.uId,}) : super(key: key);
+  const Profil({
+    Key? key,
+    required this.uId,
+  }) : super(key: key);
 
   @override
   _ProfilPageState createState() => _ProfilPageState();
@@ -69,18 +72,16 @@ class _ProfilPageState extends State<Profil> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    //final user = UserPreferences.myUser;
+    var hasWidthPage = MediaQuery.of(context).size.width;
     setState(() {});
     return isLoading
         ? Loading()
         : DefaultTabController(
             length: 2,
             child: Scaffold(
-              body: 
-              Column(
+              body: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
@@ -88,16 +89,27 @@ class _ProfilPageState extends State<Profil> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // profile picture
-                        /* ProfileWidget(
-                            imagePath: /* user.image */ '',
-                            onClicked: () async {}), */
-
-                        // number of posts, followers, following
                         Expanded(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              userData['reference'] == ''?
+                              CircleAvatar(
+                                      radius: hasWidthPage*0.15,
+                                      backgroundColor: or,
+                                      child: Icon(Icons.person, color: Colors.grey[100],size: hasWidthPage*0.15,)
+                                    ) 
+                                    : CircleAvatar(
+                                      radius: hasWidthPage * 0.15,
+                                      backgroundImage: 
+                                      NetworkImage(
+                                        userData['reference'].toString(),
+                                      )
+                                       
+                                    ),
+                              SizedBox(
+                                width: hasWidthPage * 0.1,
+                              ),
                               Column(
                                 children: [
                                   Text(
@@ -352,7 +364,10 @@ class _ProfilPageState extends State<Profil> {
                                                       MaterialPageRoute(
                                                         builder: (context) =>
                                                             commentPage(
-                                                              uId: FirebaseAuth.instance.currentUser!.uid,
+                                                          uId: FirebaseAuth
+                                                              .instance
+                                                              .currentUser!
+                                                              .uid,
                                                           idPost: snap.id,
                                                           titlePost:
                                                               snap['title'],
