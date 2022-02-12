@@ -5,6 +5,7 @@ import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -160,24 +161,22 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                   children: [
                                     ListTile(
                                       // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
-                                      leading: ElevatedButton(
-                                        onPressed: () {
+                                      leading: 
+                                      GestureDetector(
+                                        onTap: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Profil(
-                                                    uId: FirebaseAuth.instance
-                                                        .currentUser!.uid)),
+                                                builder: (context) => Scaffold(
+                                                  appBar: upBar(context, 'Ressources Relationnelles'),
+                                                  body: Profil(
+                                                    uId: data.docs[index]['idUser']),
+                                                )),
                                           );
                                         },
-                                        child: Icon(
-                                          Icons.portrait,
-                                          color: Colors.white,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          shape: CircleBorder(),
-                                          padding: EdgeInsets.all(10),
-                                          primary: Color(0xff03989E),
+                                        child: CircleAvatar(
+                                        backgroundImage:
+                                        NetworkImage('${data.docs[index]['reference']}'),
                                         ),
                                       ),
 
@@ -201,7 +200,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                         child:
-                                            data.docs[index]['reference'] == ""
+                                            (data.docs[index]['reference'] == '')
                                                 ? Image.asset(
                                                     "images/test1.jpg",
                                                   )

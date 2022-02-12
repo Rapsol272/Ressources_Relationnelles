@@ -114,10 +114,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       context, MaterialPageRoute(builder: (context) => (userData['admin']==true) ? Dashboard() : Help()));
                   break;
                 case 2:
-                  Navigator.push(
+                (userData['name'] == null)
+                  ? _auth.signOut()
+                  : Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditProfile(
+                          builder: (context) =>
+                          EditProfile(
                                 currentUserUid:
                                     FirebaseAuth.instance.currentUser!.uid,
                               )));
@@ -148,16 +151,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         )),
                     Text((userData['admin']==true) ? 'Tableau de bord' : 'Aide')
                   ])),
-              PopupMenuItem(
+                  PopupMenuItem(
                   value: 2,
                   child: Row(children: <Widget>[
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
-                          Icons.edit,
+                          (userData['name'] == null)
+                          ? Icons.person_add
+                          : Icons.edit,
                           color: greenMajor,
                         )),
-                    Text('Modifier mon profil')
+                    Text((userData['name'] == null) ? 'Créer un compte' : 'Modifier mon profil')
                   ])),
               PopupMenuItem(
                   onTap: () async {
@@ -199,13 +204,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           /// Mon profil
           SalomonBottomBarItem(
-            icon: 
-            userData['reference'] == ''
-            ? CircleAvatar(
-              backgroundImage:AssetImage('images/ressources_relationnelles.png')
-            )
-            : CircleAvatar(
-              backgroundImage:NetworkImage(userData['reference']),
+            icon: CircleAvatar(
+              backgroundImage:AssetImage('images/ressources_relationnelles.png'),
             ),
             //Icon(Icons.person),
             title: Text("Mon profil"),

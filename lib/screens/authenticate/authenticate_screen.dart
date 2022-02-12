@@ -286,8 +286,9 @@ import 'package:flutter/services.dart';
                           showSignIn? "Se connecter" : "S\'inscrire",
                         ),
                         onPressed: () async {
-                          if (_fileName != null){
-                            if (_formKey.currentState?.validate() == true) {
+                          
+                          
+                            if (_fileName !=null && _formKey.currentState?.validate() == true) {
                             setState(() => loading = true);
                             var password = passwordController.value.text;
                             var email = emailController.value.text;
@@ -312,11 +313,8 @@ import 'package:flutter/services.dart';
                                     });
                                   }
                                 }
-                              } else{
-                                setState(() {
-                                  currentColor = Colors.red;
-                                });
-                              }
+
+                          
                           }
 
                           

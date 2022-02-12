@@ -72,8 +72,7 @@ class CustomSearchDelegate extends SearchDelegate {
                                                 builder: (context) => Scaffold(
                                                   appBar: upBar(context, 'Ressources Relationnelles'),
                                                   body: Profil(
-                                                    uId: FirebaseAuth.instance
-                                                        .currentUser!.uid),
+                                                    uId: data.get('idUser')),
                                                 )),
                                           );},
                               child: Card(
