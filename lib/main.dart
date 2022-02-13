@@ -67,23 +67,8 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (context) => SplashScreenWrapper());
-      case '/chat':
-        var arguments = settings.arguments;
-        if (arguments != null) {
-          return PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  ChatScreen(chatParams : arguments as ChatParams),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                animation = CurvedAnimation(curve: Curves.ease, parent: animation);
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              }
-          );
-        } else {
-          return pageNotFound();
-        }
+      //chat
+
       default:
         return pageNotFound();
     }
