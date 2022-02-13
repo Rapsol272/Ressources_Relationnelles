@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
+import 'package:flutter_firebase/screens/pages/components/radioButton.dart';
+import 'package:flutter_firebase/screens/pages/profil/friends.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_firebase/screens/pages/messages/bodymessage.dart';
@@ -15,10 +17,11 @@ class creationGroupe extends StatefulWidget {
   @override
   _creationGroupe createState() => _creationGroupe();
 }
-
+var test;
 class _creationGroupe extends State<creationGroupe> {
   var taille =0;
   bool isLoading = false;
+  
   late List<dynamic> friendship;
   var _iconColor = Colors.grey;
   var _iconColorShare = Colors.grey;
@@ -165,9 +168,10 @@ Widget build(BuildContext context) {
       body: ListView.builder(
         itemCount: friendship.length,
         itemBuilder: (context, index){
+          amies(friendship[index]["idUser1"] , friendship[index]["idUser2"]);
           return Container(
             child: Text(
-              "test"
+              test['name']
             ),
           );
         }
@@ -175,4 +179,14 @@ Widget build(BuildContext context) {
         ),
     );
 }
+}
+
+amies(friends1 ,friends2 ) async {
+  dynamic friends;
+  if(friends1 == FirebaseAuth.instance.currentUser!.uid){
+    friends = friends2;
+  }
+  else
+    friends = friends1;
+  test = await FirebaseFirestore.instance.collection('users').doc(friends).get();
 }
