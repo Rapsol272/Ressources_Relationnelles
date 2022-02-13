@@ -1,20 +1,26 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
+import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/friends.dart';
 import 'package:flutter_firebase/utils/user_preferences.dart';
 import 'package:flutter_firebase/widget/profile_widget.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 
 final usersRef = FirebaseFirestore.instance.collection('users');
 
@@ -27,6 +33,8 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<Profil> {
+  File _image = File(
+      'https://image.shutterstock.com/image-vector/blank-avatar-photo-place-holder-260nw-1095249842.jpg');
   var userData = {};
   int postLen = 0;
   bool isLoading = false;
@@ -78,7 +86,31 @@ class _ProfilPageState extends State<Profil> {
   @override
   Widget build(BuildContext context) {
     //final user = UserPreferences.myUser;
-    setState(() {});
+    Future getImage() async {
+      var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      setState(() {
+        if (image != null) {
+          _image = File(image.path);
+        } else {
+          print('null');
+        }
+        print('Image Path $_image');
+      });
+    }
+
+    Future uploadPic(BuildContext context) async {
+      String fileName = basename(_image.path);
+      Reference firebaseStorageRef =
+          FirebaseStorage.instance.ref().child(fileName);
+      UploadTask uploadTask = firebaseStorageRef.putFile(_image);
+      TaskSnapshot taskSnapshot = await uploadTask.snapshot;
+      setState(() {
+        print("Profile Picture uploaded");
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Votre photo de profil a été modifié")));
+      });
+    }
+
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(),
@@ -94,10 +126,48 @@ class _ProfilPageState extends State<Profil> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        CircleAvatar(
+                          radius: 100,
+                          backgroundColor: Color(0xff476cfb),
+                          child: ClipOval(
+                            child: new SizedBox(
+                                width: 180.0,
+                                height: 180.0,
+                                child: (_image != null)
+                                    ? Image.file(
+                                        _image,
+                                        fit: BoxFit.fill,
+                                      )
+                                    : Image.network(
+                                        'https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+                                        fit: BoxFit.fill,
+                                      )),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 60.0),
+                          child: IconButton(
+                            icon: Icon(
+                              FontAwesomeIcons.camera,
+                              size: 30.0,
+                            ),
+                            onPressed: () {
+                              //Navigator.pop(context);
+                              getImage();
+                              uploadPic(context);
+                            },
+                          ),
+                        ),
+
                         // profile picture
                         /* ProfileWidget(
-                            imagePath: /* user.image */ '',
-                            onClicked: () async {}), */
+                            imagePath: userData['reference'].toString(),
+                            onClicked: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => EditProfile(
+                                      currentUserUid: FirebaseAuth
+                                          .instance.currentUser!.uid)));
+                            }), */
 
                         // number of posts, followers, following
                         Expanded(

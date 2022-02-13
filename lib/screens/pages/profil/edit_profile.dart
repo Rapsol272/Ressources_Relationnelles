@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
+import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
@@ -30,6 +31,9 @@ class _EditProfileState extends State<EditProfile> {
   late AppUserData user_fire;
   bool _displayNameValid = true;
   bool _bioValid = true;
+  var _path;
+  var _fileName;
+  final Storage storage = Storage();
 
   @override
   void initState() {
@@ -58,12 +62,29 @@ class _EditProfileState extends State<EditProfile> {
           padding: EdgeInsets.symmetric(horizontal: 32),
           physics: BouncingScrollPhysics(),
           children: [
-            //ProfileWidget(imagePath: '', isEdit: true, onClicked: () async {}),
+            ProfileWidget(
+                imagePath: '',
+                isEdit: true,
+                onClicked: () {
+                  storage.uploadFile(_path, _fileName);
+                }),
             const SizedBox(height: 24),
+            Text(
+              'Nom',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             buildNameField(),
             const SizedBox(height: 24),
+            Text(
+              'Prénom',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             buildPrenomField(),
             const SizedBox(height: 24),
+            Text(
+              'Rôle',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             buildBioField(),
             const SizedBox(height: 24),
             ElevatedButton(
