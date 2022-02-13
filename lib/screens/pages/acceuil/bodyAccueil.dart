@@ -4,6 +4,7 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
+import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -260,14 +261,15 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                           padding:
                                               const EdgeInsets.only(bottom: 12),
                                           onPressed: () {
-                                            setState(() {
-                                              if (_iconColorAdd ==
-                                                  Colors.grey) {
-                                                _iconColorAdd = Colors.blue;
-                                              } else {
-                                                _iconColorAdd = Colors.grey;
-                                              }
-                                            });
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    creationGroupe(
+                                                  
+                                                ),
+                                              ),
+                                            );
                                           },
                                           icon: Icon(
                                             FontAwesomeIcons.plusSquare,
