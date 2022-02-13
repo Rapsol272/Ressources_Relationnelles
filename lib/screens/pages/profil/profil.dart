@@ -33,8 +33,6 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<Profil> {
-  File _image = File(
-      'https://image.shutterstock.com/image-vector/blank-avatar-photo-place-holder-260nw-1095249842.jpg');
   var userData = {};
   int postLen = 0;
   bool isLoading = false;
@@ -86,30 +84,6 @@ class _ProfilPageState extends State<Profil> {
   @override
   Widget build(BuildContext context) {
     //final user = UserPreferences.myUser;
-    Future getImage() async {
-      var image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      setState(() {
-        if (image != null) {
-          _image = File(image.path);
-        } else {
-          print('null');
-        }
-        print('Image Path $_image');
-      });
-    }
-
-    Future uploadPic(BuildContext context) async {
-      String fileName = basename(_image.path);
-      Reference firebaseStorageRef =
-          FirebaseStorage.instance.ref().child(fileName);
-      UploadTask uploadTask = firebaseStorageRef.putFile(_image);
-      TaskSnapshot taskSnapshot = await uploadTask.snapshot;
-      setState(() {
-        print("Profile Picture uploaded");
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Votre photo de profil a été modifié")));
-      });
-    }
 
     return isLoading
         ? const Center(
@@ -126,39 +100,6 @@ class _ProfilPageState extends State<Profil> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
-                          radius: 100,
-                          backgroundColor: Color(0xff476cfb),
-                          child: ClipOval(
-                            child: new SizedBox(
-                                width: 180.0,
-                                height: 180.0,
-                                child: (_image != null)
-                                    ? Image.file(
-                                        _image,
-                                        fit: BoxFit.fill,
-                                      )
-                                    : Image.network(
-                                        'https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
-                                        fit: BoxFit.fill,
-                                      )),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 60.0),
-                          child: IconButton(
-                            icon: Icon(
-                              FontAwesomeIcons.camera,
-                              size: 30.0,
-                            ),
-                            onPressed: () {
-                              //Navigator.pop(context);
-                              getImage();
-                              uploadPic(context);
-                            },
-                          ),
-                        ),
-
                         // profile picture
                         /* ProfileWidget(
                             imagePath: userData['reference'].toString(),
