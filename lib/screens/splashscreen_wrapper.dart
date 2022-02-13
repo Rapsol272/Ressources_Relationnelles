@@ -17,7 +17,10 @@ class SplashScreenWrapper extends StatelessWidget {
       }
       return Scaffold(body: AuthenticateScreen(),);
     } else {
-      return HomeScreen(uId:FirebaseAuth.instance.currentUser!.uid,);
+      return HomeScreen(uId:
+      FirebaseAuth.instance.currentUser!.uid,
+      //'cY0qw9r4Q6WXiBQwuDvRYq:APA91bH0hbf1SYqFdsA93HifmTAVuc24eJ2A32AwjCJbWFhqrVqT3jYARDaCle_xhZSm7OPKqGORuqFsXz1b_58E5GU1TNaaaSnXU5DDACIUwy1S8koo-4t12RgaOztZuguYM27rWVeh'
+      );
     }
   }
 }

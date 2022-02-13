@@ -204,10 +204,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           /// Mon profil
           SalomonBottomBarItem(
-            icon: CircleAvatar(
-              backgroundImage:AssetImage('images/ressources_relationnelles.png'),
-            ),
-            //Icon(Icons.person),
+            icon: 
+            Icon(Icons.person),
             title: Text("Mon profil"),
             selectedColor: or,
           ), 

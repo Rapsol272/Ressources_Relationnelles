@@ -33,6 +33,7 @@ class AuthenticationService {
       return _userFromFirebaseUser(user);
     } catch (exception) {
       print(exception.toString());
+      print('erreur connexion');
       return null;
     }
   }

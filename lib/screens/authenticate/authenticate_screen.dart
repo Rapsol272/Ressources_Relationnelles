@@ -286,11 +286,8 @@ import 'package:flutter/services.dart';
                           showSignIn? "Se connecter" : "S\'inscrire",
                         ),
                         onPressed: () async {
-                          
-                          
-                            if (_fileName !=null && _formKey.currentState?.validate() == true) {
-                            setState(() => loading = true);
-                            var password = passwordController.value.text;
+                          print('connexion');
+                          var password = passwordController.value.text;
                             var email = emailController.value.text;
                             var name = nameController.value.text;
                             var prenom = prenomController.value.text;
@@ -298,11 +295,15 @@ import 'package:flutter/services.dart';
                             var bio = bioController.value.text;
                             var modo = false;
                             var admin = false;
-                            var reference = await storage.uploadFile(_path, _fileName);
-
+                            var reference = await storage.uploadFile(
+                              _path, _fileName
+                              );
+                          
+                            if (_formKey.currentState?.validate() == true) {
+                            setState(() => loading = true);
+                            print('fail');
                             dynamic result = showSignIn
-                                ? await _auth.signInWithEmailAndPassword(
-                                    email, password)
+                                ? await _auth.signInWithEmailAndPassword(email, password)
                                 : await _auth.registerWithEmailAndPassword(
                                     name, prenom, email, password, role, bio, modo, admin, reference);
 
@@ -312,6 +313,9 @@ import 'package:flutter/services.dart';
                                       error = "Il y une erreur dans votre inscription";
                                     });
                                   }
+                                }
+                                else{
+                                  print('fail');
                                 }
 
                           
