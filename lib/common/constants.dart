@@ -50,3 +50,4 @@ final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
     borderRadius: BorderRadius.all(Radius.circular(2)),
   ),
 );
+

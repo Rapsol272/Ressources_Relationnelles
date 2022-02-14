@@ -289,3 +289,65 @@ SingleChildScrollView(
                   return Text('En chargement');
                 }
                 final data = snapshot.requireData;
+
+
+
+                IconButton(
+                                                      onPressed: () {
+                                                        if (isLiked == true) {
+                                                          var myData = {
+                                                            'idPost': snap.id,
+                                                            'idUser':
+                                                                currentUserId
+                                                          };
+                                                          collectionLikes
+                                                              .add(myData)
+                                                              .then((value) =>
+                                                                  print('Like'))
+                                                              .catchError(
+                                                                  (error) => print(
+                                                                      'Add failed: $error'));
+                                                          setState(() {
+                                                            isLiked = false;
+                                                          });
+                                                        } else if (isLiked ==
+                                                            false) {
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  "likes")
+                                                              .where("idPost",
+                                                                  isEqualTo:
+                                                                      snap.id)
+                                                              .where('idUser',
+                                                                  isEqualTo:
+                                                                      currentUserId)
+                                                              .get()
+                                                              .then((value) {
+                                                            value.docs.forEach(
+                                                                (element) {
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "likes")
+                                                                  .doc(element
+                                                                      .id)
+                                                                  .delete()
+                                                                  .then(
+                                                                      (value) {
+                                                                print(
+                                                                    "Dislike!");
+                                                              });
+                                                            });
+                                                          });
+                                                          setState(() {
+                                                            isLiked = true;
+                                                          });
+                                                        }
+                                                      },
+                                                      icon: Icon(Icons.favorite,
+                                                          color: isLiked
+                                                              ? Colors.grey
+                                                              : Colors.red),
+                                                      
+                                                    ))

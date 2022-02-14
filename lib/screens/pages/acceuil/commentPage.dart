@@ -5,13 +5,16 @@ import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 
 // ignore: camel_case_types
 class commentPage extends StatefulWidget {
+  final usersRef = FirebaseFirestore.instance.collection('users');
   final String idPost;
   final String titlePost;
+  final String? uId;
 
-  commentPage({Key? key, required this.idPost, required this.titlePost})
+  commentPage({Key? key, required this.idPost, required this.titlePost, required this.uId})
       : super(key: key);
 
   @override
@@ -25,27 +28,41 @@ class _commentPageState extends State<commentPage> {
       FirebaseFirestore.instance.collection('comments').snapshots();
   var myControllerTitle = TextEditingController();
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
+  var userData = {};
+
+  getDataUser() async {
+    setState(() {
+      var user = FirebaseAuth.instance.authStateChanges();
+
+    });
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uId)
+          .get();
+
+      userData = userSnap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(BuildContext context, String text) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(text),
+          ),
+        );
+      }
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    getDataUser();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.black12,
-        backgroundColor: greenMajor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
-        title: Title(
-          color: Colors.white,
-          child: Text(
-            widget.titlePost,
-            style: TextStyle(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
+      appBar: upBar(context, widget.titlePost,),
       bottomNavigationBar: Container(
         width: 300,
         height: 85,
@@ -226,6 +243,11 @@ class _commentPageState extends State<commentPage> {
                                                       },
                                                     ),
                                                   ),
+                                                  (userData['modo']==true)
+                                                  ? IconButton(
+                                                    onPressed: () {}, 
+                                                    icon: Icon(Icons.delete_outline, color: Colors.red,)) 
+                                                    : Container()
                                                 ],
                                               ),
                                             )

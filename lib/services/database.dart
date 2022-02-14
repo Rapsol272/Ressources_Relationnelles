@@ -10,7 +10,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection("users");
 
   Future<void> saveUser(String name, String prenom, String email, String role,
-      String bio, bool modo, bool admin) async {
+      String bio, bool modo, bool admin, String reference) async {
     return await userCollection.doc(uid).set({
       'name': name,
       'prenom': prenom,
@@ -19,6 +19,7 @@ class DatabaseService {
       'bio': bio,
       'modo': modo,
       'admin': admin,
+      'reference': reference
     });
   }
 
@@ -39,7 +40,7 @@ class DatabaseService {
         bio: data['bio'],
         modo: data['modo'],
         admin: data['admin'],
-        likes: data['likes']);
+        reference: data['reference']);
   }
 
   Stream<AppUserData> get user {

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:io';
 import 'dart:ui';
 
@@ -26,7 +28,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
-var collectionLikes = FirebaseFirestore.instance.collection('likes');
+var collectionLikes = FirebaseFirestore.instance
+    .collection('likes')
+    .where('idUser', isEqualTo: currentUserId);
 final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
 class FavoritePosts extends StatefulWidget {
@@ -96,7 +100,7 @@ class _FavoritePosts extends State<FavoritePosts> {
         ? Loading()
         : FutureBuilder(
             future: FirebaseFirestore.instance
-                .collection('posts')
+                .collection('likes')
                 .where('idUser',
                     isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                 .get(),
@@ -107,7 +111,11 @@ class _FavoritePosts extends State<FavoritePosts> {
                 );
               }
 
-              return hasLikes()
+              // ignore: unnecessary_null_comparison
+              return collectionLikes
+                          .where('idUser', isEqualTo: currentUserId)
+                          .toString() !=
+                      null
                   ? ListView.builder(
                       itemCount: postLen,
                       itemBuilder: (context, index) {
@@ -266,11 +274,6 @@ String convertDateTimeDisplay(String date) {
   final DateTime displayDate = displayFormater.parse(date);
   final String formatted = serverFormater.format(displayDate);
   return formatted;
-}
-
-bool hasLikes() {
-  var likes = collectionLikes.where('idUser', isEqualTo: currentUserId);
-  return true;
 }
 
 unitTagsmdr(List array, int i) {

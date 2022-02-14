@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:draggable_home/draggable_home.dart';
+import 'package:flutter_firebase/screens/authenticate/authenticate_screen.dart';
 import 'package:flutter_firebase/screens/authenticate_screen.dart';
 
 class ScrollAuth extends StatelessWidget {
@@ -7,18 +8,15 @@ class ScrollAuth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     var hasWidthPage = MediaQuery.of(context).size.width;
 
     return DraggableHome(
-      title: Text('Ressources Relationnelles'), 
-      headerWidget: 
-      Center(
-        child:
-        Image.asset('images/ressources_relationnelles_transparent.png',)), 
-      body: [
-        AuthenticateScreen()
-      ],
+      title: Text('Ressources Relationnelles'),
+      headerWidget: Center(
+          child: Image.asset(
+        'images/ressources_relationnelles_transparent.png',
+      )),
+      body: [AuthenticateScreen()],
       fullyStretchable: false,
     );
   }
