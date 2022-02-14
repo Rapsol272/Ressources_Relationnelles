@@ -227,7 +227,6 @@ import 'package:flutter/services.dart';
                           );
 
                           if (results == null) {
-                            results = '';
                             return null;
                           }
 
@@ -293,7 +292,10 @@ import 'package:flutter/services.dart';
                             var bio = bioController.value.text;
                             var modo = false;
                             var admin = false;
-                            var reference = await storage.uploadFile(_path, _fileName);
+                            var reference = 
+                            showSignIn
+                            ? ''
+                            : await storage.uploadFile(_path, _fileName);
 
                             dynamic result = showSignIn
                                 ? await _auth.signInWithEmailAndPassword(
