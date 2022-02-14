@@ -1,3 +1,7 @@
+import 'dart:html';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
@@ -7,13 +11,21 @@ import 'package:flutter_firebase/screens/pages/dashboard/usersList.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 
 class Dashboard extends StatefulWidget {
-  Dashboard({Key? key}) : super(key: key);
+  
+  Dashboard({Key? key, required this.uId}) : super(key: key);
+  final String? uId;
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
+
+  var userData = {};
+  int postLen = 0;
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,6 +122,13 @@ class _DashboardState extends State<Dashboard> {
                       color:greenMajor,
                       borderRadius: BorderRadius.circular(10)
                     ),
+                    child: Text(
+          '15' + ' utilisateurs',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
               ),
               Container(
                 width: 150, 

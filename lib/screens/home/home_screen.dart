@@ -117,7 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   break;
                 case 1:
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => (userData['admin']==true) ? Dashboard() : Help()));
+                      context, MaterialPageRoute(builder: (context) => (userData['admin']==true) ? Dashboard(uId: FirebaseAuth.instance
+                                                      .currentUser!.uid) : Help()));
                   break;
                 case 2:
                 (userData['name'] == null)
