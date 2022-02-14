@@ -5,6 +5,7 @@ import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -13,12 +14,15 @@ import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 // ignore: camel_case_types
 
 class bodyAcceuil extends StatefulWidget {
+  final String? uId;
+  const bodyAcceuil({Key? key, required this.uId}) : super(key: key);
   @override
   _bodyAcceuilState createState() => _bodyAcceuilState();
 }
 
 // ignore: camel_case_types
 class _bodyAcceuilState extends State<bodyAcceuil> {
+  final usersRef = FirebaseFirestore.instance.collection('users');
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
 
@@ -32,8 +36,11 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   List<String> allPosts = [];
   List<Color> allFavPostUser = [];
 
+  
+  var userData ={};
   getData() async {
     List<String> temp = [];
+    
     await FirebaseFirestore.instance.collection('posts').get().then(
           (querySnapshot) => {
             querySnapshot.docs.forEach(
@@ -48,6 +55,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
             )
           },
         );
+
     for (int i = 0; i < temp.length; i++) {
       for (int j = 0; j < temp[i].length; j++) {
         if (myUserId == temp[i][j]) {
@@ -62,9 +70,38 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
     setState(() {});
   }
 
+  getDataUser() async {
+    setState(() {
+      var user = FirebaseAuth.instance.authStateChanges();
+
+    });
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uId)
+          .get();
+
+      userData = userSnap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(BuildContext context, String text) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(text),
+          ),
+        );
+      }
+    }
+  }
+
+  deletePost() async{
+    await FirebaseFirestore.instance.collection('posts').doc();
+  }
+
   @override
   void initState() {
     super.initState();
+    getDataUser();
   }
 
   @override
@@ -124,24 +161,22 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                   children: [
                                     ListTile(
                                       // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
-                                      leading: ElevatedButton(
-                                        onPressed: () {
+                                      leading: 
+                                      GestureDetector(
+                                        onTap: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Profil(
-                                                    uId: FirebaseAuth.instance
-                                                        .currentUser!.uid)),
+                                                builder: (context) => Scaffold(
+                                                  appBar: upBar(context, 'Ressources Relationnelles'),
+                                                  body: Profil(
+                                                    uId: data.docs[index]['idUser']),
+                                                )),
                                           );
                                         },
-                                        child: Icon(
-                                          Icons.portrait,
-                                          color: Colors.white,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          shape: CircleBorder(),
-                                          padding: EdgeInsets.all(10),
-                                          primary: Color(0xff03989E),
+                                        child: CircleAvatar(
+                                        backgroundImage:
+                                        NetworkImage('${data.docs[index]['reference']}'),
                                         ),
                                       ),
 
@@ -165,7 +200,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                         child:
-                                            data.docs[index]['reference'] == ""
+                                            (data.docs[index]['reference'] == '')
                                                 ? Image.asset(
                                                     "images/test1.jpg",
                                                   )
@@ -226,6 +261,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     commentPage(
+                                                      uId: FirebaseAuth.instance.currentUser!.uid,
                                                   idPost: data.docs[index].id,
                                                   titlePost: data.docs[index]
                                                       ['title'],
@@ -284,6 +320,20 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                             color: _iconColorAdd,
                                           ),
                                         ),
+
+                                        (userData['modo']==true) ?
+                                        IconButton(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 12),
+                                          onPressed: () {
+                                            /*showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) => _deletePopupPost(context, getData()));*/
+                                          }, 
+                                          icon: Icon(
+                                            Icons.delete_outline,
+                                            color: Colors.red,)) 
+                                        : Container()
                                       ],
                                     ),
                                   ],
@@ -303,6 +353,34 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
       },
     );
   }
+}
+
+_deletePopupPost(BuildContext context, getData()) {
+  return new AlertDialog(
+    backgroundColor: Colors.grey[200],
+    shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
+    title: const Text('Supprimer ce post ?', style: TextStyle(color: Colors.red),),
+    content: new Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text("En cliquant sur \'Oui\', vous supprimez ce post !", style: TextStyle(fontSize: 15),),
+      ],
+    ),
+    actions: <Widget>[
+      new ElevatedButton(
+        onPressed: () {
+        },
+        child: const Text('Oui !'),
+      ),
+      ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        }, 
+        child: Text('Fermer'))
+    ],
+  );
 }
 
 String convertDateTimeDisplay(String date) {

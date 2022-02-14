@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 class NotificationService {
 
@@ -19,4 +20,10 @@ class NotificationService {
     return FirebaseMessaging.instance.getToken(vapidKey: "BFegerezgi_Uv2hezgtkqEDTzzertez-Xbt8OK8mJ4eteztVsdWDJQLkMg");
   }
 
+}
+
+
+Future deletePost(context) async{
+
+  final doc = FirebaseFirestore.instance.collection('posts').doc().get();
 }

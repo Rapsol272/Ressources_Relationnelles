@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
@@ -61,6 +61,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
                         final String auteur = data.get('auteur');
                         final String title = data.get('title');
+                        final String content = data.get('content');
 
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -71,33 +72,36 @@ class CustomSearchDelegate extends SearchDelegate {
                                                 builder: (context) => Scaffold(
                                                   appBar: upBar(context, 'Ressources Relationnelles'),
                                                   body: Profil(
-                                                    uId: FirebaseAuth.instance
-                                                        .currentUser!.uid),
+                                                    uId: data.get('idUser')),
                                                 )),
                                           );},
                               child: Card(
-                              color: Colors.grey[300],
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    greenMajor,
-                                    or
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                              ),
-                            padding: EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                    Text(auteur, style: TextStyle(color: greenMajor, fontWeight: FontWeight.bold),),
-                                    SizedBox(height: 10,),
-                                    Text(title)
-                                  ],
-                                )
-                              )
-                            ),));
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          title: Text(auteur,
+                                              style: TextStyle(
+                                                color: greenMajor, 
+                                                fontWeight: FontWeight.bold,),),
+                                          subtitle: Text(
+                                            title,
+                                            style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            content,
+                                            overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              softWrap: true , 
+                                            style: TextStyle(color: Colors.black.withOpacity(0.4)),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),));
                     })
               ],
             );
@@ -127,20 +131,49 @@ class CustomSearchDelegate extends SearchDelegate {
 
                         final String auteur = data.get('auteur');
                         final String title = data.get('title');
+                        final String content = data.get('content');
+                        final String image = data.get('reference');
 
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                            child: Card(
-                            child: Container(
-                            padding: EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  Text(auteur, style: TextStyle(color: greenMajor, fontWeight: FontWeight.bold),),
-                                  Text(title)
-                                ],
-                              )
-                            )
-                          ),);
+                            child: GestureDetector(
+                              onTap: () {Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Scaffold(
+                                                  appBar: upBar(context, 'Ressources Relationnelles'),
+                                                  body: Profil(
+                                                    uId: FirebaseAuth.instance
+                                                        .currentUser!.uid),
+                                                )),
+                                          );},
+                              child: Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          title: Text(auteur,
+                                              style: TextStyle(
+                                                color: greenMajor, 
+                                                fontWeight: FontWeight.bold,),),
+                                          subtitle: Text(
+                                            title,
+                                            style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            content,
+                                            overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              softWrap: true , 
+                                            style: TextStyle(color: Colors.black.withOpacity(0.4)),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),));
                     })
               ],
             );
