@@ -379,7 +379,8 @@ class _AddPostPageState extends State<AddPostPage> {
               'title': myControllerTitle.text,
               'reference': await storage.uploadFile(_path, _fileName),
               'tags': getTags(),
-              'idLikeUsers': []
+              'idLikeUsers': [],
+              'idPost': DateTime.now().toString()+myUserId
             };
             var collection = FirebaseFirestore.instance.collection('posts');
             collection
@@ -390,7 +391,8 @@ class _AddPostPageState extends State<AddPostPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomeScreen(),
+                builder: (context) => HomeScreen(uId:
+                                    FirebaseAuth.instance.currentUser!.uid,),
               ),
             );
           } else if (icon == Icons.publish_sharp) {

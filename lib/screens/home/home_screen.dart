@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
@@ -17,30 +18,69 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  
+  HomeScreen({Key? key, required this.uId}) : super(key: key);
+  final String? uId;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var userData = {};
+  bool isLoading = true;
+  
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    setState(() {
+      var user = FirebaseAuth.instance.authStateChanges();
+
+      isLoading = true;
+    });
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uId)
+          .get();
+
+      userData = userSnap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(BuildContext context, String text) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(text),
+          ),
+        );
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   
   var _currentIndex = 0;
   bool mod = true;
   final List<Widget> _pages = [
-    Accueil(),
+    Accueil(uId: FirebaseAuth.instance.currentUser!.uid),
     Groupes(),
     Profil(uId: FirebaseAuth.instance.currentUser!.uid),
   ];
   final AuthenticationService _auth = AuthenticationService();
   TextEditingController textController = TextEditingController();
-  
+
   
 
   @override
   Widget build(BuildContext context) {
     var hasWidthPage = MediaQuery.of(context).size.width;
-    NotificationService.initialize();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -71,13 +111,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   break;
                 case 1:
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => !mod ? Help() : Dashboard()));
+                      context, MaterialPageRoute(builder: (context) => (userData['admin']==true) ? Dashboard() : Help()));
                   break;
                 case 2:
-                  Navigator.push(
+                (userData['name'] == null)
+                  ? _auth.signOut()
+                  : Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditProfile(
+                          builder: (context) =>
+                          EditProfile(
                                 currentUserUid:
                                     FirebaseAuth.instance.currentUser!.uid,
                               )));
@@ -102,22 +145,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
-                          !mod ?
-                          Icons.help : Icons.dashboard,
+                          (userData['admin']==true) ?
+                          Icons.dashboard : Icons.help,
                           color: greenMajor,
                         )),
-                    Text(!mod ? 'Aide' : 'Tableau de bord')
+                    Text((userData['admin']==true) ? 'Tableau de bord' : 'Aide')
                   ])),
-              PopupMenuItem(
+                  PopupMenuItem(
                   value: 2,
                   child: Row(children: <Widget>[
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
-                          Icons.edit,
+                          (userData['name'] == null)
+                          ? Icons.person_add
+                          : Icons.edit,
                           color: greenMajor,
                         )),
-                    Text('Modifier mon profil')
+                    Text((userData['name'] == null) ? 'Créer un compte' : 'Modifier mon profil')
                   ])),
               PopupMenuItem(
                   onTap: () async {
@@ -136,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: //UserList(),
+      body:
           _pages[_currentIndex],
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,
@@ -159,11 +204,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           /// Mon profil
           SalomonBottomBarItem(
-            icon: CircleAvatar(
-              backgroundImage:
-                  AssetImage('images/ressources_relationnelles.png'),
-            ),
-            //Icon(Icons.person),
+            icon: 
+            Icon(Icons.person),
             title: Text("Mon profil"),
             selectedColor: or,
           ), 

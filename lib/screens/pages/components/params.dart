@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/screens/pages/components/params/themeMode.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/screens/pages/components/params/donnes.dart';
 import 'package:flutter_firebase/screens/pages/components/params/infosPerso.dart';
@@ -43,6 +44,20 @@ class _ParamsState extends State<Params> {
                 title: Text('Changez votre mot de passe'),
               ),
             ),
+
+            SizedBox(height: 10,),
+
+         Card(
+           child:  ListTile(
+              onTap: () {
+                Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ModeTheme()));
+              },
+            leading: Icon(Icons.verified),
+            title: Text('Changer le thème de l\'application'),
+          ),
+         ),
+
             SizedBox(
               height: 10,
             ),
@@ -56,18 +71,6 @@ class _ParamsState extends State<Params> {
                 title: Text('Politique d\'utilisation des données'),
               ),
           ),
-
-          SizedBox(height: 10,),
-
-         Card(
-           child:  ListTile(
-              onTap: () {
-                print('salut');
-              },
-            leading: Icon(Icons.verified),
-            title: Text('Standard de la communautés'),
-          ),
-         ),
 
        ],
       )

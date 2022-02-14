@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/models/chat_params.dart';
+import 'package:flutter_firebase/screens/pages/chat/chat_screen.dart';
 import 'package:flutter_firebase/screens/splashscreen_wrapper.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,8 +46,13 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
         theme: ThemeData(
-          appBarTheme: AppBarTheme(),
           primarySwatch: customColor,
+          brightness: Brightness.light,
+          fontFamily: GoogleFonts.poppins().fontFamily,
+        ),
+        darkTheme: ThemeData(
+          primarySwatch: customColor,
+          brightness: Brightness.dark,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
@@ -64,12 +72,12 @@ class RouteGenerator {
     }
   }
 
-  static MaterialPageRoute pageNotFound() {
+ static MaterialPageRoute pageNotFound() {
     return MaterialPageRoute(
         builder: (context) => Scaffold(        
-            appBar: AppBar(title: Text("Error"), centerTitle: true),
+            appBar: AppBar(title: Text("Erreur"), centerTitle: true),
             body: Center(
-              child: Text("Page not found"),
+              child: Text("Aucune page trouvée :("),
             )));
   }
 }
