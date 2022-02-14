@@ -10,6 +10,7 @@ class Messages extends StatefulWidget {
   final String nameGroupe;
   Color _colorContainer1 = greenMajor;
   Color _colorContainer2 = Color(0xffaefea01);
+  
 
   Messages({Key? key, required this.idGroupe, required this.nameGroupe})
       : super(key: key);
@@ -22,7 +23,7 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
   var myControllerTitle = TextEditingController();
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
-
+  var test;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,6 +117,7 @@ class _MessagesState extends State<Messages> {
                     shrinkWrap: true,
                     itemCount: data.size,
                     itemBuilder: (context, index) {
+                      profil(data.docs[index]["idUser"]);
                       if(data.docs[index]['idUser'] == myUserId){
                         return Container(
                         decoration: BoxDecoration(
@@ -148,16 +150,27 @@ class _MessagesState extends State<Messages> {
                     top: 5,
                     bottom: 5,
                   ),
-                  child :
-                  
-                  Text(
+                  child : Column(
+                     children :[
+                       ListTile(
+                         title : Text(
                         '${data.docs[index]['content']}',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.black,
                         ),
                         textAlign: TextAlign.end,
-                      )
+                      ),
+                      subtitle: Text(
+                        'moi',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        ),
+                       )
+                      ]
+                  )
                       );
                       }else{
                         return Container(
@@ -191,16 +204,27 @@ class _MessagesState extends State<Messages> {
                     top: 5,
                     bottom: 5,
                   ),
-                  child :
-                  
-                  Text(
+                  child : Column(
+                     children :[
+                       ListTile(
+                         title : Text(
                         '${data.docs[index]['content']}',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.black,
                         ),
                         textAlign: TextAlign.start,
-                      )
+                      ),
+                      subtitle: Text(
+                        test['name'],
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        ),
+                       )
+                      ]
+                  )
                       );
                       }
                       
@@ -229,6 +253,11 @@ class _MessagesState extends State<Messages> {
       ],
     );
   }
+  profil(profil) async { 
+  test = await FirebaseFirestore.instance.collection('users').doc(profil).get();
   }
+  }
+
+
 
   
