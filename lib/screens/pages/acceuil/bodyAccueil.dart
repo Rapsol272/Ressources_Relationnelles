@@ -129,9 +129,11 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Profil(
-                                                    uId: FirebaseAuth.instance
-                                                        .currentUser!.uid)),
+                                              builder: (context) => Profil(
+                                                uId: FirebaseAuth
+                                                    .instance.currentUser!.uid,
+                                              ),
+                                            ),
                                           );
                                         },
                                         child: Icon(
