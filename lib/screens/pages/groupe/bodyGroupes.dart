@@ -68,7 +68,7 @@ class _bodyGroupes extends State<bodyGroupes> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Messages(idGroupe : groupe.docs[index]['token'] , nameGroupe : groupe.docs[index]['groupname'])),
+                                builder: (context) => Messages(idGroupe : groupe.docs[index].id , nameGroupe : groupe.docs[index]['groupname'])),
                           );
                         },
                           leading: ElevatedButton(
