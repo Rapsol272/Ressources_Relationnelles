@@ -6,6 +6,7 @@ import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
+import 'package:flutter_firebase/services/notification_service.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -96,10 +97,6 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
     }
   }
 
-  deletePost() async {
-    await FirebaseFirestore.instance.collection('posts').doc();
-  }
-
   @override
   void initState() {
     super.initState();
@@ -123,7 +120,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                 return Loading();
               }
               final data = snapshot.requireData;
-
+              
               // Première Listview builder : création d'une page scrollable
               return ListView.builder(
                 itemCount: 1,
@@ -151,7 +148,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                 bottom: 5,
                               ),
                               // Création de la card avec l'ensemble du contenu
-                              child: Card(
+                              child:Card(
                                 elevation: 15,
                                 margin: EdgeInsets.all(5),
                                 shadowColor: Color(0xff03989E),
@@ -202,14 +199,8 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(12.0),
-                                        child: (data.docs[index]['reference'] ==
-                                                '')
-                                            ? Image.asset(
-                                                "images/test1.jpg",
-                                              )
-                                            : Image.network(
-                                                '${data.docs[index]['reference']}',
-                                              )),
+                                        child: Image.network(
+                                                '${data.docs[index]['reference']}',)),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         top: 4.0,
@@ -251,25 +242,24 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ),
                                     // Barre d'action du post (favoris, share, add, comment)
                                     Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          // Comment button
-                                          IconButton(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 12),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      commentPage(
-                                                    uId: FirebaseAuth.instance
-                                                        .currentUser!.uid,
-                                                    idPost: data.docs[index].id,
-                                                    titlePost: data.docs[index]
-                                                        ['title'],
-                                                  ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        // Comment button
+                                        IconButton(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 12),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    commentPage(
+                                                  uId: FirebaseAuth.instance
+                                                      .currentUser!.uid,
+                                                  idPost: data.docs[index].id,
+                                                  titlePost: data.docs[index]
+                                                      ['title'],
                                                 ),
                                               );
                                             },
@@ -370,20 +360,70 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                           )
                                         ]),
 
-                                    (userData['modo'] == true)
-                                        ? IconButton(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 12),
-                                            onPressed: () {
-                                              /*showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) => _deletePopupPost(context, getData()));*/
-                                            },
-                                            icon: Icon(
-                                              Icons.delete_outline,
-                                              color: Colors.red,
-                                            ))
-                                        : Container()
+                                        (userData['modo'] == true)
+                                            ? IconButton(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 12),
+                                                onPressed: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              AlertDialog(
+                                                                title: Text(
+                                                                    'Supprimer ce post ?'),
+                                                                content:
+                                                                    new Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Text(
+                                                                      "Voulez-vous vraiment supprimer ce post de : " +
+                                                                          '${data.docs[index]['auteur']}',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              15),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                actions: [
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Fermer')),
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                       CollectionReference posts =
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              'posts');
+                                                  posts
+                                                      .doc(data.docs[index].id)
+                                                      .delete();
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Supprimer'))
+                                                                ],
+                                                              ));
+                                                },
+                                                icon: Icon(
+                                                  Icons.delete_outline,
+                                                  color: Colors.red,
+                                                ))
+                                            : Container()
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
@@ -401,39 +441,6 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
       },
     );
   }
-}
-
-_deletePopupPost(BuildContext context, getData()) {
-  return new AlertDialog(
-    backgroundColor: Colors.grey[200],
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12.0))),
-    title: const Text(
-      'Supprimer ce post ?',
-      style: TextStyle(color: Colors.red),
-    ),
-    content: new Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "En cliquant sur \'Oui\', vous supprimez ce post !",
-          style: TextStyle(fontSize: 15),
-        ),
-      ],
-    ),
-    actions: <Widget>[
-      new ElevatedButton(
-        onPressed: () {},
-        child: const Text('Oui !'),
-      ),
-      ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Fermer'))
-    ],
-  );
 }
 
 String convertDateTimeDisplay(String date) {

@@ -16,6 +16,7 @@ class AppUserData {
   final bool modo;
   final bool admin;
   final String reference;
+  final bool ban;
 
   const AppUserData(
       {required this.uid,
@@ -26,7 +27,9 @@ class AppUserData {
       required this.email,
       required this.modo,
       required this.admin,
-      required this.reference});
+      required this.reference,
+      required this.ban
+      });
 
   factory AppUserData.fromDocument(DocumentSnapshot doc) {
     return AppUserData(
@@ -38,6 +41,8 @@ class AppUserData {
         bio: doc['bio'],
         modo: doc['modo'],
         admin: doc['admin'],
-        reference: doc['reference']);
+        reference: doc['reference'],
+        ban: doc['ban']
+        );
   }
 }

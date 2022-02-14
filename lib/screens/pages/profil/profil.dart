@@ -79,6 +79,7 @@ class _ProfilPageState extends State<Profil> {
   }
 
   final AuthenticationService _auth = AuthenticationService();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +143,7 @@ class _ProfilPageState extends State<Profil> {
                                   children: [
                                     userData['reference'] == ''
                                         ? CircleAvatar(
-                                            radius: hasWidthPage * 0.15,
+                                            radius: hasWidthPage * 0.12,
                                             backgroundColor: or,
                                             child: Icon(
                                               Icons.person,
@@ -150,7 +151,7 @@ class _ProfilPageState extends State<Profil> {
                                               size: hasWidthPage * 0.15,
                                             ))
                                         : CircleAvatar(
-                                            radius: hasWidthPage * 0.15,
+                                            radius: hasWidthPage * 0.09,
                                             backgroundImage: NetworkImage(
                                               userData['reference'].toString(),
                                             )),
@@ -158,6 +159,7 @@ class _ProfilPageState extends State<Profil> {
                                       width: hasWidthPage * 0.1,
                                     ),
                                     Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Text(
                                             userData['prenom'].toString() +

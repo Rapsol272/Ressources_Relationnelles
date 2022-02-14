@@ -292,6 +292,7 @@ import 'package:flutter/services.dart';
                             var bio = bioController.value.text;
                             var modo = false;
                             var admin = false;
+                            var ban = false;
                             var reference = 
                             showSignIn
                             ? ''
@@ -300,8 +301,10 @@ import 'package:flutter/services.dart';
                             dynamic result = showSignIn
                                 ? await _auth.signInWithEmailAndPassword(
                                     email, password)
+                                    
                                 : await _auth.registerWithEmailAndPassword(
-                                    name, prenom, email, password, role, bio, modo, admin, reference);
+                                    name, prenom, email, password, role, bio, modo, admin, reference, ban);
+                                    
 
                                   if (result == null) {
                                     setState(() {
@@ -309,7 +312,9 @@ import 'package:flutter/services.dart';
                                       error = "Il y une erreur dans votre inscription";
                                     });
                                   }
+                                  
                                 }
+
                               },
 
                           

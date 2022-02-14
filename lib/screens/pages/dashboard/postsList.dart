@@ -133,7 +133,57 @@ class _PostsListState extends State<PostsList> {
                                                 ),
                                                 trailing: IconButton(
                                                     onPressed: () {
-                                                      
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              AlertDialog(
+                                                                title: Text(
+                                                                    'Supprimer ce post ?'),
+                                                                content:
+                                                                    new Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Text(
+                                                                      "Voulez-vous vraiment supprimer ce post de : " +
+                                                                          '${data.docs[index]['auteur']}',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              15),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                actions: [
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Fermer')),
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                       CollectionReference posts =
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              'posts');
+                                                  posts
+                                                      .doc(data.docs[index].id)
+                                                      .delete();
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Supprimer'))
+                                                                ],
+                                                              ));
                                                     },
                                                     icon: Icon(Icons.delete_outline, color: Colors.red,)),
                                               ),

@@ -83,7 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
     var hasWidthPage = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar: 
+      (userData['ban'] == true)
+      ? AppBar(
+        title: Text('Ressources Relationnelles'),
+        centerTitle: true
+      )
+      : AppBar(
         backgroundColor: greenMajor,
         elevation: 0.0,
         title: Text(
@@ -182,7 +188,22 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body:
-          _pages[_currentIndex],
+      (userData['ban'] == true)
+      ? Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Votre compte a été désactivé !', style: TextStyle(fontSize: hasWidthPage*0.06),),
+            SizedBox(height: hasWidthPage*0.2,),
+            ElevatedButton(
+              onPressed: () {
+                _auth.signOut();
+              }, 
+              child: Text('Retour à la page de connexion'))
+          ],
+        ),
+      )
+       :   _pages[_currentIndex],
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,
         onTap: (i) => setState(() => _currentIndex = i),

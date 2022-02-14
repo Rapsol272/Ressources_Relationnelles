@@ -25,7 +25,11 @@ class _UsersListState extends State<UsersList> {
   getData() async {
     List<String> temp = [];
 
-    await FirebaseFirestore.instance.collection('users').get().then(
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('name', isNull: false)
+        .get()
+        .then(
           (querySnapshot) => {
             querySnapshot.docs.forEach(
               (doc) => {allPosts.add(doc.id)},
@@ -33,12 +37,12 @@ class _UsersListState extends State<UsersList> {
           },
         );
 
-  
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    var banColor = Colors.red;
     return FutureBuilder(
         future: getData(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -84,22 +88,147 @@ class _UsersListState extends State<UsersList> {
                                             clipBehavior: Clip.antiAlias,
                                             child: Column(children: [
                                               ListTile(
-
-                                                title: 
-                                                data.docs[index]['name']==null ? Text('Anonyme'):
-                                                Text(
-                                                  '${data.docs[index]['name']}',
+                                                title: Text(
+                                                  '${data.docs[index]['prenom']}' +
+                                                      ' ' +
+                                                      '${data.docs[index]['name']}',
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                
+                                                subtitle: (data.docs[index]['ban']==true)
+                                                ? Text('Compte Désactivé')
+                                                : Text('Compte Actif'),
                                                 trailing: IconButton(
                                                     onPressed: () {
-                                                      
+
+                                                      (data.docs[index]['ban']==false)
+                                                      ? showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              AlertDialog(
+                                                                title: Text(
+                                                                    'Désactiver ce compte ?'),
+                                                                content:
+                                                                    new Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Text(
+                                                                      "Voulez-vous vraiment désactiver le compte de : " +
+                                                                          '${data.docs[index]['prenom']}' +
+                                                                          ' ' +
+                                                                          '${data.docs[index]['name']}',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              15),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                actions: [
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Fermer')),
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        final usersRef = FirebaseFirestore
+                                                                            .instance
+                                                                            .collection('users');
+                                                                        usersRef
+                                                                            .doc(data
+                                                                                .docs[
+                                                                                    index]
+                                                                                .id)
+                                                                            .update({
+                                                                          "ban":
+                                                                              true
+                                                                        });
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Désactiver'))
+                                                                ],
+                                                              ))
+                                                              : showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              AlertDialog(
+                                                                title: Text(
+                                                                    'Activer ce compte ?'),
+                                                                content:
+                                                                    new Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Text(
+                                                                      "Voulez-vous vraiment activer le compte de : " +
+                                                                          '${data.docs[index]['prenom']}' +
+                                                                          ' ' +
+                                                                          '${data.docs[index]['name']}',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              15),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                actions: [
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Fermer')),
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        final usersRef = FirebaseFirestore
+                                                                            .instance
+                                                                            .collection('users');
+                                                                        usersRef
+                                                                            .doc(data
+                                                                                .docs[
+                                                                                    index]
+                                                                                .id)
+                                                                            .update({
+                                                                          "ban":
+                                                                              false
+                                                                        });
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Activer'))
+                                                                ],
+                                                              ));
                                                     },
-                                                    icon: Icon(Icons.delete_outline, color: Colors.red,)),
+                                                    icon: Icon(
+                                                      (data.docs[index]['ban']==true)
+                                                      ? Icons.radio_button_checked
+                                                      : Icons.radio_button_unchecked,
+                                                      color: (data.docs[index]['ban']==true)
+                                                      ? Colors.red
+                                                      : Colors.green,
+                                                    )),
                                               ),
                                             ])));
                                   })
