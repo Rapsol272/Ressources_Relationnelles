@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Messages extends StatefulWidget {
   final String idGroupe;
   final String nameGroupe;
+  Color _colorContainer1 = greenMajor;
+  Color _colorContainer2 = Color(0xffaefea01);
 
   Messages({Key? key, required this.idGroupe, required this.nameGroupe})
       : super(key: key);
@@ -114,10 +116,96 @@ class _MessagesState extends State<Messages> {
                     shrinkWrap: true,
                     itemCount: data.size,
                     itemBuilder: (context, index) {
-                      return Text(
-                        '${data.docs[index]['content']}'
+                      if(data.docs[index]['idUser'] == myUserId){
+                        return Container(
+                        decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15),
+                                topLeft: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
+                                bottomLeft: Radius.circular(15),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: greenMajor,
+                                  spreadRadius: 0.2,
+                                  blurRadius: 3,
+                                  offset: Offset(
+                                      0, 0.5), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 5,
+                    bottom: 5,
+                  ),
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 5,
+                    bottom: 5,
+                  ),
+                  child :
+                  
+                  Text(
+                        '${data.docs[index]['content']}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.end,
+                      )
                       );
-                    }),
+                      }else{
+                        return Container(
+                        decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15),
+                                topLeft: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
+                                bottomLeft: Radius.circular(15),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: greenMajor,
+                                  spreadRadius: 0.2,
+                                  blurRadius: 3,
+                                  offset: Offset(
+                                      0, 0.5), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 5,
+                    bottom: 5,
+                  ),
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 5,
+                    bottom: 5,
+                  ),
+                  child :
+                  
+                  Text(
+                        '${data.docs[index]['content']}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.start,
+                      )
+                      );
+                      }
+                      
+                    }
+                    ),
               ],
             ),
           );
