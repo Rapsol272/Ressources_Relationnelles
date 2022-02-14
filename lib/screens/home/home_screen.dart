@@ -1,16 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/services/searchDelagate.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
+import 'package:flutter_firebase/screens/pages/dashboard/dashboard.dart';
 import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
 import 'package:flutter_firebase/screens/pages/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
-import 'package:flutter_firebase/screens/pages/recherche.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/services/notification_service.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+
+
+
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -20,32 +24,44 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
   var _currentIndex = 0;
+  bool mod = true;
   final List<Widget> _pages = [
     Accueil(),
     Groupes(),
-    Search(),
     Profil(uId: FirebaseAuth.instance.currentUser!.uid),
   ];
   final AuthenticationService _auth = AuthenticationService();
+  TextEditingController textController = TextEditingController();
+  
+  
 
   @override
   Widget build(BuildContext context) {
+    var hasWidthPage = MediaQuery.of(context).size.width;
     NotificationService.initialize();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: greenMajor,
         elevation: 0.0,
         title: Text(
           'Ressources Relationnelles',
-          style: TextStyle(color: greenMajor),
+          style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
+          IconButton(
+        onPressed: () {
+          showSearch(
+            context: context, 
+            delegate: CustomSearchDelegate());
+        },
+        icon: Icon(Icons.search)),
           PopupMenuButton(
             icon: Icon(
               Icons.more_vert,
-              color: greenMajor,
+              color: Colors.white,
             ),
             onSelected: (choice) {
               switch (choice) {
@@ -55,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   break;
                 case 1:
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Help()));
+                      context, MaterialPageRoute(builder: (context) => !mod ? Help() : Dashboard()));
                   break;
                 case 2:
                   Navigator.push(
@@ -65,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 currentUserUid:
                                     FirebaseAuth.instance.currentUser!.uid,
                               )));
-                // other cases...
+                  
               }
             },
             itemBuilder: (context) => [
@@ -86,10 +102,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
-                          Icons.help,
+                          !mod ?
+                          Icons.help : Icons.dashboard,
                           color: greenMajor,
                         )),
-                    Text('Aide')
+                    Text(!mod ? 'Aide' : 'Tableau de bord')
                   ])),
               PopupMenuItem(
                   value: 2,
@@ -105,7 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
               PopupMenuItem(
                   onTap: () async {
                     await _auth.signOut();
-                    //await _auth.deleteUser();
                   },
                   child: Row(children: <Widget>[
                     Padding(
@@ -139,13 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text("Mes groupes"),
             selectedColor: or,
           ),
-
-          /// Recherche
-          SalomonBottomBarItem(
-            icon: Icon(Icons.search),
-            title: Text("Recherche"),
-            selectedColor: greenMajor,
-          ),
+          
 
           /// Mon profil
           SalomonBottomBarItem(
@@ -156,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
             //Icon(Icons.person),
             title: Text("Mon profil"),
             selectedColor: or,
-          ),
+          ), 
         ],
       ),
     );

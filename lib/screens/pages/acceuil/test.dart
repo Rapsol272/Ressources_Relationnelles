@@ -83,7 +83,7 @@ class _TestState extends State<Test> {
               return Container();
             },
           ),
-          FutureBuilder(
+          /*FutureBuilder(
             future: storage.downloadUrl('IMG_20220130_151000.jpg'),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.connectionState == ConnectionState.done &&
@@ -102,7 +102,7 @@ class _TestState extends State<Test> {
               }
               return Container();
             },
-          ),
+          ),*/
         ],
       ),
     );

@@ -4,9 +4,12 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/common/loading.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
@@ -21,8 +24,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
-
-final usersRef = FirebaseFirestore.instance.collection('users');
 
 class Profil extends StatefulWidget {
   final String? uId;
@@ -40,6 +41,12 @@ class _ProfilPageState extends State<Profil> {
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   List<String> array = [];
+  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  var collectionLikes = FirebaseFirestore.instance.collection('likes');
+  var userId = FirebaseFirestore.instance.collection('users');
+
+  //Map likes = [] as Map;
+  bool isLiked = false;
 
   @override
   void initState() {
@@ -49,8 +56,6 @@ class _ProfilPageState extends State<Profil> {
 
   getData() async {
     setState(() {
-      var user = FirebaseAuth.instance.authStateChanges();
-
       isLoading = true;
     });
     try {
@@ -84,11 +89,10 @@ class _ProfilPageState extends State<Profil> {
   @override
   Widget build(BuildContext context) {
     //final user = UserPreferences.myUser;
+    //isLiked = (likes[currentUserId] == true);
 
     return isLoading
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
+        ? Loading()
         : DefaultTabController(
             length: 2,
             child: Scaffold(
@@ -230,6 +234,7 @@ class _ProfilPageState extends State<Profil> {
                             );
                           }
                           final data = snapshot.requireData;
+
                           return ListView.builder(
                             itemCount: postLen,
                             itemBuilder: (context, index) {
@@ -424,19 +429,100 @@ class _ProfilPageState extends State<Profil> {
                                                   ),
                                                 ),
                                                 Container(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 12),
-                                                  child: FavoriteButton(
-                                                    iconSize: 50,
-                                                    iconColor: Colors.red,
-                                                    valueChanged:
-                                                        (_isFavorite) {
-                                                      print(
-                                                          'Is Favorite $_isFavorite)');
-                                                    },
-                                                  ),
-                                                )
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 12),
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        if (isLiked == true) {
+                                                          var myData = {
+                                                            'idPost': snap.id,
+                                                            'idUser':
+                                                                currentUserId
+                                                          };
+                                                          collectionLikes
+                                                              .add(myData)
+                                                              .then((value) =>
+                                                                  print('Like'))
+                                                              .catchError(
+                                                                  (error) => print(
+                                                                      'Add failed: $error'));
+                                                          setState(() {
+                                                            isLiked = false;
+                                                          });
+                                                        } else if (isLiked ==
+                                                            false) {
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  "likes")
+                                                              .where("idPost",
+                                                                  isEqualTo:
+                                                                      snap.id)
+                                                              .where('idUser',
+                                                                  isEqualTo:
+                                                                      currentUserId)
+                                                              .get()
+                                                              .then((value) {
+                                                            value.docs.forEach(
+                                                                (element) {
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "likes")
+                                                                  .doc(element
+                                                                      .id)
+                                                                  .delete()
+                                                                  .then(
+                                                                      (value) {
+                                                                print(
+                                                                    "Dislike!");
+                                                              });
+                                                            });
+                                                          });
+                                                          setState(() {
+                                                            isLiked = true;
+                                                          });
+                                                        }
+                                                      },
+                                                      icon: Icon(Icons.favorite,
+                                                          color: isLiked
+                                                              ? Colors.grey
+                                                              : Colors.red),
+                                                      /* if (_isFavorite == true) {
+                                                        _iconColor = Colors.red;
+                                                        var myData = {
+                                                          'idPost': snap.id, 
+                                                          'idUser':
+                                                              currentUserId
+                                                        };
+
+                                                        collectionLikes
+                                                            .add(
+                                                                myData) // <-- Your data
+                                                            .then((_) =>
+                                                                print('Added'))
+                                                            .catchError(
+                                                                (error) => print(
+                                                                    'Add failed: $error'));
+                                                      } else if (_isFavorite ==
+                                                          false) {
+                                                        _iconColor =
+                                                            Colors.grey;
+                                                        collectionLikes
+                                                            .doc(collectionLikes
+                                                                .where('idUser',
+                                                                    isEqualTo:
+                                                                        currentUserId)
+                                                                .toString()) // <-- Doc ID to be deleted.
+                                                            .delete() // <-- Delete
+                                                            .then((_) => print(
+                                                                'Deleted'))
+                                                            .catchError(
+                                                                (error) => print(
+                                                                    'Delete failed: $error'));
+                                                      } */
+                                                    ))
                                               ],
                                             ),
                                           ],
@@ -450,7 +536,9 @@ class _ProfilPageState extends State<Profil> {
                           );
                         },
                       ),
-                      FavoritePosts()
+                      FavoritePosts(
+                        uId: FirebaseAuth.instance.currentUser!.uid,
+                      )
                     ]),
                   )
                 ],

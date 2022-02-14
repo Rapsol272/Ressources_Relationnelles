@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
@@ -115,23 +116,7 @@ class _AddPostPageState extends State<AddPostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Barre verte d'action "Création du nouveau Post"
-      appBar: AppBar(
-        foregroundColor: Colors.black12,
-        backgroundColor: greenMajor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
-        title: Title(
-          color: Colors.white,
-          child: Text(
-            'Création du nouveau post',
-            style: TextStyle(color: Colors.white, fontSize: 19),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
+      appBar: upBar(context, 'Créer un post'),
 
       // Front de la page AddPostPage
       body: Container(
@@ -394,6 +379,7 @@ class _AddPostPageState extends State<AddPostPage> {
               'title': myControllerTitle.text,
               'reference': await storage.uploadFile(_path, _fileName),
               'tags': getTags(),
+              'idLikeUsers': []
             };
             var collection = FirebaseFirestore.instance.collection('posts');
             collection
