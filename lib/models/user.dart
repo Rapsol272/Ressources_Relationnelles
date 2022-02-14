@@ -26,8 +26,7 @@ class AppUserData {
       required this.email,
       required this.modo,
       required this.admin,
-      required this.reference
-      });
+      required this.reference});
 
   factory AppUserData.fromDocument(DocumentSnapshot doc) {
     return AppUserData(
@@ -39,7 +38,6 @@ class AppUserData {
         bio: doc['bio'],
         modo: doc['modo'],
         admin: doc['admin'],
-        reference: doc['reference']
-        );
+        reference: doc['reference']);
   }
 }
