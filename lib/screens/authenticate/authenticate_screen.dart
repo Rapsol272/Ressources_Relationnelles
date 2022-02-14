@@ -227,11 +227,7 @@ import 'package:flutter/services.dart';
                           );
 
                           if (results == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('No file'),
-                              ),
-                            );
+                            results = '';
                             return null;
                           }
 
