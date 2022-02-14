@@ -140,17 +140,7 @@ class _ProfilPageState extends State<Profil> {
                               Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    userData['reference'] == ''
-                                        ? CircleAvatar(
-                                            radius: hasWidthPage * 0.12,
-                                            backgroundColor: or,
-                                            child: Icon(
-                                              Icons.person,
-                                              color: Colors.grey[100],
-                                              size: hasWidthPage * 0.15,
-                                            ))
-                                        : CircleAvatar(
+                                  children: [CircleAvatar(
                                             radius: hasWidthPage * 0.09,
                                             backgroundImage: NetworkImage(
                                               userData['reference'].toString(),

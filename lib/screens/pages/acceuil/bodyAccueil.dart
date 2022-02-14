@@ -176,7 +176,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         },
                                         child: CircleAvatar(
                                           backgroundImage: NetworkImage(
-                                              '${data.docs[index]['reference']}'),
+                                              userData['reference']),
                                         ),
                                       ),
 
@@ -261,7 +261,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                                   titlePost: data.docs[index]
                                                       ['title'],
                                                 ),
-                                              );
+                                              ));
                                             },
                                             icon:
                                                 Icon(FontAwesomeIcons.comment),
@@ -424,9 +424,8 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                             : Container()
                                       ],
                                     ),
-                                  ],
+                                  
                                 ),
-                              ),
                             );
                           },
                         )
