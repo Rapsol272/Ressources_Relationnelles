@@ -18,6 +18,7 @@ class Messages extends StatefulWidget {
 
 // ignore: camel_case_types
 class _MessagesState extends State<Messages> {
+  var myControllerTitle = TextEditingController();
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -40,7 +41,57 @@ class _MessagesState extends State<Messages> {
           ),
         ),
       ),
-      
+      bottomNavigationBar: Container(
+        width: 300,
+        height: 85,
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(15),
+            topLeft: Radius.circular(15),
+            bottomRight: Radius.circular(15),
+            bottomLeft: Radius.circular(15),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(1),
+              spreadRadius: 0.5,
+              blurRadius: 5,
+              offset: Offset(0, 1), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Flexible(
+              child: SizedBox(
+                child: txtEditingCont('test', 1),
+              ),
+            ),
+            IconButton(
+                onPressed: () {
+                  var myData = {
+                    'idUser': myUserId,
+                    'content': myControllerTitle.text,
+                    'dateCreation': DateTime.now(),
+                  };
+                  var collection =
+                      FirebaseFirestore.instance.collection('groupes').doc(widget.idGroupe).collection('messages');
+                  collection
+                      .add(myData) // <-- Your data
+                      .then((_) => print('Added'))
+                      .catchError((error) => print('Add failed: $error'));
+                  setState(() {});
+                },
+                icon: Icon(
+                  Icons.send_sharp,
+                  color: greenMajor,
+                ))
+          ],
+        ),
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('groupes').doc(widget.idGroupe).collection('messages').snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -73,4 +124,23 @@ class _MessagesState extends State<Messages> {
         },
       ),
     );
-  }}
+  }
+  txtEditingCont(String label, int max) {
+    return Column(
+      children: [
+        const SizedBox(height: 1),
+        TextField(
+          controller: myControllerTitle,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+          maxLines: max,
+        ),
+      ],
+    );
+  }
+  }
+
+  
