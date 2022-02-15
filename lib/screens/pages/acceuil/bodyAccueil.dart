@@ -30,18 +30,17 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   final usersRef = FirebaseFirestore.instance.collection('users');
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
-
+  
+  var pp;
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   var _iconFav = Colors.grey;
   bool isLiked = false;
-
   // Utiliser pour la liste des catégories associées à chaque post
   List<String> tabCategorie = [];
   List<String> allPosts = [];
   List<Color> allFavPostUser = [];
-
   var userData = {};
   getData() async {
     List<String> temp = [];
@@ -135,13 +134,14 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
 
                         // Seconde Listview builder : création d'une liste de post en correspondance avec la collection post dans firestore
                         ListView.builder(
+                          
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: data.size,
                           itemBuilder: (context, index) {
                             tabCategorie =
                                 data.docs[index]["tags"].cast<String>();
-                            return Container(
+                              return Container(
                               padding: const EdgeInsets.only(
                                 left: 10,
                                 right: 10,
@@ -162,22 +162,25 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ListTile(
                                       // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
                                       leading: GestureDetector(
-                                        onTap: () {
+                                        onTap: (){
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => Scaffold(
                                                       appBar: upBar(context,
                                                           'Ressources Relationnelles'),
-                                                      body: Profil(
+                                                      body: Profil (
                                                           uId: data.docs[index]
                                                               ['idUser']),
                                                     )),
                                           );
                                         },
-                                        child: CircleAvatar(),
+                                        child:   CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            ''
+                                              ),
+                                        ),
                                       ),
-
                                       title: Text(
                                         '${data.docs[index]['title']}',
                                         style: TextStyle(
@@ -506,4 +509,5 @@ unitTags(List array, int i) {
       ),
     ),
   );
+  
 }
