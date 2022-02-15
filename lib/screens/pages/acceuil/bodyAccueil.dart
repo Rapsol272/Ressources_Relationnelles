@@ -175,8 +175,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                           );
                                         },
                                         child: CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              userData['reference']),
+                                          
                                         ),
                                       ),
 
