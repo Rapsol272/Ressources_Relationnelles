@@ -225,17 +225,16 @@ class _ProfilPageState extends State<Profil> {
                                                                 (context) =>
                                                                     Friends()));
                                                   },
-                                                  child:
-                                                      currentUserId !=
-                                                                  widget.uId ||
-                                                              isFriends == false
-                                                          ? Text(
-                                                              'Amis',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black54),
-                                                            )
-                                                          : FollowButton(
+                                                  child: currentUserId ==
+                                                          widget.uId
+                                                      ? Text(
+                                                          'Amis',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black54),
+                                                        )
+                                                      : isFriends == false
+                                                          ? FollowButton(
                                                               backgroundColor:
                                                                   greenMajor,
                                                               borderColor:
@@ -268,6 +267,12 @@ class _ProfilPageState extends State<Profil> {
                                                                         (error) =>
                                                                             print('Add failed: $error'));
                                                               },
+                                                            )
+                                                          : Text(
+                                                              'Amis',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black54),
                                                             )),
                                               Icon(Icons.person)
                                             ],
