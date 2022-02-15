@@ -10,6 +10,8 @@ import 'package:flutter_firebase/screens/pages/profil/friends.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_firebase/screens/pages/messages/bodymessage.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 
 
@@ -18,10 +20,13 @@ class creationGroupe extends StatefulWidget {
   _creationGroupe createState() => _creationGroupe();
 }
 var test;
+List<String> list= [];
+
 class _creationGroupe extends State<creationGroupe> {
   var taille =0;
   bool isLoading = false;
-  
+  final ButtonStyle style =
+        ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
   late List<dynamic> friendship;
   var _iconColor = Colors.grey;
   var _iconColorShare = Colors.grey;
@@ -87,19 +92,38 @@ Widget build(BuildContext context) {
           ),
         ),
       ),
-      body: ListView.builder(
+      body:
+      ListView.builder(
         itemCount: friendship.length,
         itemBuilder: (context, index){
           amies(friendship[index]["idUser1"] , friendship[index]["idUser2"]);
           return Container(
-            child: Text(
-              test['name']
+            child:
+            ListTile(
+              onTap: (){
+                addonlist(test.id);
+              },
+              title : Text(test['name']),
+              
             ),
           );
         }
       ),
+      bottomNavigationBar:  ElevatedButton(
+            style: style,
+            onPressed: () {},
+            child: const Text('Enabled'),)
+      
+      
     );
 }
+}
+
+void addonlist(String id) {
+  if(list.contains(id)){
+list.remove(id);
+  }else
+  list.add(id);
 }
 
 amies(friends1 ,friends2 ) async {
