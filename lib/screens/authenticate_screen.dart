@@ -2,8 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/services/database.dart';
-
-import 'notification_service.dart';
+import 'package:flutter_firebase/services/notification_service.dart';
 
 class AuthenticationService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -37,8 +36,18 @@ class AuthenticationService {
     }
   }
 
-  Future registerWithEmailAndPassword(String name, String prenom, String email,
-      String password, String role, String bio, bool modo, bool admin, String reference, bool ban) async {
+  Future registerWithEmailAndPassword(
+      String name,
+      String prenom,
+      String email,
+      String password,
+      String role,
+      String bio,
+      bool modo,
+      bool admin,
+      String reference,
+      bool ban
+      ) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);

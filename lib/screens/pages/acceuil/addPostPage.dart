@@ -225,9 +225,9 @@ class _AddPostPageState extends State<AddPostPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      buttonStyle(238, Icons.publish_sharp),
+                      buttonStyle(238, Icons.publish_sharp, 'Publier'),
                       // Ajout d'une image pour le post
-                      buttonStyle(50, Icons.add_a_photo_outlined),
+                      buttonStyle(50, Icons.add_a_photo_outlined, ''),
                     ],
                   ),
                 ],
@@ -341,7 +341,7 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   // Les boutons en fin de page pour finir la création d'un post
-  buttonStyle(double w, icon) {
+  buttonStyle(double w, icon, txt) {
     return Container(
       width: w,
       margin: const EdgeInsets.only(
@@ -366,7 +366,9 @@ class _AddPostPageState extends State<AddPostPage> {
           ),
         ],
       ),
-      child: IconButton(
+      child: Row(
+        children: [
+          IconButton(
         onPressed: () async {
           if (icon == Icons.publish_sharp &&
               verifNumberCat() &&
@@ -428,6 +430,9 @@ class _AddPostPageState extends State<AddPostPage> {
           color: Colors.white,
         ),
       ),
+      Text(txt, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize:18,))
+        ],
+      )
     );
   }
 }
