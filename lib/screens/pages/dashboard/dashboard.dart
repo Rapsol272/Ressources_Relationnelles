@@ -1,7 +1,5 @@
-import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
@@ -24,6 +22,19 @@ class _DashboardState extends State<Dashboard> {
   var userData = {};
   int postLen = 0;
 
+getUserL() async {
+  var usersLen = FirebaseFirestore.instance
+    .collection('users')
+    .get()
+    .then((QuerySnapshot userL) {
+        userL.docs.forEach((doc) {
+            print(doc["name"]);
+        });
+    });
+
+
+}
+ 
   
 
   @override
@@ -122,13 +133,11 @@ class _DashboardState extends State<Dashboard> {
                       color:greenMajor,
                       borderRadius: BorderRadius.circular(10)
                     ),
-                    child: Text(
-          '15' + ' utilisateurs',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        getUserL();
+                      }, 
+                      child: Text('TEst'))
               ),
               Container(
                 width: 150, 
