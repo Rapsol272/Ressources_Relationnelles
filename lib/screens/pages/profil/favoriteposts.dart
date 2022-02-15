@@ -114,11 +114,9 @@ class _FavoritePosts extends State<FavoritePosts> {
                   DocumentSnapshot snap =
                       (snapshot.data! as dynamic).docs[index];
                   return (collectionLikes
-                              .where('idUser', isEqualTo: widget.uId)
-                              .toString() ==
-                          collectionLikes
                               .where('idPost', isEqualTo: snap.id)
-                              .toString())
+                              .toString() ==
+                          snap.id.toString())
                       ? SingleChildScrollView(
                           physics: ScrollPhysics(),
                           child: Column(
@@ -142,15 +140,7 @@ class _FavoritePosts extends State<FavoritePosts> {
                                     children: [
                                       ListTile(
                                         leading: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Profil(
-                                                      uId: FirebaseAuth.instance
-                                                          .currentUser!.uid)),
-                                            );
-                                          },
+                                          onPressed: () {},
                                           child: Icon(
                                             Icons.portrait,
                                             color: Colors.white,
