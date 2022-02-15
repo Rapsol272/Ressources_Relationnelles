@@ -4,6 +4,7 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
+import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
@@ -27,18 +28,17 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   final usersRef = FirebaseFirestore.instance.collection('users');
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
-
+  
+  var pp;
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   var _iconFav = Colors.grey;
   bool isLiked = false;
-
   // Utiliser pour la liste des catégories associées à chaque post
   List<String> tabCategorie = [];
   List<String> allPosts = [];
   List<Color> allFavPostUser = [];
-
   var userData = {};
   getData() async {
     List<String> temp = [];
@@ -132,13 +132,14 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
 
                         // Seconde Listview builder : création d'une liste de post en correspondance avec la collection post dans firestore
                         ListView.builder(
+                          
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: data.size,
                           itemBuilder: (context, index) {
                             tabCategorie =
                                 data.docs[index]["tags"].cast<String>();
-                            return Container(
+                              return Container(
                               padding: const EdgeInsets.only(
                                 left: 10,
                                 right: 10,
@@ -159,22 +160,25 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ListTile(
                                       // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
                                       leading: GestureDetector(
-                                        onTap: () {
+                                        onTap: (){
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => Scaffold(
                                                       appBar: upBar(context,
                                                           'Ressources Relationnelles'),
-                                                      body: Profil(
+                                                      body: Profil (
                                                           uId: data.docs[index]
                                                               ['idUser']),
                                                     )),
                                           );
                                         },
-                                        child: CircleAvatar(),
+                                        child:   CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            ''
+                                              ),
+                                        ),
                                       ),
-
                                       title: Text(
                                         '${data.docs[index]['title']}',
                                         style: TextStyle(
@@ -264,25 +268,26 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                                 Icon(FontAwesomeIcons.comment),
                                             color: Colors.grey,
                                           ),
-                                          // Button share et/ ou création d'un nouveau groupe
-                                          IconButton(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 12),
-                                            onPressed: () {
-                                              setState(() {
-                                                if (_iconColorShare ==
-                                                    Colors.grey) {
-                                                  _iconColorShare =
-                                                      Colors.green;
-                                                } else {
-                                                  _iconColorShare = Colors.grey;
-                                                }
-                                              });
-                                            },
-                                            icon: Icon(
-                                              FontAwesomeIcons.retweet,
-                                              color: _iconColorShare,
-                                            ),
+                                        
+                                        // Button Add  : a regarder plus tard
+                                        IconButton(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 12),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    creationGroupe(
+                                                  
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(
+                                            FontAwesomeIcons.plusSquare,
+                                            color: _iconColorAdd,
+                                          ),
                                           ),
                                           // Button Add  : a regarder plus tard
                                           IconButton(
@@ -502,4 +507,5 @@ unitTags(List array, int i) {
       ),
     ),
   );
+  
 }

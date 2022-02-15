@@ -8,7 +8,7 @@ import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
 import 'package:flutter_firebase/screens/pages/dashboard/dashboard.dart';
 import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
-import 'package:flutter_firebase/screens/pages/groupes.dart';
+import 'package:flutter_firebase/screens/pages/groupe/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/services/notification_service.dart';
