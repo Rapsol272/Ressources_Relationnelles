@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/screens/pages/components/help/presentation.dart';
 import 'package:flutter_firebase/screens/pages/components/help/sendMail.dart';
 
 class Help extends StatefulWidget {
@@ -22,6 +23,18 @@ class _HelpState extends State<Help> {
       ),
       body: Column(
         children: [
+          SizedBox(height: 10,),
+          Card(
+             child:ListTile(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Presentation()));
+                },
+                leading: Icon(Icons.present_to_all),
+                title: Text('Présentation de l\'application'),
+              ),
+           ),
+
           SizedBox(height: 10,),
            Card(
              child:ListTile(

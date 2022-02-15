@@ -74,7 +74,7 @@ class _CompteursState extends State<Compteurs> {
   }
   getGroupeL() async {
     var likesSnap = await FirebaseFirestore.instance
-        .collection('likes')
+        .collection('groupes')
         .where('idUser', isNotEqualTo: '')
         .get();
 

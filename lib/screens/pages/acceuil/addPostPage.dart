@@ -342,34 +342,8 @@ class _AddPostPageState extends State<AddPostPage> {
 
   // Les boutons en fin de page pour finir la création d'un post
   buttonStyle(double w, icon, txt) {
-    return Container(
-      width: w,
-      margin: const EdgeInsets.only(
-        top: 10,
-        bottom: 10,
-        right: 30,
-      ),
-      decoration: BoxDecoration(
-        color: currentColor,
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(15),
-          topLeft: Radius.circular(15),
-          bottomRight: Radius.circular(15),
-          bottomLeft: Radius.circular(15),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black38,
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          IconButton(
-        onPressed: () async {
+    return GestureDetector(
+      onTap: () async {
           if (icon == Icons.publish_sharp &&
               verifNumberCat() &&
               _fileName != null) {
@@ -424,15 +398,40 @@ class _AddPostPageState extends State<AddPostPage> {
             setState(() {});
           }
         },
-        iconSize: 25,
-        icon: Icon(
+      child: Container(
+      width: w,
+      margin: const EdgeInsets.only(
+        top: 10,
+        bottom: 10,
+        right: 30,
+      ),
+      decoration: BoxDecoration(
+        color: currentColor,
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(15),
+          topLeft: Radius.circular(15),
+          bottomRight: Radius.circular(15),
+          bottomLeft: Radius.circular(15),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: Offset(0, 1), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(
           icon,
           color: Colors.white,
         ),
-      ),
       Text(txt, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize:18,))
         ],
       )
+    ),
     );
   }
 }
