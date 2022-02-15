@@ -3,8 +3,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/models/chat_params.dart';
-import 'package:flutter_firebase/screens/pages/chat/chat_screen.dart';
 import 'package:flutter_firebase/screens/splashscreen_wrapper.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:google_fonts/google_fonts.dart';

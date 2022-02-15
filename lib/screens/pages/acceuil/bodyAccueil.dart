@@ -4,6 +4,7 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
+import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/services/notification_service.dart';
@@ -266,25 +267,26 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                                 Icon(FontAwesomeIcons.comment),
                                             color: Colors.grey,
                                           ),
-                                          // Button share et/ ou création d'un nouveau groupe
-                                          IconButton(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 12),
-                                            onPressed: () {
-                                              setState(() {
-                                                if (_iconColorShare ==
-                                                    Colors.grey) {
-                                                  _iconColorShare =
-                                                      Colors.green;
-                                                } else {
-                                                  _iconColorShare = Colors.grey;
-                                                }
-                                              });
-                                            },
-                                            icon: Icon(
-                                              FontAwesomeIcons.retweet,
-                                              color: _iconColorShare,
-                                            ),
+                                        
+                                        // Button Add  : a regarder plus tard
+                                        IconButton(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 12),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    creationGroupe(
+                                                  
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(
+                                            FontAwesomeIcons.plusSquare,
+                                            color: _iconColorAdd,
+                                          ),
                                           ),
                                           // Button Add  : a regarder plus tard
                                           IconButton(
