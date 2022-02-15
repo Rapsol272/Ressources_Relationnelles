@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/screens/pages/dashboard/commentsList.dart';
+import 'package:flutter_firebase/screens/pages/dashboard/graphs.dart';
 import 'package:flutter_firebase/screens/pages/dashboard/postsList.dart';
+import 'package:flutter_firebase/screens/pages/dashboard/stats.dart';
 import 'package:flutter_firebase/screens/pages/dashboard/usersList.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 
@@ -17,25 +19,7 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
-
-  var userData = {};
-  int postLen = 0;
-
-getUserL() async {
-  var usersLen = FirebaseFirestore.instance
-    .collection('users')
-    .get()
-    .then((QuerySnapshot userL) {
-        userL.docs.forEach((doc) {
-            print(doc["name"]);
-        });
-    });
-
-
-}
- 
-  
+class _DashboardState extends State<Dashboard> { 
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +110,12 @@ getUserL() async {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Compteurs()));
+                },
+                child: 
               Container(
                 width: 150, 
                     height: 250,
@@ -133,12 +123,20 @@ getUserL() async {
                       color:greenMajor,
                       borderRadius: BorderRadius.circular(10)
                     ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        getUserL();
-                      }, 
-                      child: Text('TEst'))
-              ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.format_list_bulleted, color: Colors.white, size: 100,),
+                        Text('Compteurs', style: TextStyle(color: Colors.white),)
+                      ],
+                    ),
+              ),),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Graphs()));
+                },
+                child: 
               Container(
                 width: 150, 
                     height: 250,
@@ -146,7 +144,14 @@ getUserL() async {
                       color:greenMajor,
                       borderRadius: BorderRadius.circular(10)
                     ),
-              )
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.bar_chart, color: Colors.white, size: 100,),
+                        Text('Graphiques', style: TextStyle(color: Colors.white),)
+                      ],
+                    ),
+              ),),
             ],
           )
         ],
