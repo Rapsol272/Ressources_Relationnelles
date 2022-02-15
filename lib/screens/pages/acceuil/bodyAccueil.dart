@@ -4,21 +4,26 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
+import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 
 // ignore: camel_case_types
+var collectionLikes = FirebaseFirestore.instance.collection('likes');
+var userFav = FirebaseFirestore.instance.collection('users');
 
 class bodyAcceuil extends StatefulWidget {
+  final String? uId;
+  const bodyAcceuil({Key? key, required this.uId}) : super(key: key);
   @override
   _bodyAcceuilState createState() => _bodyAcceuilState();
 }
 
 // ignore: camel_case_types
 class _bodyAcceuilState extends State<bodyAcceuil> {
+  final usersRef = FirebaseFirestore.instance.collection('users');
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
 
@@ -26,14 +31,17 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   var _iconFav = Colors.grey;
+  bool isLiked = false;
 
   // Utiliser pour la liste des catégories associées à chaque post
   List<String> tabCategorie = [];
   List<String> allPosts = [];
   List<Color> allFavPostUser = [];
 
+  var userData = {};
   getData() async {
     List<String> temp = [];
+
     await FirebaseFirestore.instance.collection('posts').get().then(
           (querySnapshot) => {
             querySnapshot.docs.forEach(
@@ -48,6 +56,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
             )
           },
         );
+
     for (int i = 0; i < temp.length; i++) {
       for (int j = 0; j < temp[i].length; j++) {
         if (myUserId == temp[i][j]) {
@@ -62,14 +71,38 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
     setState(() {});
   }
 
+  getDataUser() async {
+    setState(() {
+      var user = FirebaseAuth.instance.authStateChanges();
+    });
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uId)
+          .get();
+
+      userData = userSnap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(BuildContext context, String text) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(text),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    getDataUser();
   }
 
   @override
   Widget build(BuildContext context) {
-    Storage storage = new Storage();
+    //Storage storage = new Storage();
     return FutureBuilder(
       future: getData(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -124,27 +157,21 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                   children: [
                                     ListTile(
                                       // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
-                                      leading: ElevatedButton(
-                                        onPressed: () {
+                                      leading: GestureDetector(
+                                        onTap: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => Profil(
-                                                uId: FirebaseAuth
-                                                    .instance.currentUser!.uid,
-                                              ),
-                                            ),
+                                                builder: (context) => Scaffold(
+                                                      appBar: upBar(context,
+                                                          'Ressources Relationnelles'),
+                                                      body: Profil(
+                                                          uId: data.docs[index]
+                                                              ['idUser']),
+                                                    )),
                                           );
                                         },
-                                        child: Icon(
-                                          Icons.portrait,
-                                          color: Colors.white,
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          shape: CircleBorder(),
-                                          padding: EdgeInsets.all(10),
-                                          primary: Color(0xff03989E),
-                                        ),
+                                        child: CircleAvatar(),
                                       ),
 
                                       title: Text(
@@ -166,14 +193,9 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(12.0),
-                                        child:
-                                            data.docs[index]['reference'] == ""
-                                                ? Image.asset(
-                                                    "images/test1.jpg",
-                                                  )
-                                                : Image.network(
-                                                    '${data.docs[index]['reference']}',
-                                                  )),
+                                        child: Image.network(
+                                          '${data.docs[index]['reference']}',
+                                        )),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         top: 4.0,
@@ -215,79 +237,187 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ),
                                     // Barre d'action du post (favoris, share, add, comment)
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[
-                                        // Comment button
-                                        IconButton(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 12),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    commentPage(
-                                                  idPost: data.docs[index].id,
-                                                  titlePost: data.docs[index]
-                                                      ['title'],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(FontAwesomeIcons.comment),
-                                          color: Colors.grey,
-                                        ),
-                                        // Button share et/ ou création d'un nouveau groupe
-                                        IconButton(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 12),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (_iconColorShare ==
-                                                  Colors.grey) {
-                                                _iconColorShare = Colors.green;
-                                              } else {
-                                                _iconColorShare = Colors.grey;
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          // Comment button
+                                          IconButton(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        commentPage(
+                                                      uId: FirebaseAuth.instance
+                                                          .currentUser!.uid,
+                                                      idPost:
+                                                          data.docs[index].id,
+                                                      titlePost: data
+                                                          .docs[index]['title'],
+                                                    ),
+                                                  ));
+                                            },
+                                            icon:
+                                                Icon(FontAwesomeIcons.comment),
+                                            color: Colors.grey,
+                                          ),
+                                          // Button share et/ ou création d'un nouveau groupe
+                                          IconButton(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12),
+                                            onPressed: () {
+                                              setState(() {
+                                                if (_iconColorShare ==
+                                                    Colors.grey) {
+                                                  _iconColorShare =
+                                                      Colors.green;
+                                                } else {
+                                                  _iconColorShare = Colors.grey;
+                                                }
+                                              });
+                                            },
+                                            icon: Icon(
+                                              FontAwesomeIcons.retweet,
+                                              color: _iconColorShare,
+                                            ),
+                                          ),
+                                          // Button Add  : a regarder plus tard
+                                          IconButton(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12),
+                                            onPressed: () {
+                                              setState(() {
+                                                if (_iconColorAdd ==
+                                                    Colors.grey) {
+                                                  _iconColorAdd = Colors.blue;
+                                                } else {
+                                                  _iconColorAdd = Colors.grey;
+                                                }
+                                              });
+                                            },
+                                            icon: Icon(
+                                              FontAwesomeIcons.plusSquare,
+                                              color: _iconColorAdd,
+                                            ),
+                                          ),
+                                          // Button like
+                                          IconButton(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12),
+                                            onPressed: () {
+                                              if (isLiked == true) {
+                                                var myData = {
+                                                  'idPost': data.docs[index]
+                                                      ['idPost'],
+                                                  'idUser': currentUserId
+                                                };
+                                                collectionLikes
+                                                    .add(myData)
+                                                    .then((value) =>
+                                                        print('Like'))
+                                                    .catchError((error) => print(
+                                                        'Add failed: $error'));
+                                                setState(() {
+                                                  isLiked = false;
+                                                });
+                                              } else if (isLiked == false) {
+                                                FirebaseFirestore.instance
+                                                    .collection('likes')
+                                                    .where('idPost',
+                                                        isEqualTo:
+                                                            data.docs[index]
+                                                                ['idPost'])
+                                                    .where('idUser',
+                                                        isEqualTo:
+                                                            currentUserId)
+                                                    .get()
+                                                    .then((value) {
+                                                  value.docs.forEach((element) {
+                                                    FirebaseFirestore.instance
+                                                        .collection('likes')
+                                                        .doc(element.id)
+                                                        .delete()
+                                                        .then((value) {
+                                                      print('Dislike');
+                                                    });
+                                                  });
+                                                });
+                                                setState(() {
+                                                  isLiked = true;
+                                                });
                                               }
-                                            });
-                                          },
-                                          icon: Icon(
-                                            FontAwesomeIcons.retweet,
-                                            color: _iconColorShare,
-                                          ),
-                                        ),
-                                        // Button Add  : a regarder plus tard
-                                        IconButton(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 12),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (_iconColorAdd ==
-                                                  Colors.grey) {
-                                                _iconColorAdd = Colors.blue;
-                                              } else {
-                                                _iconColorAdd = Colors.grey;
-                                              }
-                                            });
-                                          },
-                                          icon: Icon(
-                                            FontAwesomeIcons.plusSquare,
-                                            color: _iconColorAdd,
-                                          ),
-                                        ),
-                                        // Button like
-                                        IconButton(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 12),
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: _iconColorAdd,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                            },
+                                            icon: Icon(Icons.favorite,
+                                                color: isLiked
+                                                    ? Colors.red
+                                                    : Colors.grey),
+                                          )
+                                        ]),
+
+                                    (userData['modo'] == true)
+                                        ? IconButton(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12),
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      AlertDialog(
+                                                        title: Text(
+                                                            'Supprimer ce post ?'),
+                                                        content: new Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Text(
+                                                              "Voulez-vous vraiment supprimer ce post de : " +
+                                                                  '${data.docs[index]['auteur']}',
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        actions: [
+                                                          ElevatedButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                  'Fermer')),
+                                                          ElevatedButton(
+                                                              onPressed: () {
+                                                                CollectionReference
+                                                                    posts =
+                                                                    FirebaseFirestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            'posts');
+                                                                posts
+                                                                    .doc(data
+                                                                        .docs[
+                                                                            index]
+                                                                        .id)
+                                                                    .delete();
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                  'Supprimer'))
+                                                        ],
+                                                      ));
+                                            },
+                                            icon: Icon(
+                                              Icons.delete_outline,
+                                              color: Colors.red,
+                                            ))
+                                        : Container()
                                   ],
                                 ),
                               ),

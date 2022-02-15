@@ -1,4 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/screens/pages/components/params/themeMode.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
+import 'package:flutter_firebase/screens/pages/components/params/donnes.dart';
+import 'package:flutter_firebase/screens/pages/components/params/infosPerso.dart';
+
 
 class Params extends StatefulWidget {
   Params({Key? key}) : super(key: key);
@@ -8,18 +14,11 @@ class Params extends StatefulWidget {
 }
 
 class _ParamsState extends State<Params> {
-  bool status8 = false;
+  bool isDarkModeEnabled = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Paramètres'),
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back_ios)),
-        ),
+        appBar: upBar(context, 'Paramètres'),
         body: Column(
           children: [
             SizedBox(
@@ -27,7 +26,10 @@ class _ParamsState extends State<Params> {
             ),
             Card(
               child: ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => InfosPerso(uId: FirebaseAuth.instance.currentUser!.uid)));
+                },
                 leading: Icon(Icons.person_outline),
                 title: Text('Informations Personelles'),
               ),
@@ -42,31 +44,38 @@ class _ParamsState extends State<Params> {
                 title: Text('Changez votre mot de passe'),
               ),
             ),
+
+            SizedBox(height: 10,),
+
+         Card(
+           child:  ListTile(
+              onTap: () {
+                Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ModeTheme()));
+              },
+            leading: Icon(Icons.verified),
+            title: Text('Changer le thème de l\'application'),
+          ),
+         ),
+
             SizedBox(
               height: 10,
             ),
             Card(
               child: ListTile(
                 onTap: () {
-                  print('salut');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Donnees()));
                 },
                 leading: Icon(Icons.analytics),
                 title: Text('Politique d\'utilisation des données'),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Card(
-              child: ListTile(
-                onTap: () {
-                  print('salut');
-                },
-                leading: Icon(Icons.verified),
-                title: Text('Standard de la communautés'),
-              ),
-            ),
-          ],
-        ));
+          ),
+
+       ],
+      )
+    );
   }
+  
 }
+

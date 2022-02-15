@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
@@ -115,23 +116,7 @@ class _AddPostPageState extends State<AddPostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Barre verte d'action "Création du nouveau Post"
-      appBar: AppBar(
-        foregroundColor: Colors.black12,
-        backgroundColor: greenMajor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
-        title: Title(
-          color: Colors.white,
-          child: Text(
-            'Création du nouveau post',
-            style: TextStyle(color: Colors.white, fontSize: 19),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
+      appBar: upBar(context, 'Créer un post'),
 
       // Front de la page AddPostPage
       body: Container(
@@ -240,9 +225,9 @@ class _AddPostPageState extends State<AddPostPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      buttonStyle(238, Icons.publish_sharp),
+                      buttonStyle(238, Icons.publish_sharp, 'Publier'),
                       // Ajout d'une image pour le post
-                      buttonStyle(50, Icons.add_a_photo_outlined),
+                      buttonStyle(50, Icons.add_a_photo_outlined, ''),
                     ],
                   ),
                 ],
@@ -356,7 +341,7 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   // Les boutons en fin de page pour finir la création d'un post
-  buttonStyle(double w, icon) {
+  buttonStyle(double w, icon, txt) {
     return Container(
       width: w,
       margin: const EdgeInsets.only(
@@ -381,7 +366,9 @@ class _AddPostPageState extends State<AddPostPage> {
           ),
         ],
       ),
-      child: IconButton(
+      child: Row(
+        children: [
+          IconButton(
         onPressed: () async {
           if (icon == Icons.publish_sharp &&
               verifNumberCat() &&
@@ -394,7 +381,8 @@ class _AddPostPageState extends State<AddPostPage> {
               'title': myControllerTitle.text,
               'reference': await storage.uploadFile(_path, _fileName),
               'tags': getTags(),
-              'idLikeUsers': []
+              'idLikeUsers': [],
+              'idPost': DateTime.now().toString()+myUserId
             };
             var collection = FirebaseFirestore.instance.collection('posts');
             collection
@@ -405,7 +393,8 @@ class _AddPostPageState extends State<AddPostPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomeScreen(),
+                builder: (context) => HomeScreen(uId:
+                                    FirebaseAuth.instance.currentUser!.uid,),
               ),
             );
           } else if (icon == Icons.publish_sharp) {
@@ -441,6 +430,9 @@ class _AddPostPageState extends State<AddPostPage> {
           color: Colors.white,
         ),
       ),
+      Text(txt, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize:18,))
+        ],
+      )
     );
   }
 }

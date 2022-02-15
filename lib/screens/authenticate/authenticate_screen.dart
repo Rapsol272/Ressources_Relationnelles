@@ -1,43 +1,42 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/services/authentication.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:select_form_field/select_form_field.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:sliver_header_delegate/sliver_header_delegate.dart';
+  import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
+  import 'package:flutter_firebase/common/constants.dart';
+  import 'package:flutter_firebase/common/loading.dart';
+  import 'package:flutter_firebase/services/authentication.dart';
+  import 'package:flutter/cupertino.dart';
+  import 'dart:io';
+  import 'package:image_picker/image_picker.dart';
+  import 'package:file_picker/file_picker.dart';
+  import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 
-enum SingingCharacter { lafayette, jefferson }
+  enum SingingCharacter { lecteur, redacteur }
+  class AuthenticateScreen extends StatefulWidget {
+    @override
+    _AuthenticateScreenState createState() => _AuthenticateScreenState();
+  }
 
-class AuthenticateScreen extends StatefulWidget {
-  @override
-  _AuthenticateScreenState createState() => _AuthenticateScreenState();
-}
+  class _AuthenticateScreenState extends State<AuthenticateScreen> {
 
-class _AuthenticateScreenState extends State<AuthenticateScreen> {
-  final AuthenticationService _auth = AuthenticationService();
-  final _formKey = GlobalKey<FormState>();
-  String error = '';
-  bool loading = false;
 
-  final emailController = TextEditingController();
-  final nameController = TextEditingController();
-  final prenomController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final roleController = TextEditingController();
-  final bioController = TextEditingController();
+    final AuthenticationService _auth = AuthenticationService();
+    final _formKey = GlobalKey<FormState>();
+    String error = '';
+    bool loading = false;
 
-  bool showSignIn = true;
-  bool changeT = true;
+    final emailController = TextEditingController();
+    final nameController = TextEditingController();
+    final prenomController = TextEditingController();
+    final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    final roleController = TextEditingController();
+    final bioController = TextEditingController();
+    
+    bool showSignIn = true;
+    bool changeT = true;
+    bool obscureText = false;
 
   @override
   void dispose() {
@@ -49,6 +48,13 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     bioController.dispose();
     super.dispose();
   }
+
+  void change() {
+      setState(() {
+        roleController.text = 'Rédacteur';
+        changeT = !changeT;
+      });
+    }
 
   void toggleView() {
     setState(() {
@@ -62,215 +68,220 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       bioController.text = '';
       showSignIn = !showSignIn;
     });
-  }
+  }SingingCharacter? _character = SingingCharacter.lecteur;
 
-  void change() {
-    setState(() {
-      roleController.text = 'Rédacteur';
-      TextFormField(
-        controller: roleController..text = 'Redacteur',
-        style: TextStyle(color: changeT ? greenMajor : Colors.grey),
-        enabled: false,
-        decoration: textInputDecoration.copyWith(hintText: 'Role'),
-        validator: (value) =>
-            value == null || value.isEmpty ? "Entrez votre role" : null,
-      );
-      changeT = !changeT;
-    });
-  }
+      var _path;
+      var _fileName;
+      final Storage storage = Storage();
+      var currentColor = Color(0xff03989E);
 
-  final ImagePicker _picker = ImagePicker();
+  
+   @override
+    Widget build(BuildContext context) {
 
-  XFile? profilImage;
+      var hasWidthPage = MediaQuery.of(context).size.width;
 
-  void filePicker() async {
-    final XFile? selectImage =
-        await _picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      profilImage = selectImage;
-    });
-  }
+      
 
-  var storage = FirebaseStorage.instance;
-
-  @override
-  Widget build(BuildContext context) {
-    return loading
-        ? Loading()
-        : SingleChildScrollView(
-            child: Column(
-            children: [
-              Text(showSignIn ? 'Se connecter' : 'S\'inscrire',
-                  style: TextStyle(
-                      color: greenMajor,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold)),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
-                child: Form(
+      return loading
+          ? Loading()
+          : 
+          SingleChildScrollView(
+                    child:
+                      Column(
+                        children: [
+                    hasWidthPage > 600 ?  ClipOval(
+                            child: SizedBox.fromSize(
+                              size: Size.fromRadius(hasWidthPage * 0.1),
+                              child: Image.asset('images/ressources_relationnelles.png', fit: BoxFit.cover),
+                            ),
+                          ) : Container(),
+                    Text(showSignIn ? 'Se connecter' : 'S\'inscrire',  style: TextStyle(color: greenMajor, fontSize: 25, fontWeight: FontWeight.bold)),
+                    Padding(
+                      padding: hasWidthPage < 600 ? EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0)
+                      :EdgeInsets.symmetric(vertical: 0.0, horizontal: 400.0),
+                      child: Form(
                   key: _formKey,
-                  child: Column(
+                  child: Container(
+                    margin: hasWidthPage > 600 ? EdgeInsets.only(bottom: 50, top: 10) : EdgeInsets.symmetric(),
+                    padding: hasWidthPage > 600 ? EdgeInsets.symmetric(vertical: 00, horizontal: 20) : EdgeInsets.symmetric(),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: hasWidthPage > 600 ? Colors.grey[100] : Colors.transparent,
+                      ),
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20,),
                       !showSignIn
                           ? TextFormField(
                               controller: nameController,
-                              decoration: textInputDecoration.copyWith(
-                                  hintText: 'Votre nom'),
+                              decoration: textInputDecoration.copyWith(hintText: 'Votre nom'),
                               validator: (value) =>
-                                  value == null || value.isEmpty
-                                      ? "Entrez votre nom"
-                                      : null,
+                                  value == null || value.isEmpty ? "Entrez votre nom" : null,
                             )
                           : Container(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      !showSignIn
+                          SizedBox(height: 20,),
+                          !showSignIn
                           ? TextFormField(
                               controller: prenomController,
-                              decoration: textInputDecoration.copyWith(
-                                  hintText: 'Votre prénom'),
+                              decoration: textInputDecoration.copyWith(hintText: 'Votre prénom'),
                               validator: (value) =>
-                                  value == null || value.isEmpty
-                                      ? "Entrez votre prénom"
-                                      : null,
+                                  value == null || value.isEmpty ? "Entrez votre prénom" : null,
                             )
                           : Container(),
-                      !showSignIn ? SizedBox(height: 20.0) : Container(),
+
+                      !showSignIn ? 
+                      SizedBox(height: 20.0) : Container(),
                       TextFormField(
                         controller: emailController,
-                        decoration: textInputDecoration.copyWith(
-                            hintText: 'Votre adresse email'),
-                        validator: (value) => value == null || value.isEmpty
-                            ? "Entrez votre adresse email"
-                            : null,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: textInputDecoration.copyWith(hintText: 'Votre adresse email',),
+                        validator: (value) =>
+                            value == null || value.isEmpty ? "Entrez votre adresse email" : null,
                       ),
                       SizedBox(height: 20.0),
                       TextFormField(
                         controller: passwordController,
                         decoration: textInputDecoration.copyWith(
-                            hintText: 'Votre mot de passe'),
-                        obscureText: true,
+                          hintText: 'Votre mot de passe',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                              color: greenMajor,
+                              ),
+                            onPressed: () {
+                              setState(() {
+                                  obscureText = !obscureText;
+                              });
+                            },
+                            ),),
+                        obscureText: !obscureText,
                         validator: (value) => value != null && value.length < 6
                             ? "Entrez un mot de passe d'au moins 6 caractères"
                             : null,
                       ),
                       SizedBox(height: 20.0),
-                      !showSignIn
-                          ? TextFormField(
-                              controller: confirmPasswordController,
-                              decoration: textInputDecoration.copyWith(
-                                  hintText: 'Confirmez mot de passe'),
-                              obscureText: true,
-                              validator: (value) => value ==
-                                      passwordController.text
-                                  ? null
-                                  : "Les mots de passes ne se correspondent pas !",
-                            )
-                          : Container(),
-                      SizedBox(height: 30.0),
-                      !showSignIn
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Votre rôle est :',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                                GestureDetector(
-                                  onTap: () => change(),
-                                  child: TextFormField(
-                                    textAlignVertical: TextAlignVertical.center,
-                                    textAlign: TextAlign.left,
-                                    controller: roleController
-                                      ..text =
-                                          changeT ? 'Lecteur' : 'Rédacteur',
-                                    style: TextStyle(color: greenMajor),
-                                    enabled: false,
-                                    decoration: textInputDecoration.copyWith(
-                                      prefixIcon: Icon(Icons.swap_vert,
-                                          color: greenMajor),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Container(),
-                      SizedBox(height: 30.0),
-                      !showSignIn
-                          ? Center(
-                              child: profilImage == null
-                                  ? Text(
-                                      'Pas d\'image de profil sélectionnée !')
-                                  : ClipOval(
-                                      child: SizedBox.fromSize(
-                                        size: Size.fromRadius(48),
-                                        child: Image.file(
-                                            File(profilImage!.path),
-                                            fit: BoxFit.cover),
-                                      ),
-                                    ))
-                          : Container(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      !showSignIn
-                          ? OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                primary: greenMajor,
-                                backgroundColor: Colors.transparent,
-                                side: BorderSide(color: greenMajor, width: 1),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                              ),
-                              onPressed: () {
-                                filePicker();
-                              },
-                              child: Text('Ajouter une image'))
-                          : Container(),
-                      SizedBox(height: 20),
-                      !showSignIn
-                          ? TextFormField(
-                              controller: bioController,
-                              maxLines: 4,
-                              decoration: textInputDecoration.copyWith(
-                                  hintText: 'Votre biographie'),
-                            )
-                          : Container(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Center(
-                          child: GestureDetector(
-                              onTap: () => toggleView(),
-                              child: Text(
-                                showSignIn
-                                    ? 'Créer un compte ?'
-                                    : 'Déjà un compte ? Connectez vous !',
-                                style: TextStyle(color: greenMajor),
-                              ))),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: greenMajor,
-                          onPrimary: Colors.white,
-                          shadowColor: or,
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
-                          minimumSize: Size(200, 40),
+
+                      !showSignIn ? 
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Votre rôle est :', style: TextStyle(
+                            fontSize: 15
+                          ),),
+                           GestureDetector(
+                        onTap: () => change(),
+                        child: TextFormField(
+                          textAlignVertical: TextAlignVertical.center,
+                          textAlign: TextAlign.left,
+                        controller: roleController..text = changeT ? 'Lecteur' : 'Rédacteur', 
+                        style: TextStyle(
+                          color: greenMajor
+                          ),
+                        enabled: false,
+                        decoration: textInputDecoration.copyWith(
+                          prefixIcon: Icon(
+                                Icons.swap_vert,
+                                color: greenMajor
+                      ),),
                         ),
-                        child: Text(
-                          showSignIn ? "Se connecter" : "S\'inscrire",
+                      ),
+                        ],
+                      )
+                       : Container(),
+                      
+                      !showSignIn ? SizedBox(height: 30,) : Container(),
+                      !showSignIn ?
+                      Container(
+                        child: 
+                        _path == null ?
+                       Center(
+                         child: Text('Aucune Image de Profil sélectionnée !'),
+                       )
+                              : CircleAvatar(
+                                 radius: hasWidthPage*0.2,
+                                backgroundImage: 
+                                FileImage(File(_path)),
+                              )
+                      ) : Container(),
+
+                      !showSignIn ? SizedBox(height: 30,) : Container(),
+
+                      !showSignIn ? 
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          primary: greenMajor,
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: greenMajor, width: 1),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                         ),
                         onPressed: () async {
+                          final results = await FilePicker.platform.pickFiles(
+                            allowMultiple: false,
+                            type: FileType.image,
+                            
+                          );
+
+                          if (results == null) {
+                            return null;
+                          }
+
+                          final path = results.files.single.path!;
+                          _path = path;
+                          final fileName = results.files.single.name;
+                          _fileName = fileName;
+                          setState(() {});
+                          print(_path);
+                        }, 
+                        child: Text('Ajouter une image'))
+                      : Container(),
+
+                      
+
+                      !showSignIn ? SizedBox(height: 30,) : Container(),
+
+                      !showSignIn ?
+                      TextFormField(
+                        controller: bioController,
+                        maxLines: 4,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(100)
+                        ],
+                        decoration: textOutlineDecoration.copyWith(hintText: 'Votre Biographie') 
+                            
+                      )
+                       :Container(),
+                       
+                       !showSignIn ? SizedBox(height: 30,) : Container(),
+
+                      Center(child: 
+                      GestureDetector(
+                        onTap: () => toggleView(), 
+                        child: Text(showSignIn ? 'Créer un compte ?' : 'Déjà un compte ? Connectez vous !', 
+                        style: TextStyle(
+                          color: greenMajor
+                        )
+                        ,))),
+                        SizedBox(height: 20,),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                              primary: currentColor,
+                              onPrimary: Colors.white,
+                              shadowColor: or,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              minimumSize: Size(200, 40),
+                          ),
+                        child: Text(
+                          showSignIn? "Se connecter" : "S\'inscrire",
+                        ),
+                        onPressed: () async 
+                        {
                           if (_formKey.currentState?.validate() == true) {
                             setState(() => loading = true);
                             var password = passwordController.value.text;
@@ -279,48 +290,67 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                             var prenom = prenomController.value.text;
                             var role = roleController.value.text;
                             var bio = bioController.value.text;
+                            var modo = false;
+                            var admin = false;
+                            var ban = false;
+                            var reference = 
+                            showSignIn
+                            ? ''
+                            : await storage.uploadFile(_path, _fileName);
 
                             dynamic result = showSignIn
                                 ? await _auth.signInWithEmailAndPassword(
                                     email, password)
+                                    
                                 : await _auth.registerWithEmailAndPassword(
-                                    name, prenom, email, password, role, bio);
+                                    name, prenom, email, password, role, bio, modo, admin, reference, ban);
+                                    
 
-                            if (result == null) {
-                              setState(() {
-                                loading = false;
-                                error =
-                                    "Il y une erreur dans votre inscription";
-                              });
-                            }
-                          }
-                        },
-                      ),
-                      showSignIn
-                          ? OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: greenMajor, width: 2),
-                                primary: greenMajor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                              onPressed: () async {
-                                dynamic result =
-                                    await _auth.signInAnonymously();
+                                  if (result == null) {
+                                    setState(() {
+                                      loading = false;
+                                      error = "Il y une erreur dans votre inscription";
+                                    });
+                                  }
+                                  
+                                }
+
                               },
-                              child: Text('Se connecter en Anonyme'))
-                          : Container(),
-                      SizedBox(height: 10.0),
-                      Text(
-                        error,
-                        style: TextStyle(color: Colors.red, fontSize: 15.0),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ));
+
+                          
+                              ),
+                              SizedBox(height: 10,),
+                            showSignIn
+                                ? OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side:
+                                          BorderSide(color: greenMajor, width: 2),
+                                      primary: greenMajor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20.0),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      dynamic result =
+                                          await _auth.signInAnonymously();
+                                    },
+                                    child: Text('Se connecter en Anonyme'))
+                                : Container(),
+                            SizedBox(height: 10.0),
+                            Text(
+                              error,
+                              style: TextStyle(color: Colors.red, fontSize: 15.0),
+                            )
+                          ],
+                        ),
+                  )
+                      ),
+                    ),
+        ],
+      )
+                    );
+          
+    }
+    
   }
-}
+

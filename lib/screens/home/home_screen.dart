@@ -1,51 +1,113 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
+import 'package:flutter_firebase/services/searchDelagate.dart';
 import 'package:flutter_firebase/screens/pages/accueil.dart';
 import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/screens/pages/components/params.dart';
+import 'package:flutter_firebase/screens/pages/dashboard/dashboard.dart';
 import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
 import 'package:flutter_firebase/screens/pages/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
-import 'package:flutter_firebase/screens/pages/recherche.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/services/notification_service.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
+
+
+
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  
+  HomeScreen({Key? key, required this.uId}) : super(key: key);
+  final String? uId;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var userData = {};
+  bool isLoading = true;
+  
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    setState(() {
+      var user = FirebaseAuth.instance.authStateChanges();
+
+      isLoading = true;
+    });
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uId)
+          .get();
+
+      userData = userSnap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(BuildContext context, String text) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(text),
+          ),
+        );
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  
   var _currentIndex = 0;
+  bool mod = true;
   final List<Widget> _pages = [
-    Accueil(),
+    Accueil(uId: FirebaseAuth.instance.currentUser!.uid),
     Groupes(),
-    Search(),
     Profil(uId: FirebaseAuth.instance.currentUser!.uid),
   ];
   final AuthenticationService _auth = AuthenticationService();
+  TextEditingController textController = TextEditingController();
+
+  
 
   @override
   Widget build(BuildContext context) {
-    NotificationService.initialize();
+    var hasWidthPage = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
+      appBar: 
+      (userData['ban'] == true)
+      ? AppBar(
+        title: Text('Ressources Relationnelles'),
+        centerTitle: true
+      )
+      : AppBar(
+        backgroundColor: greenMajor,
         elevation: 0.0,
         title: Text(
           'Ressources Relationnelles',
-          style: TextStyle(color: greenMajor),
+          style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
+          IconButton(
+        onPressed: () {
+          showSearch(
+            context: context, 
+            delegate: CustomSearchDelegate());
+        },
+        icon: Icon(Icons.search)),
           PopupMenuButton(
             icon: Icon(
               Icons.more_vert,
-              color: greenMajor,
+              color: Colors.white,
             ),
             onSelected: (choice) {
               switch (choice) {
@@ -55,17 +117,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   break;
                 case 1:
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Help()));
+                      context, MaterialPageRoute(builder: (context) => (userData['admin']==true) ? Dashboard(uId: FirebaseAuth.instance
+                                                      .currentUser!.uid) : Help()));
                   break;
                 case 2:
-                  Navigator.push(
+                (userData['name'] == null)
+                  ? _auth.signOut()
+                  : Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditProfile(
+                          builder: (context) =>
+                          EditProfile(
                                 currentUserUid:
                                     FirebaseAuth.instance.currentUser!.uid,
                               )));
-                // other cases...
+                  
               }
             },
             itemBuilder: (context) => [
@@ -86,26 +152,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
-                          Icons.help,
+                          (userData['admin']==true) ?
+                          Icons.dashboard : Icons.help,
                           color: greenMajor,
                         )),
-                    Text('Aide')
+                    Text((userData['admin']==true) ? 'Tableau de bord' : 'Aide')
                   ])),
-              PopupMenuItem(
+                  PopupMenuItem(
                   value: 2,
                   child: Row(children: <Widget>[
                     Padding(
                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
                         child: Icon(
-                          Icons.edit,
+                          (userData['name'] == null)
+                          ? Icons.person_add
+                          : Icons.edit,
                           color: greenMajor,
                         )),
-                    Text('Modifier mon profil')
+                    Text((userData['name'] == null) ? 'Créer un compte' : 'Modifier mon profil')
                   ])),
               PopupMenuItem(
                   onTap: () async {
                     await _auth.signOut();
-                    //await _auth.deleteUser();
                   },
                   child: Row(children: <Widget>[
                     Padding(
@@ -120,8 +188,23 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: //UserList(),
-          _pages[_currentIndex],
+      body:
+      (userData['ban'] == true)
+      ? Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Votre compte a été désactivé !', style: TextStyle(fontSize: hasWidthPage*0.06),),
+            SizedBox(height: hasWidthPage*0.2,),
+            ElevatedButton(
+              onPressed: () {
+                _auth.signOut();
+              }, 
+              child: Text('Retour à la page de connexion'))
+          ],
+        ),
+      )
+       :   _pages[_currentIndex],
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,
         onTap: (i) => setState(() => _currentIndex = i),
@@ -139,24 +222,15 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text("Mes groupes"),
             selectedColor: or,
           ),
-
-          /// Recherche
-          SalomonBottomBarItem(
-            icon: Icon(Icons.search),
-            title: Text("Recherche"),
-            selectedColor: greenMajor,
-          ),
+          
 
           /// Mon profil
           SalomonBottomBarItem(
-            icon: CircleAvatar(
-              backgroundImage:
-                  AssetImage('images/ressources_relationnelles.png'),
-            ),
-            //Icon(Icons.person),
+            icon: 
+            Icon(Icons.person),
             title: Text("Mon profil"),
             selectedColor: or,
-          ),
+          ), 
         ],
       ),
     );
