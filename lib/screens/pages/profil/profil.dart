@@ -74,7 +74,7 @@ class _ProfilPageState extends State<Profil> {
 
       userData = userSnap.data()!;
       postLen = postSnap.docs.length;
-      if (friendsSnap1.docs[0].exists || friendsSnap2.docs[0].exists) {
+      if (friendsSnap1.size != 0 || friendsSnap2.size != 0) {
         isFriends = true;
       }
       setState(() {});
@@ -218,23 +218,26 @@ class _ProfilPageState extends State<Profil> {
                                             children: [
                                               GestureDetector(
                                                   onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Friends()));
+                                                    currentUserId == widget.uId
+                                                        ? Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Friends()))
+                                                        : null;
                                                   },
-                                                  child: currentUserId ==
-                                                          widget.uId
-                                                      ? Text(
-                                                          'Amis',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black54),
-                                                        )
-                                                      : isFriends == false
-                                                          ? FollowButton(
+                                                  child:
+                                                      currentUserId ==
+                                                                  widget.uId ||
+                                                              isFriends == true
+                                                          ? Text(
+                                                              'Amis',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black54),
+                                                            )
+                                                          : FollowButton(
                                                               backgroundColor:
                                                                   greenMajor,
                                                               borderColor:
@@ -267,12 +270,6 @@ class _ProfilPageState extends State<Profil> {
                                                                         (error) =>
                                                                             print('Add failed: $error'));
                                                               },
-                                                            )
-                                                          : Text(
-                                                              'Amis',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black54),
                                                             )),
                                               Icon(Icons.person)
                                             ],

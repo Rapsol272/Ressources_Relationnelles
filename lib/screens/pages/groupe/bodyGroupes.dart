@@ -18,7 +18,7 @@ class bodyGroupes extends StatefulWidget {
 
 class _bodyGroupes extends State<bodyGroupes> {
   final Stream<QuerySnapshot> groupes =
-  FirebaseFirestore.instance.collection('groupes').snapshots();
+  FirebaseFirestore.instance.collection('groupes').where('listId', arrayContains : FirebaseAuth.instance.currentUser!.uid ).snapshots();
   var _iconColor = Colors.grey;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
