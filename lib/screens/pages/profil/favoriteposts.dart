@@ -45,9 +45,6 @@ class _FavoritePosts extends State<FavoritePosts> {
   var userData = {};
   int postLen = 0;
   bool isLoading = false;
-  var _iconColor = Colors.grey;
-  var _iconColorShare = Colors.grey;
-  var _iconColorAdd = Colors.grey;
   List<String> array = [];
   var userId = FirebaseFirestore.instance.collection('users');
   var collectionLikes = FirebaseFirestore.instance.collection('likes');
