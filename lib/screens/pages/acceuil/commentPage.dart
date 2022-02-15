@@ -332,6 +332,7 @@ class _commentPageState extends State<commentPage> {
         TextField(
           controller: myControllerTitle,
           decoration: InputDecoration(
+            label: Text('Entrez votre commentaire...'),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
             ),

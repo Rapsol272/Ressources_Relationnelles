@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/screens/pages/components/params/themeMode.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/screens/pages/components/params/donnes.dart';
 import 'package:flutter_firebase/screens/pages/components/params/infosPerso.dart';
@@ -14,7 +13,13 @@ class Params extends StatefulWidget {
 }
 
 class _ParamsState extends State<Params> {
-  bool isDarkModeEnabled = true;
+
+  bool light = true;
+  void changeLight() {
+      setState(() {
+        light = !light;
+      });
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,11 +55,20 @@ class _ParamsState extends State<Params> {
          Card(
            child:  ListTile(
               onTap: () {
-                Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ModeTheme()));
+                
               },
             leading: Icon(Icons.verified),
-            title: Text('Changer le thème de l\'application'),
+            title: Text('Thème Sombre'),
+            trailing: IconButton(
+            onPressed: () {
+              setState(() {
+                light = !light;
+              });
+            }, 
+            icon: Icon( (light == true)
+            ? Icons.toggle_off
+            : Icons.toggle_on, color: (light == true) ? Colors.red : Colors.green,), iconSize: 50,),
+            
           ),
          ),
 

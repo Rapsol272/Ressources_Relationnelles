@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 
@@ -26,8 +27,12 @@ class Presentation extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Column(
                 children: [
-                  Text('Présentation d\'application'),
+                  Text('Présentation d\'application', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                  SizedBox(height: 30,),
+                  Text("${data['intro']}"),
+                  SizedBox(height: 10,),
                   Text("${data['content']}"),
+
                 ],
               )),
             )
