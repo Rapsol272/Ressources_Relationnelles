@@ -5,6 +5,7 @@ import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
+import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
@@ -268,26 +269,24 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                                 Icon(FontAwesomeIcons.comment),
                                             color: Colors.grey,
                                           ),
-                                        
-                                        // Button Add  : a regarder plus tard
-                                        IconButton(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 12),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    creationGroupe(
-                                                  
+
+                                          // Button Add  : a regarder plus tard
+                                          IconButton(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      creationGroupe(),
                                                 ),
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(
-                                            FontAwesomeIcons.plusSquare,
-                                            color: _iconColorAdd,
-                                          ),
+                                              );
+                                            },
+                                            icon: Icon(
+                                              FontAwesomeIcons.plusSquare,
+                                              color: _iconColorAdd,
+                                            ),
                                           ),
                                           // Button Add  : a regarder plus tard
                                           IconButton(
