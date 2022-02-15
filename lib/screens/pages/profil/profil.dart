@@ -46,8 +46,6 @@ class _ProfilPageState extends State<Profil> {
 
   getData() async {
     setState(() {
-      var user = FirebaseAuth.instance.authStateChanges();
-
       isLoading = true;
     });
     try {
@@ -556,10 +554,9 @@ class _ProfilPageState extends State<Profil> {
                                                             icon: Icon(
                                                                 Icons.favorite,
                                                                 color: isLiked
-                                                                    ? Colors
-                                                                        .grey
+                                                                    ? Colors.red
                                                                     : Colors
-                                                                        .red),
+                                                                        .grey),
                                                           ))
                                                     ],
                                                   ),
