@@ -74,7 +74,7 @@ class _ProfilPageState extends State<Profil> {
 
       userData = userSnap.data()!;
       postLen = postSnap.docs.length;
-      if (friendsSnap1.docs[0].exists || friendsSnap2.docs[0].exists) {
+      if (friendsSnap1.size != 0 || friendsSnap2.size != 0) {
         isFriends = true;
       }
       setState(() {});
@@ -226,9 +226,9 @@ class _ProfilPageState extends State<Profil> {
                                                                     Friends()));
                                                   },
                                                   child:
-                                                      currentUserId !=
+                                                      currentUserId ==
                                                                   widget.uId ||
-                                                              isFriends == false
+                                                              isFriends == true
                                                           ? Text(
                                                               'Amis',
                                                               style: TextStyle(
