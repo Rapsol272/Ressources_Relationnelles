@@ -32,7 +32,7 @@ class _ProfilPageState extends State<Profil> {
   var userData = {};
   int postLen = 0;
   bool isLoading = false;
-  var _iconColor = Colors.grey;
+  bool isFriends = false;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   bool isLiked = false;
@@ -60,8 +60,23 @@ class _ProfilPageState extends State<Profil> {
           .where('idUser', isEqualTo: widget.uId)
           .get();
 
+      var friendsSnap1 = await FirebaseFirestore.instance
+          .collection('friendship')
+          .where('idUser1', isEqualTo: widget.uId)
+          .where('idUser2', isEqualTo: currentUserId)
+          .get();
+
+      var friendsSnap2 = await FirebaseFirestore.instance
+          .collection('friendship')
+          .where('idUser2', isEqualTo: widget.uId)
+          .where('idUser1', isEqualTo: currentUserId)
+          .get();
+
       userData = userSnap.data()!;
       postLen = postSnap.docs.length;
+      if (friendsSnap1.docs[0].exists || friendsSnap2.docs[0].exists) {
+        isFriends = true;
+      }
       setState(() {});
     } catch (e) {
       showSnackBar(BuildContext context, String text) {
@@ -211,8 +226,9 @@ class _ProfilPageState extends State<Profil> {
                                                                     Friends()));
                                                   },
                                                   child:
-                                                      currentUserId ==
-                                                              widget.uId
+                                                      currentUserId !=
+                                                                  widget.uId ||
+                                                              isFriends == false
                                                           ? Text(
                                                               'Amis',
                                                               style: TextStyle(
