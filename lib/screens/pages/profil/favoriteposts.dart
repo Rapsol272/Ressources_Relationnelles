@@ -28,8 +28,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
-var collectionLikes = FirebaseFirestore.instance
-    .collection('likes')
+var posts = FirebaseFirestore.instance
+    .collection('posts')
     .where('idUser', isEqualTo: currentUserId);
 final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -45,11 +45,9 @@ class _FavoritePosts extends State<FavoritePosts> {
   var userData = {};
   int postLen = 0;
   bool isLoading = false;
-  var _iconColor = Colors.grey;
-  var _iconColorShare = Colors.grey;
-  var _iconColorAdd = Colors.grey;
   List<String> array = [];
   var userId = FirebaseFirestore.instance.collection('users');
+  var collectionLikes = FirebaseFirestore.instance.collection('likes');
 
   //Map likes = [] as Map;
   bool isLiked = false;
@@ -72,7 +70,7 @@ class _FavoritePosts extends State<FavoritePosts> {
 
       var postSnap = await FirebaseFirestore.instance
           .collection('posts')
-          .where('idUser', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('idUser', isEqualTo: widget.uId)
           .get();
 
       userData = userSnap.data()!;
@@ -100,9 +98,8 @@ class _FavoritePosts extends State<FavoritePosts> {
         ? Loading()
         : FutureBuilder(
             future: FirebaseFirestore.instance
-                .collection('likes')
-                .where('idUser',
-                    isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                .collection('posts')
+                .where('idUser', isEqualTo: widget.uId)
                 .get(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -111,18 +108,18 @@ class _FavoritePosts extends State<FavoritePosts> {
                 );
               }
 
-              // ignore: unnecessary_null_comparison
-              return collectionLikes
-                          .where('idUser', isEqualTo: currentUserId)
-                          .toString() !=
-                      null
-                  ? ListView.builder(
-                      itemCount: postLen,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot snap =
-                            (snapshot.data! as dynamic).docs[index];
-
-                        return SingleChildScrollView(
+              return ListView.builder(
+                itemCount: postLen,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot snap =
+                      (snapshot.data! as dynamic).docs[index];
+                  return (collectionLikes
+                              .where('idUser', isEqualTo: widget.uId)
+                              .toString() ==
+                          collectionLikes
+                              .where('idPost', isEqualTo: snap.id)
+                              .toString())
+                      ? SingleChildScrollView(
                           physics: ScrollPhysics(),
                           child: Column(
                             children: <Widget>[
@@ -236,12 +233,10 @@ class _FavoritePosts extends State<FavoritePosts> {
                               )
                             ],
                           ),
-                        );
-                      },
-                    )
-                  : Container(
-                      child: Text('F,EPOGJZPIHjzqrpij'),
-                    );
+                        )
+                      : Container();
+                },
+              );
             },
           );
   }

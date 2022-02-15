@@ -46,8 +46,6 @@ class _ProfilPageState extends State<Profil> {
 
   getData() async {
     setState(() {
-      var user = FirebaseAuth.instance.authStateChanges();
-
       isLoading = true;
     });
     try {
@@ -58,7 +56,7 @@ class _ProfilPageState extends State<Profil> {
 
       var postSnap = await FirebaseFirestore.instance
           .collection('posts')
-          .where('idUser', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('idUser', isEqualTo: widget.uId)
           .get();
 
       userData = userSnap.data()!;
@@ -79,7 +77,6 @@ class _ProfilPageState extends State<Profil> {
   }
 
   final AuthenticationService _auth = AuthenticationService();
-  
 
   @override
   Widget build(BuildContext context) {
@@ -140,16 +137,18 @@ class _ProfilPageState extends State<Profil> {
                               Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [CircleAvatar(
-                                            radius: hasWidthPage * 0.09,
-                                            backgroundImage: NetworkImage(
-                                              userData['reference'].toString(),
-                                            )),
+                                  children: [
+                                    CircleAvatar(
+                                        radius: hasWidthPage * 0.09,
+                                        backgroundImage: NetworkImage(
+                                          userData['reference'].toString(),
+                                        )),
                                     SizedBox(
                                       width: hasWidthPage * 0.1,
                                     ),
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         Text(
                                             userData['prenom'].toString() +
@@ -257,9 +256,7 @@ class _ProfilPageState extends State<Profil> {
                             FutureBuilder(
                               future: FirebaseFirestore.instance
                                   .collection('posts')
-                                  .where('idUser',
-                                      isEqualTo: FirebaseAuth
-                                          .instance.currentUser!.uid)
+                                  .where('idUser', isEqualTo: widget.uId)
                                   .get(),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
@@ -335,9 +332,10 @@ class _ProfilPageState extends State<Profil> {
                                                     ),
                                                     subtitle: Text(
                                                       //'${data.docs[index]['auteur']}',
-                                                      userData['name']
+                                                      userData['prenom']
                                                               .toString() +
-                                                          userData['prenom']
+                                                          ' ' +
+                                                          userData['name']
                                                               .toString(),
                                                       style: TextStyle(
                                                           color: Colors.black
@@ -556,10 +554,9 @@ class _ProfilPageState extends State<Profil> {
                                                             icon: Icon(
                                                                 Icons.favorite,
                                                                 color: isLiked
-                                                                    ? Colors
-                                                                        .grey
+                                                                    ? Colors.red
                                                                     : Colors
-                                                                        .red),
+                                                                        .grey),
                                                           ))
                                                     ],
                                                   ),
