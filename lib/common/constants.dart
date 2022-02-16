@@ -30,8 +30,8 @@ String convertDateTimeDisplay(String date) {
 unitTags(List array, int i) {
   return Flexible(
     child: Container(
-      margin: const EdgeInsets.only(right: 5, left: 5),
-      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      margin: const EdgeInsets.only(right: 3, left: 3),
+      padding: const EdgeInsets.only(top: 4, bottom: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(15),

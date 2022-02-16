@@ -269,7 +269,7 @@ class _commentPageState extends State<commentPage> {
         width: double.infinity,
         height: 85,
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.all(5),
+        margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(

@@ -24,11 +24,6 @@ class _Friends extends State<Friends> {
   }
 
   getData() async {
-    setState(() {
-      var user = FirebaseAuth.instance.authStateChanges();
-
-      isLoading = true;
-    });
     try {
       users_friends = [];
       var amies1 = await FirebaseFirestore.instance
