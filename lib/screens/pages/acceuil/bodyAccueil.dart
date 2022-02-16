@@ -4,14 +4,14 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/categSection.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
+import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
+import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
-import 'package:flutter_firebase/services/notification_service.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 
 // ignore: camel_case_types
 var collectionLikes = FirebaseFirestore.instance.collection('likes');
@@ -29,18 +29,17 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   final usersRef = FirebaseFirestore.instance.collection('users');
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
-
+  
+  var pp;
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   var _iconFav = Colors.grey;
   bool isLiked = false;
-
   // Utiliser pour la liste des catégories associées à chaque post
   List<String> tabCategorie = [];
   List<String> allPosts = [];
   List<Color> allFavPostUser = [];
-
   var userData = {};
   getData() async {
     List<String> temp = [];
@@ -120,7 +119,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                 return Loading();
               }
               final data = snapshot.requireData;
-              
+
               // Première Listview builder : création d'une page scrollable
               return ListView.builder(
                 itemCount: 1,
@@ -134,13 +133,14 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
 
                         // Seconde Listview builder : création d'une liste de post en correspondance avec la collection post dans firestore
                         ListView.builder(
+                          
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: data.size,
                           itemBuilder: (context, index) {
                             tabCategorie =
                                 data.docs[index]["tags"].cast<String>();
-                            return Container(
+                              return Container(
                               padding: const EdgeInsets.only(
                                 left: 10,
                                 right: 10,
@@ -148,7 +148,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                 bottom: 5,
                               ),
                               // Création de la card avec l'ensemble du contenu
-                              child:Card(
+                              child: Card(
                                 elevation: 15,
                                 margin: EdgeInsets.all(5),
                                 shadowColor: Color(0xff03989E),
@@ -161,24 +161,25 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ListTile(
                                       // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
                                       leading: GestureDetector(
-                                        onTap: () {
+                                        onTap: (){
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => Scaffold(
                                                       appBar: upBar(context,
                                                           'Ressources Relationnelles'),
-                                                      body: Profil(
+                                                      body: Profil (
                                                           uId: data.docs[index]
                                                               ['idUser']),
                                                     )),
                                           );
                                         },
-                                        child: CircleAvatar(
-                                          
+                                        child:   CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            ''
+                                              ),
                                         ),
                                       ),
-
                                       title: Text(
                                         '${data.docs[index]['title']}',
                                         style: TextStyle(
@@ -199,7 +200,8 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                         child: Image.network(
-                                                '${data.docs[index]['reference']}',)),
+                                          '${data.docs[index]['reference']}',
+                                        )),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         top: 4.0,
@@ -241,49 +243,49 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ),
                                     // Barre d'action du post (favoris, share, add, comment)
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[
-                                        // Comment button
-                                        IconButton(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 12),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    commentPage(
-                                                  uId: FirebaseAuth.instance
-                                                      .currentUser!.uid,
-                                                  idPost: data.docs[index].id,
-                                                  titlePost: data.docs[index]
-                                                      ['title'],
-                                                ),
-                                              ));
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          // Comment button
+                                          IconButton(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        commentPage(
+                                                      uId: FirebaseAuth.instance
+                                                          .currentUser!.uid,
+                                                      idPost:
+                                                          data.docs[index].id,
+                                                      titlePost: data
+                                                          .docs[index]['title'],
+                                                    ),
+                                                  ));
                                             },
                                             icon:
                                                 Icon(FontAwesomeIcons.comment),
                                             color: Colors.grey,
                                           ),
-                                          // Button share et/ ou création d'un nouveau groupe
+
+                                          // Button Add  : a regarder plus tard
                                           IconButton(
                                             padding: const EdgeInsets.only(
                                                 bottom: 12),
                                             onPressed: () {
-                                              setState(() {
-                                                if (_iconColorShare ==
-                                                    Colors.grey) {
-                                                  _iconColorShare =
-                                                      Colors.green;
-                                                } else {
-                                                  _iconColorShare = Colors.grey;
-                                                }
-                                              });
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      creationGroupe(),
+                                                ),
+                                              );
                                             },
                                             icon: Icon(
-                                              FontAwesomeIcons.retweet,
-                                              color: _iconColorShare,
+                                              FontAwesomeIcons.plusSquare,
+                                              color: _iconColorAdd,
                                             ),
                                           ),
                                           // Button Add  : a regarder plus tard
@@ -354,77 +356,76 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                             },
                                             icon: Icon(Icons.favorite,
                                                 color: isLiked
-                                                    ? Colors.grey
-                                                    : Colors.red),
+                                                    ? Colors.red
+                                                    : Colors.grey),
                                           )
                                         ]),
 
-                                        (userData['modo'] == true)
-                                            ? IconButton(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 12),
-                                                onPressed: () {
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              AlertDialog(
-                                                                title: Text(
-                                                                    'Supprimer ce post ?'),
-                                                                content:
-                                                                    new Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Text(
-                                                                      "Voulez-vous vraiment supprimer ce post de : " +
-                                                                          '${data.docs[index]['auteur']}',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              15),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                actions: [
-                                                                  ElevatedButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                      child: Text(
-                                                                          'Fermer')),
-                                                                  ElevatedButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                       CollectionReference posts =
-                                                      FirebaseFirestore.instance
-                                                          .collection(
-                                                              'posts');
-                                                  posts
-                                                      .doc(data.docs[index].id)
-                                                      .delete();
-                                                                        Navigator.pop(context);
-                                                                      },
-                                                                      child: Text(
-                                                                          'Supprimer'))
-                                                                ],
-                                                              ));
-                                                },
-                                                icon: Icon(
-                                                  Icons.delete_outline,
-                                                  color: Colors.red,
-                                                ))
-                                            : Container()
-                                      ],
-                                    ),
-                                  
+                                    (userData['modo'] == true)
+                                        ? IconButton(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 12),
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      AlertDialog(
+                                                        title: Text(
+                                                            'Supprimer ce post ?'),
+                                                        content: new Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Text(
+                                                              "Voulez-vous vraiment supprimer ce post de : " +
+                                                                  '${data.docs[index]['auteur']}',
+                                                              style: TextStyle(
+                                                                  fontSize: 15),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        actions: [
+                                                          ElevatedButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                  'Fermer')),
+                                                          ElevatedButton(
+                                                              onPressed: () {
+                                                                CollectionReference
+                                                                    posts =
+                                                                    FirebaseFirestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            'posts');
+                                                                posts
+                                                                    .doc(data
+                                                                        .docs[
+                                                                            index]
+                                                                        .id)
+                                                                    .delete();
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                  'Supprimer'))
+                                                        ],
+                                                      ));
+                                            },
+                                            icon: Icon(
+                                              Icons.delete_outline,
+                                              color: Colors.red,
+                                            ))
+                                        : Container()
+                                  ],
                                 ),
+                              ),
                             );
                           },
                         )
@@ -505,4 +506,5 @@ unitTags(List array, int i) {
       ),
     ),
   );
+  
 }

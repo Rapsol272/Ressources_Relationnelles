@@ -11,6 +11,7 @@ import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/friends.dart';
 import 'package:flutter_firebase/services/authentication.dart';
+import 'package:flutter_firebase/widget/follow_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -31,7 +32,7 @@ class _ProfilPageState extends State<Profil> {
   var userData = {};
   int postLen = 0;
   bool isLoading = false;
-  var _iconColor = Colors.grey;
+  bool isFriends = false;
   var _iconColorShare = Colors.grey;
   var _iconColorAdd = Colors.grey;
   bool isLiked = false;
@@ -46,8 +47,6 @@ class _ProfilPageState extends State<Profil> {
 
   getData() async {
     setState(() {
-      var user = FirebaseAuth.instance.authStateChanges();
-
       isLoading = true;
     });
     try {
@@ -58,11 +57,26 @@ class _ProfilPageState extends State<Profil> {
 
       var postSnap = await FirebaseFirestore.instance
           .collection('posts')
-          .where('idUser', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('idUser', isEqualTo: widget.uId)
+          .get();
+
+      var friendsSnap1 = await FirebaseFirestore.instance
+          .collection('friendship')
+          .where('idUser1', isEqualTo: widget.uId)
+          .where('idUser2', isEqualTo: currentUserId)
+          .get();
+
+      var friendsSnap2 = await FirebaseFirestore.instance
+          .collection('friendship')
+          .where('idUser2', isEqualTo: widget.uId)
+          .where('idUser1', isEqualTo: currentUserId)
           .get();
 
       userData = userSnap.data()!;
       postLen = postSnap.docs.length;
+      if (friendsSnap1.size != 0 || friendsSnap2.size != 0) {
+        isFriends = true;
+      }
       setState(() {});
     } catch (e) {
       showSnackBar(BuildContext context, String text) {
@@ -79,7 +93,6 @@ class _ProfilPageState extends State<Profil> {
   }
 
   final AuthenticationService _auth = AuthenticationService();
-  
 
   @override
   Widget build(BuildContext context) {
@@ -140,16 +153,18 @@ class _ProfilPageState extends State<Profil> {
                               Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [CircleAvatar(
-                                            radius: hasWidthPage * 0.09,
-                                            backgroundImage: NetworkImage(
-                                              userData['reference'].toString(),
-                                            )),
+                                  children: [
+                                    CircleAvatar(
+                                        radius: hasWidthPage * 0.09,
+                                        backgroundImage: NetworkImage(
+                                          userData['reference'].toString(),
+                                        )),
                                     SizedBox(
                                       width: hasWidthPage * 0.1,
                                     ),
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         Text(
                                             userData['prenom'].toString() +
@@ -164,12 +179,6 @@ class _ProfilPageState extends State<Profil> {
                                               TextStyle(color: Colors.black54),
                                         ),
                                       ],
-                                    ),
-                                    Column(
-                                      children: [Text('')],
-                                    ),
-                                    Column(
-                                      children: [Text('')],
                                     ),
                                   ],
                                 ),
@@ -209,18 +218,59 @@ class _ProfilPageState extends State<Profil> {
                                             children: [
                                               GestureDetector(
                                                   onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Friends()));
+                                                    currentUserId == widget.uId
+                                                        ? Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Friends()))
+                                                        : null;
                                                   },
-                                                  child: Text(
-                                                    'Amis',
-                                                    style: TextStyle(
-                                                        color: Colors.black54),
-                                                  )),
+                                                  child:
+                                                      currentUserId ==
+                                                                  widget.uId ||
+                                                              isFriends == true
+                                                          ? Text(
+                                                              'Amis',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black54),
+                                                            )
+                                                          : FollowButton(
+                                                              backgroundColor:
+                                                                  greenMajor,
+                                                              borderColor:
+                                                                  Colors.grey,
+                                                              text: 'Suivre',
+                                                              textColor:
+                                                                  Colors.white,
+                                                              function: () {
+                                                                var myData = {
+                                                                  'idUser1':
+                                                                      currentUserId,
+                                                                  'idUser2':
+                                                                      widget
+                                                                          .uId,
+                                                                  'validation':
+                                                                      true,
+                                                                };
+                                                                var collection =
+                                                                    FirebaseFirestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            'friendship');
+                                                                collection
+                                                                    .add(
+                                                                        myData) // <-- Your data
+                                                                    .then((_) =>
+                                                                        print(
+                                                                            'Added'))
+                                                                    .catchError(
+                                                                        (error) =>
+                                                                            print('Add failed: $error'));
+                                                              },
+                                                            )),
                                               Icon(Icons.person)
                                             ],
                                           )
@@ -257,9 +307,7 @@ class _ProfilPageState extends State<Profil> {
                             FutureBuilder(
                               future: FirebaseFirestore.instance
                                   .collection('posts')
-                                  .where('idUser',
-                                      isEqualTo: FirebaseAuth
-                                          .instance.currentUser!.uid)
+                                  .where('idUser', isEqualTo: widget.uId)
                                   .get(),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
@@ -335,9 +383,10 @@ class _ProfilPageState extends State<Profil> {
                                                     ),
                                                     subtitle: Text(
                                                       //'${data.docs[index]['auteur']}',
-                                                      userData['name']
+                                                      userData['prenom']
                                                               .toString() +
-                                                          userData['prenom']
+                                                          ' ' +
+                                                          userData['name']
                                                               .toString(),
                                                       style: TextStyle(
                                                           color: Colors.black
@@ -494,6 +543,7 @@ class _ProfilPageState extends State<Profil> {
                                                             onPressed: () {
                                                               if (isLiked ==
                                                                   true) {
+                                                                isLiked = false;
                                                                 var myData = {
                                                                   'idPost':
                                                                       snap.id,
@@ -508,12 +558,10 @@ class _ProfilPageState extends State<Profil> {
                                                                     .catchError(
                                                                         (error) =>
                                                                             print('Add failed: $error'));
-                                                                setState(() {
-                                                                  isLiked =
-                                                                      false;
-                                                                });
+                                                                setState(() {});
                                                               } else if (isLiked ==
                                                                   false) {
+                                                                isLiked = true;
                                                                 FirebaseFirestore
                                                                     .instance
                                                                     .collection(
@@ -547,19 +595,15 @@ class _ProfilPageState extends State<Profil> {
                                                                     });
                                                                   });
                                                                 });
-                                                                setState(() {
-                                                                  isLiked =
-                                                                      true;
-                                                                });
+                                                                setState(() {});
                                                               }
                                                             },
                                                             icon: Icon(
                                                                 Icons.favorite,
                                                                 color: isLiked
-                                                                    ? Colors
-                                                                        .grey
+                                                                    ? Colors.red
                                                                     : Colors
-                                                                        .red),
+                                                                        .grey),
                                                           ))
                                                     ],
                                                   ),
