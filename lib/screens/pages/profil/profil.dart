@@ -218,12 +218,14 @@ class _ProfilPageState extends State<Profil> {
                                             children: [
                                               GestureDetector(
                                                   onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Friends()));
+                                                    currentUserId == widget.uId
+                                                        ? Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Friends()))
+                                                        : null;
                                                   },
                                                   child:
                                                       currentUserId ==

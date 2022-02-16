@@ -8,12 +8,10 @@ import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
 import 'package:flutter_firebase/screens/pages/groupe/creationGroupe.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
-import 'package:flutter_firebase/services/notification_service.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
 
 // ignore: camel_case_types
 var collectionLikes = FirebaseFirestore.instance.collection('likes');

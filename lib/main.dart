@@ -46,11 +46,6 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
-        darkTheme: ThemeData(
-          primarySwatch: customColor,
-          brightness: Brightness.dark,
-          fontFamily: GoogleFonts.poppins().fontFamily,
-        ),
       ),
     );
   }
