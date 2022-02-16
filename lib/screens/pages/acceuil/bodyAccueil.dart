@@ -29,7 +29,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
   final usersRef = FirebaseFirestore.instance.collection('users');
   final Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
-  
+
   var pp;
   var myUserId = FirebaseAuth.instance.currentUser!.uid;
   var _iconColorShare = Colors.grey;
@@ -133,14 +133,12 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
 
                         // Seconde Listview builder : création d'une liste de post en correspondance avec la collection post dans firestore
                         ListView.builder(
-                          
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: data.size,
                           itemBuilder: (context, index) {
                             tabCategorie =
                                 data.docs[index]["tags"].cast<String>();
-                              return Container(
                               padding: const EdgeInsets.only(
                                 left: 10,
                                 right: 10,
@@ -161,23 +159,21 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                     ListTile(
                                       // IconButton profil disponible sur chaque post : renvoie au profil du rédacteur
                                       leading: GestureDetector(
-                                        onTap: (){
+                                        onTap: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => Scaffold(
                                                       appBar: upBar(context,
                                                           'Ressources Relationnelles'),
-                                                      body: Profil (
+                                                      body: Profil(
                                                           uId: data.docs[index]
                                                               ['idUser']),
                                                     )),
                                           );
                                         },
-                                        child:   CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                            ''
-                                              ),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(''),
                                         ),
                                       ),
                                       title: Text(
@@ -303,7 +299,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                               });
                                             },
                                             icon: Icon(
-                                              FontAwesomeIcons.plusSquare,
+                                              FontAwesomeIcons.share,
                                               color: _iconColorAdd,
                                             ),
                                           ),
@@ -450,18 +446,6 @@ String convertDateTimeDisplay(String date) {
   return formatted;
 }
 
-void getUser() {
-  StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('users').doc().snapshots(),
-      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (!snapshot.hasData) {
-          return Text("Loading");
-        }
-        var userDocument = snapshot.data;
-        return Container();
-      });
-}
-
 // Create une pillule dans la barre des tags pour un tag i dans la list array
 unitTags(List array, int i) {
   return Flexible(
@@ -506,5 +490,4 @@ unitTags(List array, int i) {
       ),
     ),
   );
-  
 }
