@@ -305,7 +305,7 @@ class _bodyAcceuilState extends State<bodyAcceuil> {
                                               });
                                             },
                                             icon: Icon(
-                                              FontAwesomeIcons.plusSquare,
+                                              FontAwesomeIcons.share,
                                               color: _iconColorAdd,
                                             ),
                                           ),
