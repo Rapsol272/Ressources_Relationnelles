@@ -1,19 +1,14 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:favorite_button/favorite_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/screens/authenticate/scrollAuth.dart';
 import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
 import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
 import 'package:flutter_firebase/screens/pages/profil/friends.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/widget/follow_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 
 final usersRef = FirebaseFirestore.instance.collection('users');
 
@@ -317,12 +312,13 @@ class _ProfilPageState extends State<Profil> {
                                   );
                                 }
                                 final data = snapshot.requireData;
+
                                 return ListView.builder(
                                   itemCount: postLen,
                                   itemBuilder: (context, index) {
                                     DocumentSnapshot snap =
                                         (snapshot.data! as dynamic).docs[index];
-
+                                    array = snap["tags"].cast<String>();
                                     return SingleChildScrollView(
                                       physics: ScrollPhysics(),
                                       child: Column(
@@ -422,8 +418,7 @@ class _ProfilPageState extends State<Profil> {
                                                           for (var i = 0;
                                                               i < array.length;
                                                               i++)
-                                                            unitTagsmdr(
-                                                                array, i)
+                                                            unitTags(array, i)
                                                         ],
                                                       ),
                                                       leading: Text(
@@ -628,14 +623,6 @@ class _ProfilPageState extends State<Profil> {
             ));
   }
 
-  String convertDateTimeDisplay(String date) {
-    final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
-    final DateFormat serverFormater = DateFormat('dd-MM-yyyy');
-    final DateTime displayDate = displayFormater.parse(date);
-    final String formatted = serverFormater.format(displayDate);
-    return formatted;
-  }
-
   Column buildStatColumn(int num, String label) {
     return Column(
       children: [
@@ -656,49 +643,4 @@ class _ProfilPageState extends State<Profil> {
       ],
     );
   }
-}
-
-unitTagsmdr(List array, int i) {
-  return Flexible(
-    child: Container(
-      margin: const EdgeInsets.only(right: 5, left: 5),
-      padding: const EdgeInsets.only(top: 5, bottom: 5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(15),
-          topLeft: Radius.circular(15),
-          bottomRight: Radius.circular(15),
-          bottomLeft: Radius.circular(15),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black38,
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 1), // changes position of shadow
-          ),
-        ],
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            greenMajor,
-            Color(0xffaefea01),
-          ],
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            array[i],
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 8,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }

@@ -1,17 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:favorite_button/favorite_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/screens/home/home_screen.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
-import 'package:flutter_firebase/screens/pages/components/radioButton.dart';
-import 'package:flutter_firebase/screens/pages/profil/friends.dart';
-import 'package:flutter_firebase/screens/pages/profil/profil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_firebase/screens/pages/messages/bodymessage.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class creationGroupe extends StatefulWidget {
   @override

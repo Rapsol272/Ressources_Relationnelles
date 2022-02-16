@@ -339,11 +339,3 @@ class _commentPageState extends State<commentPage> {
     );
   }
 }
-
-String convertDateTimeDisplay(String date) {
-  final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
-  final DateFormat serverFormater = DateFormat('yyyy-MM-dd HH-mm-ss');
-  final DateTime displayDate = displayFormater.parse(date);
-  final String formatted = serverFormater.format(displayDate);
-  return formatted;
-}
