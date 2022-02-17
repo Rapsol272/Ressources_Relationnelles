@@ -1,32 +1,10 @@
 // ignore_for_file: unnecessary_null_comparison
-
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:favorite_button/favorite_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/screens/pages/profil/profil.dart';
-import 'package:flutter_firebase/widget/upBar.dart';
-import 'package:flutter_firebase/models/user.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/bodyAccueil.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/commentPage.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
-import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
-import 'package:flutter_firebase/screens/pages/profil/favoriteposts.dart';
-import 'package:flutter_firebase/screens/pages/profil/friends.dart';
-import 'package:flutter_firebase/utils/user_preferences.dart';
-import 'package:flutter_firebase/widget/profile_widget.dart';
-import 'package:flutter_firebase/screens/pages/accueil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 
 var posts = FirebaseFirestore.instance
     .collection('posts')
@@ -193,7 +171,7 @@ class _FavoritePosts extends State<FavoritePosts> {
                                               for (var i = 0;
                                                   i < array.length;
                                                   i++)
-                                                unitTagsmdr(array, i)
+                                                unitTags(array, i)
                                             ],
                                           ),
                                           leading: Text(
@@ -251,57 +229,4 @@ class _FavoritePosts extends State<FavoritePosts> {
       ],
     );
   }
-}
-
-String convertDateTimeDisplay(String date) {
-  final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
-  final DateFormat serverFormater = DateFormat('dd-MM-yyyy');
-  final DateTime displayDate = displayFormater.parse(date);
-  final String formatted = serverFormater.format(displayDate);
-  return formatted;
-}
-
-unitTagsmdr(List array, int i) {
-  return Flexible(
-    child: Container(
-      margin: const EdgeInsets.only(right: 5, left: 5),
-      padding: const EdgeInsets.only(top: 5, bottom: 5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(15),
-          topLeft: Radius.circular(15),
-          bottomRight: Radius.circular(15),
-          bottomLeft: Radius.circular(15),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black38,
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 1), // changes position of shadow
-          ),
-        ],
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            greenMajor,
-            Color(0xffaefea01),
-          ],
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            array[i],
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 8,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }

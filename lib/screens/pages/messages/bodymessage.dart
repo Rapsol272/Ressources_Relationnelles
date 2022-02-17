@@ -10,7 +10,6 @@ class Messages extends StatefulWidget {
   final String nameGroupe;
   Color _colorContainer1 = greenMajor;
   Color _colorContainer2 = Color(0xffaefea01);
-  
 
   Messages({Key? key, required this.idGroupe, required this.nameGroupe})
       : super(key: key);
@@ -27,28 +26,11 @@ class _MessagesState extends State<Messages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.black12,
-        backgroundColor: greenMajor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
-        title: Title(
-          color: Colors.white,
-          child: Text(
-            widget.nameGroupe,
-            style: TextStyle(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        width: 300,
+      bottomSheet: Container(
+        width: double.infinity,
         height: 85,
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.all(5),
+        margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -80,8 +62,10 @@ class _MessagesState extends State<Messages> {
                     'content': myControllerTitle.text,
                     'dateCreation': DateTime.now(),
                   };
-                  var collection =
-                      FirebaseFirestore.instance.collection('groupes').doc(widget.idGroupe).collection('messages');
+                  var collection = FirebaseFirestore.instance
+                      .collection('groupes')
+                      .doc(widget.idGroupe)
+                      .collection('messages');
                   collection
                       .add(myData) // <-- Your data
                       .then((_) => print('Added'))
@@ -95,8 +79,29 @@ class _MessagesState extends State<Messages> {
           ],
         ),
       ),
+      appBar: AppBar(
+        foregroundColor: Colors.black12,
+        backgroundColor: greenMajor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
+        ),
+        title: Title(
+          color: Colors.white,
+          child: Text(
+            widget.nameGroupe,
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('groupes').doc(widget.idGroupe).collection('messages').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('groupes')
+            .doc(widget.idGroupe)
+            .collection('messages')
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
             return Text("Il y a eu une erreur");
@@ -118,9 +123,9 @@ class _MessagesState extends State<Messages> {
                     itemCount: data.size,
                     itemBuilder: (context, index) {
                       profil(data.docs[index]["idUser"]);
-                      if(data.docs[index]['idUser'] == myUserId){
+                      if (data.docs[index]['idUser'] == myUserId) {
                         return Container(
-                        decoration: BoxDecoration(
+                            decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(15),
@@ -138,43 +143,40 @@ class _MessagesState extends State<Messages> {
                                 ),
                               ],
                             ),
-                  padding: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 5,
-                    bottom: 5,
-                  ),
-                  margin: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 5,
-                    bottom: 5,
-                  ),
-                  child : Column(
-                     children :[
-                       ListTile(
-                         title : Text(
-                        '${data.docs[index]['content']}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.end,
-                      ),
-                      subtitle: Text(
-                        'moi',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                        ),
-                       )
-                      ]
-                  )
-                      );
-                      }else{
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                              top: 5,
+                              bottom: 5,
+                            ),
+                            margin: const EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                              top: 5,
+                              bottom: 5,
+                            ),
+                            child: Column(children: [
+                              ListTile(
+                                title: Text(
+                                  '${data.docs[index]['content']}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.end,
+                                ),
+                                subtitle: Text(
+                                  'moi',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              )
+                            ]));
+                      } else {
                         return Container(
-                        decoration: BoxDecoration(
+                            decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(15),
@@ -192,44 +194,39 @@ class _MessagesState extends State<Messages> {
                                 ),
                               ],
                             ),
-                  padding: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 5,
-                    bottom: 5,
-                  ),
-                  margin: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 5,
-                    bottom: 5,
-                  ),
-                  child : Column(
-                     children :[
-                       ListTile(
-                         title : Text(
-                        '${data.docs[index]['content']}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      subtitle: Text(
-                        test['name'],
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                        ),
-                       )
-                      ]
-                  )
-                      );
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                              top: 5,
+                              bottom: 5,
+                            ),
+                            margin: const EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                              top: 5,
+                              bottom: 5,
+                            ),
+                            child: Column(children: [
+                              ListTile(
+                                title: Text(
+                                  '${data.docs[index]['content']}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                ),
+                                subtitle: Text(
+                                  test['name'],
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              )
+                            ]));
                       }
-                      
-                    }
-                    ),
+                    }),
               ],
             ),
           );
@@ -237,6 +234,7 @@ class _MessagesState extends State<Messages> {
       ),
     );
   }
+
   txtEditingCont(String label, int max) {
     return Column(
       children: [
@@ -253,11 +251,9 @@ class _MessagesState extends State<Messages> {
       ],
     );
   }
-  profil(profil) async { 
-  test = await FirebaseFirestore.instance.collection('users').doc(profil).get();
+
+  profil(profil) async {
+    test =
+        await FirebaseFirestore.instance.collection('users').doc(profil).get();
   }
-  }
-
-
-
-  
+}

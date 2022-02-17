@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
+import 'package:flutter_firebase/services/storage_service.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 
 class CommentsList extends StatefulWidget {
@@ -129,21 +129,24 @@ class _CommentsListState extends State<CommentsList> {
                                                                   ElevatedButton(
                                                                       onPressed:
                                                                           () {
-                                                                       CollectionReference posts =
-                                                      FirebaseFirestore.instance
-                                                          .collection(
-                                                              'comments');
-                                                  posts
-                                                      .doc(data.docs[index].id)
-                                                      .delete();
-                                                                        Navigator.pop(context);
+                                                                        CollectionReference
+                                                                            posts =
+                                                                            FirebaseFirestore.instance.collection('comments');
+                                                                        posts
+                                                                            .doc(data.docs[index].id)
+                                                                            .delete();
+                                                                        Navigator.pop(
+                                                                            context);
                                                                       },
                                                                       child: Text(
                                                                           'Supprimer'))
                                                                 ],
                                                               ));
                                                     },
-                                                    icon: Icon(Icons.delete_outline, color: Colors.red,)),
+                                                    icon: Icon(
+                                                      Icons.delete_outline,
+                                                      color: Colors.red,
+                                                    )),
                                               ),
                                             ])));
                                   })
