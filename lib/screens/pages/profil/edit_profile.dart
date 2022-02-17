@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/widget/profile_widget.dart';
 import 'package:flutter_firebase/common/constants.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
+import 'package:flutter_firebase/services/storage_service.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';

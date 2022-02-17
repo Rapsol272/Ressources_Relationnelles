@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
-import 'package:flutter_firebase/models/user.dart';
 import 'package:flutter_firebase/screens/home/home_screen.dart';
-import 'package:flutter_firebase/screens/pages/acceuil/storage_service.dart';
-import 'package:flutter_firebase/utils/user_preferences.dart';
+import 'package:flutter_firebase/services/storage_service.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
@@ -344,94 +342,99 @@ class _AddPostPageState extends State<AddPostPage> {
   buttonStyle(double w, icon, txt) {
     return GestureDetector(
       onTap: () async {
-          if (icon == Icons.publish_sharp &&
-              verifNumberCat() &&
-              _fileName != null) {
-            var myData = {
-              'idUser': myUserId,
-              'auteur': prenom + ' ' + name,
-              'content': myControllerContent.text,
-              'dateCreation': DateTime.now(),
-              'title': myControllerTitle.text,
-              'reference': await storage.uploadFile(_path, _fileName),
-              'tags': getTags(),
-              'idLikeUsers': [],
-              'idPost': DateTime.now().toString()+myUserId
-            };
-            var collection = FirebaseFirestore.instance.collection('posts');
-            collection
-                .add(myData) // <-- Your data
-                .then((_) => print('Added'))
-                .catchError((error) => print('Add failed: $error'));
+        if (icon == Icons.publish_sharp &&
+            verifNumberCat() &&
+            _fileName != null) {
+          var myData = {
+            'idUser': myUserId,
+            'auteur': prenom + ' ' + name,
+            'content': myControllerContent.text,
+            'dateCreation': DateTime.now(),
+            'title': myControllerTitle.text,
+            'reference': await storage.uploadFile(_path, _fileName),
+            'tags': getTags(),
+            'idLikeUsers': [],
+            'idPost': DateTime.now().toString() + myUserId
+          };
+          var collection = FirebaseFirestore.instance.collection('posts');
+          collection
+              .add(myData) // <-- Your data
+              .then((_) => print('Added'))
+              .catchError((error) => print('Add failed: $error'));
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(uId:
-                                    FirebaseAuth.instance.currentUser!.uid,),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                uId: FirebaseAuth.instance.currentUser!.uid,
+              ),
+            ),
+          );
+        } else if (icon == Icons.publish_sharp) {
+          setState(() {
+            currentColor = Color(0xffb72c1c);
+          });
+        } else if (icon == Icons.add_a_photo_outlined) {
+          final results = await FilePicker.platform.pickFiles(
+            allowMultiple: false,
+            type: FileType.custom,
+            allowedExtensions: ['png', 'jpg'],
+          );
+
+          if (results == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('No file'),
               ),
             );
-          } else if (icon == Icons.publish_sharp) {
-            setState(() {
-              currentColor = Color(0xffb72c1c);
-            });
-          } else if (icon == Icons.add_a_photo_outlined) {
-            final results = await FilePicker.platform.pickFiles(
-              allowMultiple: false,
-              type: FileType.custom,
-              allowedExtensions: ['png', 'jpg'],
-            );
-
-            if (results == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('No file'),
-                ),
-              );
-              return null;
-            }
-
-            final path = results.files.single.path!;
-            _path = path;
-            final fileName = results.files.single.name;
-            _fileName = fileName;
-            setState(() {});
+            return null;
           }
-        },
+
+          final path = results.files.single.path!;
+          _path = path;
+          final fileName = results.files.single.name;
+          _fileName = fileName;
+          setState(() {});
+        }
+      },
       child: Container(
-      width: w,
-      margin: const EdgeInsets.only(
-        top: 10,
-        bottom: 10,
-        right: 30,
-      ),
-      decoration: BoxDecoration(
-        color: currentColor,
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(15),
-          topLeft: Radius.circular(15),
-          bottomRight: Radius.circular(15),
-          bottomLeft: Radius.circular(15),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black38,
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 1), // changes position of shadow
+          width: w,
+          margin: const EdgeInsets.only(
+            top: 10,
+            bottom: 10,
+            right: 30,
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(
-          icon,
-          color: Colors.white,
-        ),
-      Text(txt, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize:18,))
-        ],
-      )
-    ),
+          decoration: BoxDecoration(
+            color: currentColor,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(15),
+              topLeft: Radius.circular(15),
+              bottomRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black38,
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: Offset(0, 1), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: Colors.white,
+              ),
+              Text(txt,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ))
+            ],
+          )),
     );
   }
 }
