@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
-import 'package:intl/intl.dart';
 
 var posts = FirebaseFirestore.instance
     .collection('posts')

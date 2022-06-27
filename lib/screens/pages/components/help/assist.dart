@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/screens/home/home_screen.dart';
-import 'package:flutter_firebase/screens/pages/components/help.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 
 class Assist extends StatelessWidget {

@@ -11,7 +11,6 @@ import 'package:flutter_firebase/screens/pages/profil/edit_profile.dart';
 import 'package:flutter_firebase/screens/pages/groupe/groupes.dart';
 import 'package:flutter_firebase/screens/pages/profil/profil.dart';
 import 'package:flutter_firebase/services/authentication.dart';
-import 'package:flutter_firebase/services/notification_service.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 

@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Compteurs extends StatefulWidget {
   Compteurs({Key? key}) : super(key: key);

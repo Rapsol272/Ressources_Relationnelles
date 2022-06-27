@@ -7,7 +7,6 @@ import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
-import 'package:intl/intl.dart';
 
 // ignore: camel_case_types
 class commentPage extends StatefulWidget {

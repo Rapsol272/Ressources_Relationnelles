@@ -1,13 +1,9 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/common/loading.dart';
 import 'package:flutter_firebase/services/authentication.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_firebase/services/storage_service.dart';
 
@@ -180,9 +176,13 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                               ),
                             ),
                             obscureText: !obscureText,
-                            validator: (value) => value != null &&
-                                    value.length < 6
-                                ? "Entrez un mot de passe d'au moins 6 caractères"
+                            validator: (value) => value == null ||
+                                    value.length < 8 ||
+                                    !value.contains(RegExp(r'[0-9]')) ||
+                                    !value.contains(RegExp(r'[a-z]')) ||
+                                    !value.contains(RegExp(r'[A-Z]')) ||
+                                    !value.contains(RegExp(r'[!@#\$%\^&\*]'))
+                                ? "Entrez un mot de passe d'au moins 8 caractères, contenant des chiffres, des lettres majuscules, minuscules, et des caractères spéciaux"
                                 : null,
                           ),
                           SizedBox(height: 20.0),

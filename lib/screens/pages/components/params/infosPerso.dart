@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_firebase/common/constants.dart';
 import 'package:flutter_firebase/services/authentication.dart';
 import 'package:flutter_firebase/widget/upBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
